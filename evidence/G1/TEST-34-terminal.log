@@ -1,0 +1,23 @@
+# run-test TEST-34 slug=terminal gate=G1 commit=fa0d803+dirty started=2026-10-29T21:59:19.955Z
+# command: pnpm exec vitexec --timeout 170 ./vitexec/physics-terminal.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] case {"type":"static-slab","phaseS":null,"spot":"centre","drops":401,"tunnels":0,"landed":401,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"ramp","phaseS":null,"spot":"centre","drops":401,"tunnels":0,"landed":401,"minFinalClearance":0.0576,"minStepClearance":0.0576,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"static-slab","phaseS":null,"spot":"edge","drops":401,"tunnels":0,"landed":401,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"ramp","phaseS":null,"spot":"edge","drops":401,"tunnels":0,"landed":401,"minFinalClearance":0.0576,"minStepClearance":0.0576,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-linear","phaseS":0.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-lift","phaseS":0.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-linear","phaseS":3.4,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-lift","phaseS":3.4,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-linear","phaseS":4.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-lift","phaseS":4.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-linear","phaseS":6,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-lift","phaseS":6,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-linear","phaseS":9.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] case {"type":"mover-lift","phaseS":9.5,"spot":"centre","drops":41,"tunnels":0,"landed":41,"minFinalClearance":0,"minStepClearance":0,"startVy":-200,"tunnelOffsets":[],"notLandedOffsets":[]}
+[log] TEST-34 PASS {"thinnestM":0.5,"terminalMs":200,"stepS":0.2,"substepTravelM":0.4,"free":{"startVy":-200,"vyAfterStep":-200,"dyInStep":-40},"cases":14,"drops":2014,"tunnels":0,"notLanded":0,"minFinalClearance":0,"minStepClearance":0,"elapsedMs":2142}
+# exit=0 flagged=0 seconds=6.9 result=PASS
+# log: evidence/G1/TEST-34-terminal.log
