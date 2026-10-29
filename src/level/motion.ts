@@ -201,6 +201,22 @@ export class PlatformMotion {
     return Math.max(1, Math.ceil(this.maxDisplacement(dt) / 0.2 - 1e-9))
   }
 
+  /** Slices for the current frame, set by beginFrame (priority -3) and read by the controller (-2). */
+  slices = 1
+
+  /**
+   * Priority -3 (ref/02 §Frame order). dt = clamped frame delta, 0 when physics does not run this frame.
+   * n == 1: advance the world clock and every platform now; n > 1: the controller advances per slice.
+   */
+  beginFrame(dt: number): void {
+    if (dt <= 0) {
+      this.slices = 1
+      return
+    }
+    this.slices = this.slicesFor(dt)
+    if (this.slices === 1) this.advance(dt)
+  }
+
   /** Advances the world clock by dt and moves every platform: prev ← cur, cur ← body.matrixWorld. */
   advance(dt: number): void {
     this.worldClock += dt

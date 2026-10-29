@@ -1,0 +1,4 @@
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[log] stale-plane {"segments":4000,"triangles":7019,"stalePlanes":3513,"differing":114,"falsePierce":30,"missedPierce":84}

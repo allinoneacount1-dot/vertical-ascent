@@ -1,4 +1,4 @@
-// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
+// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
 //
 // The only module that writes character position and velocity (ref/02 Pemilik besaran).
 import { Box3, Line3, Matrix4, Object3D, Vector3 } from 'three'
@@ -203,7 +203,10 @@ export class CharacterPhysics {
     this.world.updateSensors(
       centerHelper,
       (bounds) => bounds.intersectsBox(this.aabbox),
-      (triangle) => triangle.closestPointToSegment(this.segment) < this.radius,
+      (triangle) => {
+        markDirty(triangle)
+        return triangle.closestPointToSegment(this.segment) < this.radius
+      },
     )
   }
 
@@ -230,6 +233,7 @@ export class CharacterPhysics {
     this.world.shapecast(
       (bounds) => bounds.intersectsBox(this.aabbox),
       (tri) => {
+        markDirty(tri)
         const distance = tri.closestPointToSegment(this.segment, triPoint, capsulePoint)
         if (distance === 0) {
           const isCloserToSegmentStart =
@@ -257,6 +261,15 @@ export class CharacterPhysics {
     target.y -= this.radius
     return grounded
   }
+}
+
+/**
+ * The world reuses one ExtendedTriangle and refills it with Triangle.copy, which does not set needsUpdate,
+ * so three-mesh-bvh 0.9.17 would keep the cached plane of the first triangle ever tested and run the
+ * segment-pierce test against it (ExtendedTriangle.js closestPointToSegment). Mark it dirty first (D-032).
+ */
+function markDirty(triangle: unknown): void {
+  ;(triangle as { needsUpdate: boolean }).needsUpdate = true
 }
 
 function requireParent(model: Object3D): Object3D {
