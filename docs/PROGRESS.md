@@ -57,7 +57,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-29 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-31 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 170 ./vitexec/physics-framerate.ts` | 76bd3ff+dirty | 2026-10-30 |
-| TEST-32 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-32 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | 8552baf | 2026-10-30 |
 | TEST-33 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-34 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | 76bd3ff+dirty | 2026-10-30 |
 | TEST-34b | G2 | NOT-STARTED | 0 | | | | |
