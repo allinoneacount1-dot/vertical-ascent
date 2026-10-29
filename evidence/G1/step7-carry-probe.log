@@ -1,0 +1,5 @@
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] carry-probe [{"kind":"slide","withCarry":false,"drift":11.662,"platformMoved":6,"groundedPct":0,"feetY":-10,"platTopY":-0.25},{"kind":"slide","withCarry":true,"drift":0,"platformMoved":6,"groundedPct":0,"feetY":0,"platTopY":-0.25},{"kind":"lift","withCarry":false,"drift":0,"platformMoved":3,"groundedPct":80.6,"feetY":3,"platTopY":2.75},{"kind":"lift","withCarry":true,"drift":0,"platformMoved":3,"groundedPct":80.6,"feetY":3,"platTopY":2.75}]
