@@ -1,4 +1,4 @@
-RESUME HERE: G2, next action: wait for the owner's G2 kickoff (it must name the approved docs/APPROVALS.md ids); then DIRECTIVE §5 G2 step 1 (ref/05 asset pipeline). G1 PASS at 390d1ea.
+RESUME HERE: G2 IN-PROGRESS (started 2026-10-30 05:36 in the planning session, D-041), next action: asset-free G2 work; asset ids not yet approved
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -10,7 +10,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 |---|---|---|---|---|---|---|
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
 | G1 Foundation | PASS | 2026-10-30 01:33 | 2026-10-30 05:34 | 390d1ea | 0 | evidence/G1 |
-| G2 Vertical slice | NOT-STARTED | | | | | evidence/G2 |
+| G2 Vertical slice | IN-PROGRESS | 2026-10-30 05:36 | | | 0 | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
 | G5 Delivery | NOT-STARTED | | | | | evidence/G5 |
