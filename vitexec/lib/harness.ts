@@ -41,6 +41,8 @@ export function createHarness(
   blocks: readonly HarnessBlock[],
   spawn: Vec3 = [0, 0, 0],
   options: Partial<CharacterPhysicsOptions> = {},
+  /** override of the near-kinematic test (control runs use () => false = library behaviour) */
+  nearKinematic?: (box: import('three').Box3) => boolean,
 ): Harness {
   const world = new BvhPhysicsWorld()
   const root = new Group()
@@ -77,7 +79,7 @@ export function createHarness(
   root.add(character)
   character.position.fromArray(spawn)
   root.updateWorldMatrix(true, true)
-  const port = createCharacterPhysicsPort(world, character, options, motion.nearKinematic)
+  const port = createCharacterPhysicsPort(world, character, options, nearKinematic ?? motion.nearKinematic)
   return { world, root, character, port, motion }
 }
 

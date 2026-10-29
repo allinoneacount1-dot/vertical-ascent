@@ -48,7 +48,7 @@ export type BarRun = {
 }
 
 /** Runs passes until `contactTarget` seconds of contact (or maxPasses) at a constant frame dt. */
-export function barRun(dt: number, walking: boolean, contactTarget: number, maxPasses = 400): BarRun {
+export function barRun(dt: number, walking: boolean, contactTarget: number, maxPasses = 400, libraryControl = false): BarRun {
   if (Math.abs(linearSpeed(BAR_MOTION) - BAR.speed) > 1e-9) throw new Error('bar setup speed mismatch')
   const h = createHarness(
     [
@@ -56,6 +56,8 @@ export function barRun(dt: number, walking: boolean, contactTarget: number, maxP
       { id: 'bar', size: BAR.size, pos: [0, BAR.y, 0], motion: BAR_MOTION },
     ],
     [0, 0, 0],
+    {},
+    libraryControl ? () => false : undefined,
   )
   const clock = new FrameClock()
   const ctrl = new CharacterController(h.port, h.motion)

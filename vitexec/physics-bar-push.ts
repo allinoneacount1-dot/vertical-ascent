@@ -3,6 +3,9 @@
 import { barRun, BAR } from '/vitexec/lib/bar-harness.ts'
 
 const runs = [barRun(1 / 60, false, 60), barRun(1 / 60, true, 60)]
+// control (validity): upstream behaviour without the vendored near-kinematic write-back must be caught by this measure
+const control = barRun(1 / 60, false, 5, 40, true)
+const controlDetected = control.maxPenetrationAfterPushS > 0.05 || control.maxPushOutS > 0.2 || control.tunnels > 0
 const failures: string[] = []
 for (const r of runs) {
   const who = r.walking ? 'walking' : 'idle'
@@ -11,7 +14,8 @@ for (const r of runs) {
   if (r.maxPenetrationAfterPushS > 0.05) failures.push(`${who}: penetration ${r.maxPenetrationAfterPushS} m during contact (> 0.05)`)
   if (r.nonFinite > 0) failures.push(`${who}: ${r.nonFinite} non-finite frames`)
 }
-const numbers = { bar: BAR, runs }
+if (!controlDetected) failures.push('validity: the library-behaviour control run was not detected')
+const numbers = { bar: BAR, runs, control, controlDetected }
 if (failures.length) {
   console.log('TEST-07b numbers ' + JSON.stringify(numbers))
   throw new Error('TEST-07b FAIL ' + failures.join('; '))
