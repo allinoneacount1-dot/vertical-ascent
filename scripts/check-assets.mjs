@@ -2,13 +2,15 @@
 // Asset gate (DIRECTIVE D-016; ref/05 §Script, §Pipeline per kelas file): every file under public/ has an
 // ASSET_MANIFEST.md row (column "path") whose integration_status is not UNKNOWN; every .glb/.gltf/.vrm is inspected
 // (generator, extensionsUsed, animation names, VRM meta). Fails on: restrictive VRM meta, meshopt/quantization in
-// public/assets/animations/ or any .vrm, forbidden upstream example file names, missing manifest rows.
+// public/assets/[_build-only/]animations/ or any .vrm, forbidden upstream example file names, missing manifest rows.
 //   node scripts/check-assets.mjs [--json]
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 
 const FORBIDDEN = /(^|\/)(avatar\.vrm|jog-[^/]*|aim-[^/]*|pistol-[^/]*|map\.glb|muzzleflash\.png|pose\.glb|laying\.fbx|sword\.gltf|sample\.bvh|viverse-logo\.png)$/i
 const COMPRESSION = ['EXT_meshopt_compression', 'KHR_mesh_quantization']
+/** Clip folders: committed, or BUILD-ONLY (gitignored, rebuilt by scripts/build-only-assets.sh). */
+const ANIMATIONS = /^public\/assets\/(_build-only\/)?animations\//
 
 function walk(dir) {
   const out = []
@@ -75,7 +77,7 @@ for (const f of files) {
       const ext = json.extensionsUsed ?? []
       Object.assign(entry, { generator: json.asset?.generator ?? null, extensionsUsed: ext, animations: (json.animations ?? []).map((a) => a.name) })
       const isVrm = f.toLowerCase().endsWith('.vrm') || ext.includes('VRM') || ext.includes('VRMC_vrm')
-      if ((isVrm || f.startsWith('public/assets/animations/')) && ext.some((e) => COMPRESSION.includes(e))) failures.push(`${f}: meshopt/quantization not allowed for VRM or animation clips`)
+      if ((isVrm || ANIMATIONS.test(f)) && ext.some((e) => COMPRESSION.includes(e))) failures.push(`${f}: meshopt/quantization not allowed for VRM or animation clips`)
       const vp = vrmProblems(json)
       if (vp.length) {
         entry.vrmProblems = vp

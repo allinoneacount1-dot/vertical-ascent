@@ -1,0 +1,50 @@
+.cache/downloads/ual1-standard-oga/universal_animation_librarystandard.zip: OK
+.cache/extract/ual1-standard-oga/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb: OK
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+prune: Removed types... Skin (1), Mesh (1), Primitive (2), TextureInfo (10), Material (2), Accessor (7195)
+{
+  "input": ".cache/extract/ual1-standard-oga/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+  "clips": 46,
+  "written": [
+    {
+      "name": "Idle_Loop",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Idle_Loop.glb"
+    },
+    {
+      "name": "Jump_Land",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Jump_Land.glb"
+    },
+    {
+      "name": "Jump_Loop",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Jump_Loop.glb"
+    },
+    {
+      "name": "Jump_Start",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Jump_Start.glb"
+    },
+    {
+      "name": "Sprint_Loop",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Sprint_Loop.glb"
+    },
+    {
+      "name": "Walk_Loop",
+      "file": "public\\assets\\_build-only\\animations\\ual1\\Walk_Loop.glb"
+    }
+  ]
+}
+a6ca3c06607dfffeccc6fa1cc6a0d219e7ca81d46169b3f61495a217f8b1555f *Idle_Loop.glb
+14c532a73af6966732ce1afca4f48f24b64e33159db104b7807425e976d0d7f1 *Jump_Land.glb
+6ca0eb152a2a6547e7c4c43d3492812c64fe3905e7d0fc730e7980ba8006a369 *Jump_Loop.glb
+e3ee4b43d8fa185228436d750567bcd5acb1b2409c5038bf509e53af18976f23 *Jump_Start.glb
+1cd9d9d1b9fab75d80b6d01090577644fdfeb31b4bbc2cf608cc241505a9a149 *Sprint_Loop.glb
+5f58eb56ae48b870a60f44516450c41d0f0875641c12b9809fa16e7df103fe4c *Walk_Loop.glb
+Idle_Loop.glb 201784B accessors=160 nodes=55 anim=Idle_Loop(159ch, 2.500 s) ext=[]
+Jump_Land.glb 123136B accessors=160 nodes=55 anim=Jump_Land(159ch, 1.267 s) ext=[]
+Jump_Loop.glb 201784B accessors=160 nodes=55 anim=Jump_Loop(159ch, 2.500 s) ext=[]
+Jump_Start.glb 127388B accessors=160 nodes=55 anim=Jump_Start(159ch, 1.333 s) ext=[]
+Sprint_Loop.glb 84888B accessors=160 nodes=55 anim=Sprint_Loop(159ch, 0.667 s) ext=[]
+Walk_Loop.glb 127388B accessors=160 nodes=55 anim=Walk_Loop(159ch, 1.333 s) ext=[]

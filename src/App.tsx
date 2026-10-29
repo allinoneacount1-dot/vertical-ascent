@@ -2,7 +2,7 @@
 // The Canvas never unmounts between menu and game (D-005).
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Sky } from '@react-three/drei'
+import { Environment, Sky } from '@react-three/drei'
 import { BvhPhysicsWorld, useKeyboardLocomotionActionBindings, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
 import { Level } from './level/Level.tsx'
 import { Player } from './controller/Player.tsx'
@@ -14,6 +14,7 @@ import { game } from './game/game.ts'
 import { installPlayGuards } from './game/enter-playing.ts'
 import { attachRenderer } from './game/debug.ts'
 import { CAMERA } from './camera/camera-rig.ts'
+import { assetUrl } from './assets.ts'
 
 /** Bindings mounted once at the Canvas root (D-004). Keyboard listens on the canvas, so it must have focus. */
 function Bindings() {
@@ -22,10 +23,16 @@ function Bindings() {
   return null
 }
 
+/** Poly Haven HDRI as image-based lighting only; the visible sky stays drei <Sky> (ref/05 §Sumber HDRI). */
+const HDRI_URL = assetUrl('assets/hdri/industrial_sunset_puresky_1k.hdr')
+
 function Lights() {
   return (
     <>
-      <ambientLight intensity={0.8} />
+      <Suspense fallback={null}>
+        <Environment files={HDRI_URL} background={false} environmentIntensity={0.5} />
+      </Suspense>
+      <ambientLight intensity={0.5} />
       <directionalLight
         intensity={1.6}
         position={[-12, 20, 10]}
