@@ -8,7 +8,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## Gates
 | Gate | Status | Started | Finished | Commit | Compactions | Evidence |
 |---|---|---|---|---|---|---|
-| G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:27 | (see G0 report) | 1 | evidence/G0 |
+| G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
 | G1 Foundation | NOT-STARTED | | | | | evidence/G1 |
 | G2 Vertical slice | NOT-STARTED | | | | | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
@@ -80,3 +80,19 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 - Owner actions due at the end of G0 (OWNER_RUNBOOK "Tindakan owner per gate"): answer Q1–Q11 or accept the defaults; review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
 ## Gate reports
 (append DIRECTIVE §5.7 blocks here)
+
+## Gate G0 report — 2026-10-30 01:26 — commit d779fba
+Status: PASS
+TESTs: none owned by G0 (DIRECTIVE §7). G0 criteria, all met:
+- pnpm build exit 0 with exact D-015 pins (evidence/G0/build.log, evidence/G0/pin-exact.txt)
+- one version each of @pmndrs/timeline, @pmndrs/viverse, @react-three/timeline (evidence/G0/deps.txt); bundle three revision 186 only (evidence/G0/three-revision.txt); SDK gate 0 hits (evidence/G0/sdk-gate.txt)
+- vitexec default renderer ANGLE NVIDIA RTX 2050 (evidence/G0/env.log); low-power flag ANGLE Intel UHD (evidence/G0/env-intel.log)
+- first-run screenshot rendered, 60 frames in 3.4 s, attr binary set (evidence/G0/00-first-run.png, 00-first-run.log, check-attr.txt)
+- preview console 0 errors (evidence/G0/00-preview.log); upstream clone b88c0e7 with physics/index.ts; skills pmndrs-viverse and vitexec in .claude/skills
+- CLAUDE.md, PROGRESS, DECISIONS, APPROVALS, ASSET_MANIFEST, .claude/launch.json present; TEST-23 row NOT-STARTED
+Notes: appType 'mpa' works with vitexec; the setPointerCapture InvalidStateError from DIRECTIVE §4 step 9 did not occur.
+Expected placeholders still present: SimpleCharacter smoke scene, mannequin, default clips, PrototypeBox
+Blocked / needs owner: none (owner actions for the end of G0 are listed above)
+Decisions added: D-025, D-026, D-027, D-028
+Budget: compactions 1/2 · TESTs at attempt cap: none · wall-clock 01:11–01:26
+Next gate first action: owner opens a fresh session in D:\CLAUDE\vertical-ascent with the G1 kickoff; agent reads ref/04 §Bacaan per gate for G1
