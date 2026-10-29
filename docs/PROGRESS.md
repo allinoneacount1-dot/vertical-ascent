@@ -1,4 +1,4 @@
-RESUME HERE: G1 IN-PROGRESS (started 2026-10-30 01:33 in the planning session, D-030), next action: see the newest G1 commit and the TEST rows below
+RESUME HERE: G1 IN-PROGRESS (started 2026-10-30 01:33, D-030), next action: G1 TEST scripts — physics harness (07, 34, 08, 06, 31, 28b, 11a) and smoke (01, 32, 04, 05, 09, 10, 14a, 28a), 35a unit; then official runs via scripts/run-test.mjs
 
 # PROGRESS — Vertical Ascent
 ## Environment

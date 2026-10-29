@@ -61,6 +61,7 @@ function snapshotGame() {
       zoom: r3(rig?.behavior.zoomDistance ?? 0),
       fov: rig?.fov ?? 0,
       lastHit: rig?.lastHit == null ? null : r3(rig.lastHit),
+      pos: rig?.camera ? arr(rig.camera.position) : ([0, 0, 0] as Vec3),
     },
     model: { uuid: game.model?.scene.uuid ?? '' },
     anim: { clip: currentClip(), mixerTime: r3(game.model?.mixer.time ?? 0) },

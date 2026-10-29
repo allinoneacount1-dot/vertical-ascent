@@ -18,8 +18,8 @@ export const CLIPS = Object.freeze({
 
 /** Cross-fade between clips (library default). */
 export const FADE_S = 0.1
-/** Landing clip window, ≤150 ms (D-023, TEST-06). */
-export const LAND_HOLD_S = 0.15
+/** Landing clip window. D-023/TEST-06 allow ≤150 ms; graph transitions land on frame boundaries (+1–2 frames), so 0.10 s. */
+export const LAND_HOLD_S = 0.1
 /** Minimum time in jumpUp before a landing can end it. */
 export const JUMP_UP_MIN_S = 0.3
 /** Upward speed that counts as rising (m/s). */

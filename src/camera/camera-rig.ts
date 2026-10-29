@@ -60,6 +60,8 @@ export class CameraRig {
 
   /** Last measured shortest hit distance (m) or null; for tests and __game. */
   lastHit: number | null = null
+  /** The camera this rig drives (read-only use outside src/camera/). */
+  camera: PerspectiveCamera | null = null
 
   constructor(world: BvhPhysicsWorld) {
     this.world = world
@@ -131,6 +133,7 @@ export class CameraRig {
 
   /** Priority -1. target = the physics root (feet). */
   update(camera: PerspectiveCamera, target: Object3D, dt: number): void {
+    this.camera = camera
     this.frameDt = dt
     // zoom: the game reads ZoomAction itself (D-014); wheel down (+) zooms out
     this.zoomReader.update()
