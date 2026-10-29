@@ -1,0 +1,28 @@
+# D-047 build check 2026-10-30T06:30:31+07:00 commit=e08de1f
+tsc exit 0
+.tmp/stub-check/assets/idle-jwpRKiXz.js                                   0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/jump-down-jwpRKiXz.js                              0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/jump-forward-jwpRKiXz.js                           0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/jump-loop-jwpRKiXz.js                              0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/jump-up-jwpRKiXz.js                                0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/run-jwpRKiXz.js                                    0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/walk-jwpRKiXz.js                                   0.03 kB │ gzip:   0.05 kB
+.tmp/stub-check/assets/mannequin-C0R0votB.js                            123.35 kB │ gzip:  73.91 kB
+[32m✓ built in 1.52s[39m
+--- data:model/gltf-binary in build (expected: mannequin only):
+tr: warning: an unescaped backslash at end of string is not portable
+.tmp/stub-check/assets/mannequin-C0R0votB.js
+--- copied public assets:
+.tmp/stub-check/assets/_build-only/animations/ual1/Idle_Loop.glb
+.tmp/stub-check/assets/_build-only/animations/ual1/Jump_Land.glb
+.tmp/stub-check/assets/_build-only/animations/ual1/Jump_Loop.glb
+.tmp/stub-check/assets/_build-only/animations/ual1/Jump_Start.glb
+.tmp/stub-check/assets/_build-only/animations/ual1/Sprint_Loop.glb
+.tmp/stub-check/assets/_build-only/animations/ual1/Walk_Loop.glb
+.tmp/stub-check/assets/hdri/industrial_sunset_puresky_1k.hdr
+--- gate: root-absolute asset paths in src
+src\assets.ts:1:// Runtime URLs of files under public/ (ref/05 §Gate string: src never spells a root-absolute '/assets/' path).
+--- gate: remote asset URLs in src/public
+0 hits
+--- gate rerun after the comment fix in src/assets.ts:
+0 hits
