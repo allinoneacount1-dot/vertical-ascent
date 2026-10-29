@@ -53,7 +53,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-26 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-27 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-28a | G1 | NOT-STARTED | 0 | | | | |
-| TEST-28b | G1 | NOT-STARTED | 0 | | | | |
+| TEST-28b | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 120 ./vitexec/physics-dt-clamp.ts` | 74e6d03 | 2026-10-30 |
 | TEST-29 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-31 | G1 | NOT-STARTED | 0 | | | | |
