@@ -1,0 +1,14 @@
+# run-test TEST-10 slug=camera-walls gate=G1 commit=74469ea started=2026-10-29T22:28:20.463Z
+# command: pnpm exec vitexec --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] menu after ms 525
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] TEST-10 PASS {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","walks":[{"label":"thin wall (west face)","target":[8.15,6],"reached":[8.152,6.003],"offM":0.004},{"label":"thick wall (east face)","target":[-12.4,8],"reached":[-12.399,7.985],"offM":0.015},{"label":"inside corner","target":[-12.4,12.4],"reached":[-12.408,12.427],"offM":0.028},{"label":"pole strafe start","target":[1,1],"reached":[1.03,0.988],"offM":0.032}],"orbits":[{"label":"thin wall (west face) @ -20°","samples":201,"sweptRad":6.784,"pitch":-0.349,"minDist":0.35,"pulledInSamples":133,"insideSamples":0,"insideOf":[]},{"label":"thin wall (west face) @ +35°","samples":190,"sweptRad":6.789,"pitch":0.612,"minDist":0.356,"pulledInSamples":190,"insideSamples":0,"insideOf":[]},{"label":"thick wall (east face) @ -20°","samples":193,"sweptRad":6.789,"pitch":-0.349,"minDist":0.35,"pulledInSamples":152,"insideSamples":0,"insideOf":[]},{"label":"thick wall (east face) @ +35°","samples":192,"sweptRad":6.789,"pitch":0.612,"minDist":0.359,"pulledInSamples":192,"insideSamples":0,"insideOf":[]},{"label":"inside corner @ -20°","samples":187,"sweptRad":6.789,"pitch":-0.349,"minDist":0.35,"pulledInSamples":182,"insideSamples":0,"insideOf":[]},{"label":"inside corner @ +35°","samples":193,"sweptRad":6.789,"pitch":0.612,"minDist":0.35,"pulledInSamples":193,"insideSamples":0,"insideOf":[]}],"wallPulledInSamples":1042,"strafeSetup":{"aimErr":-0.001,"pitch":-0.349,"yaw":43.983},"strafe":{"samples":114,"feetX":[1.07,5.272],"zoom":4,"distRange":[4,4],"rayCrossedPoleSamples":3,"distChangedSamples":0},"allSamples":{"n":3043,"minDist":0.35,"insideAnyFrame":0,"insideFrames":[]}}
+[screenshot] ./evidence/G1/TEST-10-camera-walls.png
+# exit=0 flagged=0 seconds=46.6 result=PASS
+# log: evidence/G1/TEST-10-camera-walls.log
