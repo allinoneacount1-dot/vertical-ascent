@@ -1,4 +1,4 @@
-RESUME HERE: G1 PAUSED by owner ("stop dulu", 2026-10-30) — next action: review the untracked TEST scripts in vitexec/ (written by the stopped authoring workflow, not yet reviewed), finish the missing ones (TEST-05 hold/always/toggle, 06 smoke, 08 hold-Space, 10, 14a, 28a), then official runs via scripts/run-test.mjs; TEST-35a done
+RESUME HERE: G2, next action: wait for the owner's G2 kickoff (it must name the approved docs/APPROVALS.md ids); then DIRECTIVE §5 G2 step 1 (ref/05 asset pipeline). G1 PASS at 390d1ea.
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -9,7 +9,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | Gate | Status | Started | Finished | Commit | Compactions | Evidence |
 |---|---|---|---|---|---|---|
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
-| G1 Foundation | IN-PROGRESS | 2026-10-30 01:33 | | | 0 | evidence/G1 |
+| G1 Foundation | PASS | 2026-10-30 01:33 | 2026-10-30 05:34 | 390d1ea | 0 | evidence/G1 |
 | G2 Vertical slice | NOT-STARTED | | | | | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
@@ -75,7 +75,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | Default animation clips (Idle/Walk/Run/JumpUp/JumpLoop/JumpDown) | src/character/rig.ts CLIPS | G0, G1 | Split licensed clips (ref/05), G2 |
 | Flat-colour blockout boxes (G1 level) | src/level/blockout.ts | G1 | level/*.json + prefabs with licensed art (ref/03, ref/05), G2 |
 ## Blocked / needs owner
-- (none for G0)
+- (none for G0, none for G1)
 - Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
 - Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
 ## Gate reports
@@ -96,3 +96,14 @@ Blocked / needs owner: none (owner actions for the end of G0 are listed above)
 Decisions added: D-025, D-026, D-027, D-028
 Budget: compactions 1/2 · TESTs at attempt cap: none · wall-clock 01:11–01:26
 Next gate first action: owner opens a fresh session in D:\CLAUDE\vertical-ascent with the G1 kickoff; agent reads ref/04 §Bacaan per gate for G1
+
+## Gate G1 report — 2026-10-30 05:34 — commit 390d1ea
+Status: PASS
+TESTs (all VERIFIED-PASS, final run on ec416ee unless noted): TEST-01 load (evidence/G1/TEST-01-load.log) · TEST-04 move · TEST-05 sprint-toggle/hold/always · TEST-06 physics + smoke · TEST-07 phase-sweep · TEST-08 physics + smoke-hold · TEST-09 camera · TEST-10 camera-walls (74469ea, attempt 3) · TEST-11a platforms (attempt 3 fix cycle) · TEST-14a pause · TEST-28a visibility · TEST-28b dt-clamp · TEST-31 framerate · TEST-32 frame-order · TEST-34 terminal · TEST-35a state — logs evidence/G1/TEST-<id>-<slug>.log
+Key numbers: apex 1.5756 m (±0.0023 measured), Δapex across dt 0.0022 m, 533 + 2014 drops 0 tunnels, jump latency ≤12 ms, landing ≤123 ms, camera 0/3043 frames inside colliders, HUD store 80/80 slots at 10 Hz, load 2.95 s
+Steps: movement.json (level/movement.json, incl. doubleJump), carry probe (evidence/G1/step7-carry-probe.log), owner checks 0 violations (evidence/G1/step9-owner-check.log)
+Expected placeholders still present: mannequin, default clips, flat-colour blockout boxes
+Blocked / needs owner: none for G1; for G2 the kickoff must name approved APPROVALS ids, and OWNER-ONLY files go to .cache/inbox/<slot>/
+Decisions added: D-030 … D-040 (D-038 double jump = owner request)
+Budget: compactions 0/2 · TESTs at attempt cap: TEST-10 and TEST-11a passed on their 3rd cycle · wall-clock 01:33–05:34
+Next gate first action: owner G2 kickoff (fresh session recommended) naming approved asset ids; agent runs the ref/05 asset pipeline; route jumps must state whether they need the double jump (D-038)
