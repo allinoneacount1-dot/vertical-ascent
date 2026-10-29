@@ -235,3 +235,31 @@ export async function turnToYaw(targetYaw: number): Promise<{ from: number; to: 
   for (let i = 0; i < 5; i++) await nextFrame()
   return { from, to: game().snapshot().camera.yaw, dxPx }
 }
+
+/**
+ * Clicks an element with a real pointer even when vitexec's tracked pointer is far away (after many relative moves
+ * under pointer lock a single settled moveTo would exceed vitexec's 1200 px limit): approach with moveToLatest
+ * (≤ ~500 px per 400 ms lease), stop, then a settled moveTo and click.
+ */
+export async function clickElement(el: Element): Promise<void> {
+  const r = el.getBoundingClientRect()
+  const x = r.x + r.width / 2
+  const y = r.y + r.height / 2
+  for (let i = 0; i < 30; i++) {
+    try {
+      await mouse.moveTo(x, y)
+      await mouse.click()
+      return
+    } catch (err) {
+      if (!/requires \d+ms/.test(String(err))) throw err
+    }
+    try {
+      await mouse.moveToLatest(x, y)
+    } catch (err) {
+      if (!/different destination/.test(String(err))) throw err
+    }
+    await sleep(450)
+    await mouse.stop()
+  }
+  throw new Error('clickElement: could not reach the element')
+}

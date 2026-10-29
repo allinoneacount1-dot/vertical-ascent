@@ -8,7 +8,7 @@ import { runRoute } from '/vitexec/lib/route-bot.ts'
 import type { Route } from '/vitexec/lib/route-bot.ts'
 import route from '/vitexec/routes/slice.json'
 import level from '/level/slice.json'
-import { nextFrame, r3, sleep, wrap } from '/vitexec/lib/move-smoke.ts'
+import { clickElement, nextFrame, r3, sleep, wrap } from '/vitexec/lib/move-smoke.ts'
 
 type Full = { state: string; frame: number; player: { pos: number[]; vel: number[]; groundedRaw: boolean; sprintActive: boolean }; camera: { yaw: number }; run: { timerMs: number; heightM: number; started: boolean; killPlaneRespawns: number } }
 const snap = (): Full => (window as unknown as { __game: { snapshot(): Full } }).__game.snapshot()
@@ -29,9 +29,7 @@ const H = canvas.getBoundingClientRect().height
 const clickSel = async (sel: string) => {
   const el = document.querySelector(sel)
   if (!(el instanceof HTMLElement)) throw new Error(`TEST-13 FAIL missing ${sel}`)
-  const r = el.getBoundingClientRect()
-  await mouse.moveTo(r.x + r.width / 2, r.y + r.height / 2)
-  await mouse.click()
+  await clickElement(el)
 }
 const waitPlaying = async () => {
   for (let i = 0; i < 150; i++) {
