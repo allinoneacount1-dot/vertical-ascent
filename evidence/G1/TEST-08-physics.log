@@ -1,9 +1,9 @@
-# run-test TEST-08 slug=physics gate=G1 commit=75fcb28 started=2026-10-29T22:09:01.274Z
+# run-test TEST-08 slug=physics gate=G1 commit=ec416ee+dirty started=2026-10-29T22:30:14.064Z
 # command: pnpm exec vitexec --timeout 150 ./vitexec/physics-jump-repeat.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [log] TEST-08 PASS {"part":"physics","jumps":100,"yTol":0.01,"results":[{"schedule":"dt=1/60","takeoffs":100,"lands":100,"relands":0,"frames":4922,"simS":82.017,"y0":0,"yEnd":0,"dy":0,"xzDrift":0,"groundedEnd":true,"nonFinite":0,"firstNonFinite":null,"riseMin":1.5753,"riseMax":1.5753,"landYMin":0,"landYMax":0},{"schedule":"dt=rand[8,50]ms seed=0x5eed08","takeoffs":100,"lands":100,"relands":0,"frames":2846,"simS":83.185,"y0":0,"yEnd":0,"dy":0,"xzDrift":0,"groundedEnd":true,"nonFinite":0,"firstNonFinite":null,"riseMin":1.5693,"riseMax":1.5753,"landYMin":0,"landYMax":0}]}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
-# exit=0 flagged=0 seconds=4.8 result=PASS
+# exit=0 flagged=0 seconds=4.2 result=PASS
 # log: evidence/G1/TEST-08-physics.log

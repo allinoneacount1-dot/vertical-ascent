@@ -1,9 +1,9 @@
-# run-test TEST-28b slug=dt-clamp gate=G1 commit=76bd3ff+dirty started=2026-10-29T22:04:28.833Z
-# command: pnpm exec vitexec --timeout 170 ./vitexec/physics-dt-clamp.ts
+# run-test TEST-28b slug=dt-clamp gate=G1 commit=ec416ee+dirty started=2026-10-29T22:29:54.126Z
+# command: pnpm exec vitexec --timeout 120 ./vitexec/physics-dt-clamp.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [log] TEST-28b PASS {"clause1_dt5":{"pass":true,"rawDt":5,"clampedDt":0.1,"clamp":0.1,"advanceS":{"simTime":0.1,"world":0.1,"xz":0.1,"platform":0.1},"fallVyDelta":-1.9731},"clause2_firstDeltaAfterResume":{"pass":true,"resumes":[{"firstRawDt":5,"first":{"dt":0,"simTime":0,"world":0,"dPos":0,"dVel":0,"platform":0},"second":{"dt":0.016667,"simTime":0.016667,"world":0.016667,"xz":0.016667},"discarded":true,"secondRuns":true},{"firstRawDt":0.016667,"first":{"dt":0,"simTime":0,"world":0,"dPos":0,"dVel":0,"platform":0},"second":{"dt":0.016667,"simTime":0.016667,"world":0.016667,"xz":0.016667},"discarded":true,"secondRuns":true}]},"info_pausedFrames120":{"simTime":0,"world":0,"dPos":0},"control":{"rawStep5xzAdvanceS":1,"fallVyDelta":-18.9971}}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
-# exit=0 flagged=0 seconds=4.7 result=PASS
+# exit=0 flagged=0 seconds=4.5 result=PASS
 # log: evidence/G1/TEST-28b-dt-clamp.log

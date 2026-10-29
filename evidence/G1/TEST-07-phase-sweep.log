@@ -1,4 +1,4 @@
-# run-test TEST-07 slug=phase-sweep gate=G1 commit=76bd3ff started=2026-10-29T22:04:08.526Z
+# run-test TEST-07 slug=phase-sweep gate=G1 commit=ec416ee+dirty started=2026-10-29T22:29:41.548Z
 # command: pnpm exec vitexec --timeout 170 ./vitexec/physics-phase-sweep.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
@@ -21,8 +21,8 @@ logs:
 [log] wall {"wall":"thin-0.5m","dt":0.2,"steps":300,"minY":0,"maxY":0,"final":[8.35,0,6],"reached":true,"throughWall":false}
 [log] wall {"wall":"thick-2m","dt":0.2,"steps":300,"minY":0,"maxY":0,"final":[-12.6,0,8],"reached":true,"throughWall":false}
 [log] wall {"wall":"inside-corner","dt":0.2,"steps":300,"minY":0,"maxY":0,"final":[-12.6,0,12.6],"reached":true,"throughWall":false}
-[log] TEST-07 PASS {"sweep":{"heights":41,"heightStepM":0.05,"stepS":0.2,"platformCases":13,"drops":533,"tunnels":0,"notLanded":0,"minFinalClearance":0,"minStepClearance":0},"walls":{"runs":6,"seconds":60,"speed":6,"floorTop":0,"minY":0,"limit":-0.05,"violations":[],"unreached":[],"throughWall":[]},"elapsedMs":1453}
+[log] TEST-07 PASS {"sweep":{"heights":41,"heightStepM":0.05,"stepS":0.2,"platformCases":13,"drops":533,"tunnels":0,"notLanded":0,"minFinalClearance":0,"minStepClearance":0},"walls":{"runs":6,"seconds":60,"speed":6,"floorTop":0,"minY":0,"limit":-0.05,"violations":[],"unreached":[],"throughWall":[]},"elapsedMs":1373}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
-# exit=0 flagged=0 seconds=6.1 result=PASS
+# exit=0 flagged=0 seconds=5.6 result=PASS
 # log: evidence/G1/TEST-07-phase-sweep.log

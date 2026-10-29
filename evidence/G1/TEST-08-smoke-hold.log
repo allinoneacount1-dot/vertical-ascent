@@ -1,12 +1,13 @@
-# run-test TEST-08 slug=smoke-hold gate=G1 commit=75fcb28 started=2026-10-29T22:09:06.464Z
+# run-test TEST-08 slug=smoke-hold gate=G1 commit=ec416ee+dirty started=2026-10-29T22:31:52.459Z
 # command: pnpm exec vitexec --timeout 120 ./vitexec/smoke-hold-jump.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
-[log] menu after ms 594
+[log] menu after ms 556
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
 [log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
 [log] TEST-08 PASS {"part":"smoke-hold","holdMs":2017.2,"keydowns":1,"keydownRepeats":0,"takeoffs":1,"kinds":["ground"]}
-# exit=0 flagged=0 seconds=9.2 result=PASS
+# exit=0 flagged=0 seconds=8.7 result=PASS
 # log: evidence/G1/TEST-08-smoke-hold.log

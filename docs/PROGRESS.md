@@ -17,23 +17,23 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## TESTs (one row per ID in DIRECTIVE §7, incl. 07b 11a 11b 12a 12b 14a 14b 18a 18b 19a 19b 20a 20b 23b 28a 28b 34b 35a 35b)
 | ID | Gate | Status | Attempts | Artifact | Command | Commit | Date |
 |---|---|---|---|---|---|---|---|
-| TEST-01 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-01-load.log, evidence/G1/TEST-01-load.png | `node scripts/run-test.mjs 01 --slug load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts` | c40aed4 | 2026-10-30 |
+| TEST-01 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-01-load.log, evidence/G1/TEST-01-load.png | `node scripts/run-test.mjs 01 --slug load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts` | ec416ee | 2026-10-30 |
 | TEST-02 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-03 | G2 | NOT-STARTED | 0 | | | | |
-| TEST-04 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-04-move.log, evidence/G1/TEST-04-move.png | `node scripts/run-test.mjs 04 --slug move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts` | 1f62efd | 2026-10-30 |
-| TEST-05 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | a8c8788 | 2026-10-30 |
-| TEST-06 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-06-smoke.log, evidence/G1/TEST-06-physics.log, evidence/G1/TEST-06-smoke.png | `node scripts/run-test.mjs 06 --slug physics -- --timeout 120 ./vitexec/physics-jump.ts` ; `node scripts/run-test.mjs 06 --slug smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts` | 7b233c2 | 2026-10-30 |
-| TEST-07 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | 76bd3ff | 2026-10-30 |
+| TEST-04 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-04-move.log, evidence/G1/TEST-04-move.png | `node scripts/run-test.mjs 04 --slug move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts` | ec416ee | 2026-10-30 |
+| TEST-05 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | ec416ee | 2026-10-30 |
+| TEST-06 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-06-smoke.log, evidence/G1/TEST-06-physics.log, evidence/G1/TEST-06-smoke.png | `node scripts/run-test.mjs 06 --slug physics -- --timeout 120 ./vitexec/physics-jump.ts` ; `node scripts/run-test.mjs 06 --slug smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts` | ec416ee | 2026-10-30 |
+| TEST-07 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | ec416ee | 2026-10-30 |
 | TEST-07b | G2 | NOT-STARTED | 0 | | | | |
-| TEST-08 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-08-smoke-hold.log, evidence/G1/TEST-08-physics.log | `node scripts/run-test.mjs 08 --slug physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts` ; `node scripts/run-test.mjs 08 --slug smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts` | 75fcb28 | 2026-10-30 |
-| TEST-09 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-09-camera.log, evidence/G1/TEST-09-camera.png | `node scripts/run-test.mjs 09 --slug camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts` | 9b27e45 | 2026-10-30 |
+| TEST-08 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-08-smoke-hold.log, evidence/G1/TEST-08-physics.log | `node scripts/run-test.mjs 08 --slug physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts` ; `node scripts/run-test.mjs 08 --slug smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts` | ec416ee | 2026-10-30 |
+| TEST-09 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-09-camera.log, evidence/G1/TEST-09-camera.png | `node scripts/run-test.mjs 09 --slug camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts` | ec416ee | 2026-10-30 |
 | TEST-10 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-10-camera-walls.log, evidence/G1/TEST-10-camera-walls.png, evidence/G1/TEST-10-camera-walls-attempt1-FAIL.log, evidence/G1/TEST-10-camera-walls-attempt2-FAIL.log | `node scripts/run-test.mjs 10 --slug camera-walls -- --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts` | 74469ea | 2026-10-30 |
-| TEST-11a | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | 7b067d6 | 2026-10-30 |
+| TEST-11a | G1 | VERIFIED-PASS | 4 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | ec416ee | 2026-10-30 |
 | TEST-11b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12a | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12b | G4 | NOT-STARTED | 0 | | | | |
 | TEST-13 | G2 | NOT-STARTED | 0 | | | | |
-| TEST-14a | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | 8da8e4a | 2026-10-30 |
+| TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |
 | TEST-14b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-15 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
@@ -52,16 +52,16 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-25 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-26 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-27 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-28a | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-28a-visibility.log, evidence/G1/TEST-28a-visibility.png | `node scripts/run-test.mjs 28a --slug visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts` | a234a25 | 2026-10-30 |
-| TEST-28b | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 170 ./vitexec/physics-dt-clamp.ts` | 76bd3ff+dirty | 2026-10-30 |
+| TEST-28a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-28a-visibility.log, evidence/G1/TEST-28a-visibility.png | `node scripts/run-test.mjs 28a --slug visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts` | ec416ee | 2026-10-30 |
+| TEST-28b | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 120 ./vitexec/physics-dt-clamp.ts` | ec416ee | 2026-10-30 |
 | TEST-29 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-31 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 170 ./vitexec/physics-framerate.ts` | 76bd3ff+dirty | 2026-10-30 |
-| TEST-32 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | 8552baf | 2026-10-30 |
+| TEST-31 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 120 ./vitexec/physics-framerate.ts` | ec416ee | 2026-10-30 |
+| TEST-32 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | ec416ee | 2026-10-30 |
 | TEST-33 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-34 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | 76bd3ff+dirty | 2026-10-30 |
+| TEST-34 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | ec416ee | 2026-10-30 |
 | TEST-34b | G2 | NOT-STARTED | 0 | | | | |
-| TEST-35a | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-35a-state.log | `node scripts/run-test.mjs 35a --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | cd2ff6a | 2026-10-30 |
+| TEST-35a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-35a-state.log | `node scripts/run-test.mjs 35a --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ec416ee | 2026-10-30 |
 | TEST-35b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-36 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-37 | G3 | NOT-STARTED | 0 | | | | |

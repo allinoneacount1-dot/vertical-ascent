@@ -1,12 +1,13 @@
-# run-test TEST-32 slug=frame-order gate=G1 commit=8552baf started=2026-10-29T22:10:07.985Z
+# run-test TEST-32 slug=frame-order gate=G1 commit=ec416ee+dirty started=2026-10-29T22:32:50.076Z
 # command: pnpm exec vitexec --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
 [log] synthetic: order-probe
-[log] TEST-32 PASS {"moveMs":2005,"frames":151,"controllerFrames":151,"framesWithoutController":0,"leadingCallsBeforeFirstFrame":0,"violations":0,"firstViolations":[],"counts":{"platform":151,"controller":151,"camera":151,"mixer":151,"hud":151},"sampleFrame":"platform>controller>camera>hud>mixer","movedM":4.991,"yaw":[0,0,-1.667],"pitch":[-0.349,-0.349,-0.127],"prototypesRestored":true,"pointermove":{"menu":{"n":56,"sx":639,"sy":372},"locked":{"n":0,"sx":0,"sy":0},"probe":{"n":60,"sx":300,"sy":-40,"maxAbsX":8},"canvasH":720}}
+[log] TEST-32 PASS {"moveMs":2002,"frames":150,"controllerFrames":150,"framesWithoutController":0,"leadingCallsBeforeFirstFrame":0,"violations":0,"firstViolations":[],"counts":{"platform":150,"controller":150,"camera":150,"mixer":150,"hud":150},"sampleFrame":"platform>controller>camera>hud>mixer","movedM":4.993,"yaw":[0,0,-1.667],"pitch":[-0.349,-0.349,-0.127],"prototypesRestored":true,"pointermove":{"menu":{"n":56,"sx":639,"sy":372},"locked":{"n":0,"sx":0,"sy":0},"probe":{"n":60,"sx":300,"sy":-40,"maxAbsX":8},"canvasH":720}}
 [screenshot] ./evidence/G1/TEST-32-frame-order.png
-# exit=0 flagged=0 seconds=8.0 result=PASS
+# exit=0 flagged=0 seconds=7.7 result=PASS
 # log: evidence/G1/TEST-32-frame-order.log

@@ -1,19 +1,20 @@
-# run-test TEST-01 slug=load gate=G1 commit=c40aed4 started=2026-10-29T22:09:37.593Z
+# run-test TEST-01 slug=load gate=G1 commit=ec416ee+dirty started=2026-10-29T22:30:18.610Z
 # command: pnpm exec vitexec --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
-[log] load {"tScriptMs":1738,"tCanvasMs":1738,"tWorldReadyMs":1821,"tFrames60Ms":2954,"appFramesAtLoad":60,"rafWithCanvas":62}
-[log] bvh {"buildMs":{"physics:g1-static":2.6,"physics:mover-linear":0.2,"physics:mover-lift":0.2,"camera:g1-blockers":0.6},"tris":{"physics:g1-static":108,"physics:mover-linear":12,"physics:mover-lift":12,"camera:g1-blockers":108}}
-[log] bvhBuild {"t":1816,"name":"physics:g1-static","ms":2.6,"tris":108,"kinematic":false}
-[log] bvhBuild {"t":1816.3,"name":"physics:mover-linear","ms":0.2,"tris":12,"kinematic":true}
-[log] bvhBuild {"t":1816.7,"name":"physics:mover-lift","ms":0.2,"tris":12,"kinematic":true}
-[log] bvhBuild {"t":1817.8,"name":"camera:g1-blockers","ms":0.6,"tris":108,"kinematic":false}
-[log] bvh per world {"physics":{"bodies":3,"ms":3,"tris":132},"camera":{"bodies":1,"ms":0.6,"tris":108}}
+[log] load {"tScriptMs":1413,"tCanvasMs":1413,"tWorldReadyMs":1498,"tFrames60Ms":2612,"appFramesAtLoad":60,"rafWithCanvas":63}
+[log] bvh {"buildMs":{"physics:g1-static":2.4,"physics:mover-linear":0.1,"physics:mover-lift":0.1,"camera:g1-blockers":0.6},"tris":{"physics:g1-static":108,"physics:mover-linear":12,"physics:mover-lift":12,"camera:g1-blockers":108}}
+[log] bvhBuild {"t":1495.1,"name":"physics:g1-static","ms":2.4,"tris":108,"kinematic":false}
+[log] bvhBuild {"t":1495.3,"name":"physics:mover-linear","ms":0.1,"tris":12,"kinematic":true}
+[log] bvhBuild {"t":1495.6,"name":"physics:mover-lift","ms":0.1,"tris":12,"kinematic":true}
+[log] bvhBuild {"t":1496.6,"name":"camera:g1-blockers","ms":0.6,"tris":108,"kinematic":false}
+[log] bvh per world {"physics":{"bodies":3,"ms":2.6,"tris":132},"camera":{"bodies":1,"ms":0.6,"tris":108}}
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
 [log] playing {"locked":true,"active":"CANVAS"}
-[log] TEST-01 PASS {"tScriptMs":1738,"tCanvasMs":1738,"tWorldReadyMs":1821,"tFrames60Ms":2954,"appFramesAtLoad":60,"rafWithCanvas":62,"tMenuMs":2955,"bvhWorlds":{"physics":{"bodies":3,"ms":3,"tris":132},"camera":{"bodies":1,"ms":0.6,"tris":108}},"bvhBodies":4,"windowFrames":600,"appFrames":599,"windowS":7.99,"maxRafGapMs":17.9,"uuid":"6d0889f8-97c9-4584-8781-18549497c6ac","uuidDistinct":1,"uuidEmpty":0,"slotsCrossed":80,"slotsWithOneChange":80,"badSlots":[],"storeChanges":80,"changesPerS":10.01,"nonHudChanges":0,"minBoundaryOffsetMs":1.7,"domMutations":7,"stateLeftPlaying":0,"walkedM":0.44,"pageErrors":0}
+[log] TEST-01 PASS {"tScriptMs":1413,"tCanvasMs":1413,"tWorldReadyMs":1498,"tFrames60Ms":2612,"appFramesAtLoad":60,"rafWithCanvas":63,"tMenuMs":2612,"bvhWorlds":{"physics":{"bodies":3,"ms":2.6,"tris":132},"camera":{"bodies":1,"ms":0.6,"tris":108}},"bvhBodies":4,"windowFrames":600,"appFrames":599,"windowS":7.99,"maxRafGapMs":15.4,"uuid":"2e62cda0-3e87-4926-9d09-849d965b8917","uuidDistinct":1,"uuidEmpty":0,"slotsCrossed":80,"slotsWithOneChange":80,"badSlots":[],"storeChanges":80,"changesPerS":10.01,"nonHudChanges":0,"minBoundaryOffsetMs":0.1,"domMutations":8,"stateLeftPlaying":0,"walkedM":0.44,"pageErrors":0}
 [screenshot] ./evidence/G1/TEST-01-load.png
-# exit=0 flagged=0 seconds=15.3 result=PASS
+# exit=0 flagged=0 seconds=14.6 result=PASS
 # log: evidence/G1/TEST-01-load.log

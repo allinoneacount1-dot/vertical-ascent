@@ -56,7 +56,12 @@ const command = cmd ?? ['pnpm', 'exec', 'vitexec', ...vitexecArgs.map(quote)].jo
 let commit = 'unknown'
 try {
   commit = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
-  if (execSync('git status --porcelain --untracked-files=no', { encoding: 'utf8' }).trim() !== '') commit += '+dirty'
+  // dirty = tracked changes outside evidence/ and docs/PROGRESS.md (earlier runs of a suite write those)
+  const changed = execSync('git status --porcelain --untracked-files=no', { encoding: 'utf8' })
+    .split('\n')
+    .map((l) => l.slice(3).trim())
+    .filter((p) => p !== '' && !p.startsWith('evidence/') && p !== 'docs/PROGRESS.md')
+  if (changed.length > 0) commit += '+dirty'
 } catch {
   // not fatal: evidence still records the command
 }
