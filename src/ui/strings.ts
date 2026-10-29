@@ -35,7 +35,8 @@ export const STRINGS = {
   keysJump: { id: 'Spasi — lompat (tekan lagi di udara: lompat ganda)', en: 'Space — jump (press again in the air: double jump)' },
   keysLook: { id: 'Mouse — kamera, roda — jarak', en: 'Mouse — camera, wheel — distance' },
   creditsLibs: { id: 'Dibuat dengan three.js, React Three Fiber, pmndrs viverse (Bela Bohlender), zustand.', en: 'Built with three.js, React Three Fiber, pmndrs viverse (Bela Bohlender), zustand.' },
-  creditsPlaceholders: { id: 'Karakter dan animasi sementara: mannequin dan klip Quaternius dari paket viverse.', en: 'Temporary character and animations: Quaternius mannequin and clips bundled with viverse.' },
+  creditsPlaceholders: { id: 'Karakter sementara: mannequin Quaternius dari paket viverse.', en: 'Temporary character: Quaternius mannequin bundled with viverse.' },
+  creditsAssets: { id: 'Animasi: Universal Animation Library oleh Quaternius (quaternius.com). Cahaya langit: HDRI Industrial Sunset (Pure Sky) oleh Sergej Majboroda dan Jarod Guest, Poly Haven (CC0).', en: 'Animations: Universal Animation Library by Quaternius (quaternius.com). Sky lighting: Industrial Sunset (Pure Sky) HDRI by Sergej Majboroda and Jarod Guest, Poly Haven (CC0).' },
   creditsFont: { id: 'Font: Inter (SIL OFL 1.1).', en: 'Font: Inter (SIL OFL 1.1).' },
 } as const satisfies Record<string, Record<Lang, string>>
 

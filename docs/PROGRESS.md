@@ -1,4 +1,4 @@
-RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 2026-10-30 06:12), next action: owner approves APPROVALS ids in chat and/or drops OWNER-ONLY files → run the ref/05 asset pipeline, close TEST-03 (final character, D-017), swap slice prefab art, shrink the stub keep list (D-044); then G3 in a new session
+RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 2026-10-30 06:12; addendum D-045..D-048), next action: owner pastes the first-party pixiv CC0 sentence (unlocks A5 AvatarSample_G/F) or drops O1/O2 → final character (D-017: textures ≤1024², recolour + accessory), close TEST-03, empty the stub keep list; then G3 in a new session
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -19,7 +19,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 |---|---|---|---|---|---|---|---|
 | TEST-01 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-01-load.log, evidence/G1/TEST-01-load.png | `node scripts/run-test.mjs 01 --slug load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts` | ec416ee | 2026-10-30 |
 | TEST-02 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-03 | G2 | BLOCKED(owner-asset-approval) | 0 | none: no final character yet (APPROVALS ids A1–A6 not approved in chat; OWNER-ONLY O1/O2 not in .cache/inbox) | — | ee1b8e7 | 2026-10-30 |
+| TEST-03 | G2 | BLOCKED(owner-asset-approval) | 0 | none: no final character yet. A1–A5 approved and downloaded (D-045); clips and IBL integrated (D-047); check-assets part: evidence/G2/TEST-03-check-assets.log. Waits for the owner: first-party pixiv CC0 text for A5, or O1/O2 drops | — | ee1b8e7 | 2026-10-30 |
 | TEST-04 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-04-move.log, evidence/G1/TEST-04-move.png | `node scripts/run-test.mjs 04 --slug move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts` | ec416ee | 2026-10-30 |
 | TEST-05 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | ec416ee | 2026-10-30 |
 | TEST-06 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-06-smoke.log, evidence/G1/TEST-06-physics.log, evidence/G1/TEST-06-smoke.png | `node scripts/run-test.mjs 06 --slug physics -- --timeout 120 ./vitexec/physics-jump.ts` ; `node scripts/run-test.mjs 06 --slug smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts` | ec416ee | 2026-10-30 |
@@ -71,14 +71,14 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## Placeholders still present
 | What | Where referenced | Expected in gate | Replacement |
 |---|---|---|---|
-| Mannequin (library default model, no url) | src/character/rig.ts MODEL_OPTIONS; stub keep list vite.config.ts GAP_SLOTS (D-044) | G0, G1; G2 gap (TEST-03) | Final character (D-017): O1 UBC + O2 Outfits, or A5 VRoid fallback |
-| Default animation clips (Idle/Walk/Run/JumpUp/JumpLoop/JumpDown) | src/character/rig.ts CLIPS; stub keep list (D-044) | G0, G1; G2 gap (TEST-03) | Split licensed clips (ref/05): A1/A2 UAL |
+| Mannequin (library default model, no url) | src/character/rig.ts MODEL_OPTIONS; stub keep list vite.config.ts GAP_SLOTS (D-044, D-047) | G0, G1; G2 gap (TEST-03) | Final character (D-017): O1 UBC + O2 Outfits, or A5 VRoid AvatarSample_G/F (downloaded; waits for the owner to paste the first-party pixiv CC0 text) |
+| ~~Default animation clips~~ replaced 2026-10-30 by UAL1 clips (A1, D-047) | — | — | done: public/assets/_build-only/animations/ual1/*.glb |
 | Procedural slice prefab visuals (coloured boxes, blade bands; `glb: null`) | level/prefabs.json, used by level/slice.json | G2 gap (no kit delivered) | Kenney kits O3–O8 (or A6 OGA mirrors) |
 | Flat-colour blockout boxes (G1 level) | src/level/blockout.ts, DEV-only `?level=g1-blockout` (D-042) | G1; kept as a DEV test level | none needed (not shipped as a level) |
 ## Blocked / needs owner
 - (none for G0, none for G1)
-- G2 gap TEST-03 BLOCKED(owner-asset-approval): no final character. Owner: approve in chat any of A1–A6 (asset-id, host, file pattern, size ±25 %), and/or drop O1/O2 (character), O3–O8 (kits), O9–O12 (audio) into `.cache/inbox/<slot>/` and reply "dropped <slot>". First action of the next gate.
-- G2 gap (same owner action): slice prefab art is procedural until a kit is delivered.
+- G2 gap TEST-03 BLOCKED(owner-asset-approval): no final character. A1–A5 approved and downloaded (D-045); clips and IBL integrated (D-047). Still needed from the owner, either: (a) paste the CC0 sentence from https://vroid.pixiv.help/hc/en-us/articles/4402614652569 (first-party page; agent access is refused as bot-check circumvention) to unlock A5 (AvatarSample_G 1.74 m or _F 1.71 m), or (b) drop O1 UBC + O2 Outfits into `.cache/inbox/<slot>/`. First action of the next step.
+- G2 gap: slice prefab art is procedural until a kit is delivered (O3–O8 are OWNER-ONLY drops; A6 OGA mirrors not approved).
 - Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
 - Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in chat (this session, or the kickoff of the session that closes the G2 gap); place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/.
 ## Gate reports

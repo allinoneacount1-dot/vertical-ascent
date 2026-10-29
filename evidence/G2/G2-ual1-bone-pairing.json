@@ -1,0 +1,323 @@
+{
+ "note": "UAL1 skin joints paired in order with the library mannequin skin joints (both 53); inRigMap = the pair appears in src/character/rig.ts UAL1_BONE_MAP",
+ "pairs": [
+  {
+   "index": 0,
+   "ual1": "root",
+   "mannequin": "root",
+   "inRigMap": false
+  },
+  {
+   "index": 1,
+   "ual1": "DEF-hips",
+   "mannequin": "hips",
+   "inRigMap": true
+  },
+  {
+   "index": 2,
+   "ual1": "DEF-spine001",
+   "mannequin": "spine",
+   "inRigMap": true
+  },
+  {
+   "index": 3,
+   "ual1": "DEF-spine002",
+   "mannequin": "chest",
+   "inRigMap": true
+  },
+  {
+   "index": 4,
+   "ual1": "DEF-spine003",
+   "mannequin": "upperChest",
+   "inRigMap": true
+  },
+  {
+   "index": 5,
+   "ual1": "DEF-neck",
+   "mannequin": "neck",
+   "inRigMap": true
+  },
+  {
+   "index": 6,
+   "ual1": "DEF-head",
+   "mannequin": "head",
+   "inRigMap": true
+  },
+  {
+   "index": 7,
+   "ual1": "DEF-shoulderL",
+   "mannequin": "leftShoulder",
+   "inRigMap": true
+  },
+  {
+   "index": 8,
+   "ual1": "DEF-upper_armL",
+   "mannequin": "leftUpperArm",
+   "inRigMap": true
+  },
+  {
+   "index": 9,
+   "ual1": "DEF-forearmL",
+   "mannequin": "leftLowerArm",
+   "inRigMap": true
+  },
+  {
+   "index": 10,
+   "ual1": "DEF-handL",
+   "mannequin": "leftHand",
+   "inRigMap": true
+  },
+  {
+   "index": 11,
+   "ual1": "DEF-f_index01L",
+   "mannequin": "leftIndexProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 12,
+   "ual1": "DEF-f_index02L",
+   "mannequin": "leftIndexIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 13,
+   "ual1": "DEF-f_index03L",
+   "mannequin": "leftIndexDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 14,
+   "ual1": "DEF-f_middle01L",
+   "mannequin": "leftMiddleProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 15,
+   "ual1": "DEF-f_middle02L",
+   "mannequin": "leftMiddleIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 16,
+   "ual1": "DEF-f_middle03L",
+   "mannequin": "leftMiddleDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 17,
+   "ual1": "DEF-f_pinky01L",
+   "mannequin": "leftLittleProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 18,
+   "ual1": "DEF-f_pinky02L",
+   "mannequin": "leftLittleIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 19,
+   "ual1": "DEF-f_pinky03L",
+   "mannequin": "leftLittleDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 20,
+   "ual1": "DEF-f_ring01L",
+   "mannequin": "leftRingProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 21,
+   "ual1": "DEF-f_ring02L",
+   "mannequin": "leftRingIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 22,
+   "ual1": "DEF-f_ring03L",
+   "mannequin": "leftRingDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 23,
+   "ual1": "DEF-thumb01L",
+   "mannequin": "leftThumbMetacarpal",
+   "inRigMap": true
+  },
+  {
+   "index": 24,
+   "ual1": "DEF-thumb02L",
+   "mannequin": "leftThumbProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 25,
+   "ual1": "DEF-thumb03L",
+   "mannequin": "leftThumbDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 26,
+   "ual1": "DEF-shoulderR",
+   "mannequin": "rightShoulder",
+   "inRigMap": true
+  },
+  {
+   "index": 27,
+   "ual1": "DEF-upper_armR",
+   "mannequin": "rightUpperArm",
+   "inRigMap": true
+  },
+  {
+   "index": 28,
+   "ual1": "DEF-forearmR",
+   "mannequin": "rightLowerArm",
+   "inRigMap": true
+  },
+  {
+   "index": 29,
+   "ual1": "DEF-handR",
+   "mannequin": "rightHand",
+   "inRigMap": true
+  },
+  {
+   "index": 30,
+   "ual1": "DEF-f_index01R",
+   "mannequin": "rightIndexProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 31,
+   "ual1": "DEF-f_index02R",
+   "mannequin": "rightIndexIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 32,
+   "ual1": "DEF-f_index03R",
+   "mannequin": "rightIndexDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 33,
+   "ual1": "DEF-f_middle01R",
+   "mannequin": "rightMiddleProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 34,
+   "ual1": "DEF-f_middle02R",
+   "mannequin": "rightMiddleIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 35,
+   "ual1": "DEF-f_middle03R",
+   "mannequin": "rightMiddleDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 36,
+   "ual1": "DEF-f_pinky01R",
+   "mannequin": "rightLittleProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 37,
+   "ual1": "DEF-f_pinky02R",
+   "mannequin": "rightLittleIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 38,
+   "ual1": "DEF-f_pinky03R",
+   "mannequin": "rightLittleDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 39,
+   "ual1": "DEF-f_ring01R",
+   "mannequin": "rightRingProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 40,
+   "ual1": "DEF-f_ring02R",
+   "mannequin": "rightRingIntermediate",
+   "inRigMap": true
+  },
+  {
+   "index": 41,
+   "ual1": "DEF-f_ring03R",
+   "mannequin": "rightRingDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 42,
+   "ual1": "DEF-thumb01R",
+   "mannequin": "rightThumbMetacarpal",
+   "inRigMap": true
+  },
+  {
+   "index": 43,
+   "ual1": "DEF-thumb02R",
+   "mannequin": "rightThumbProximal",
+   "inRigMap": true
+  },
+  {
+   "index": 44,
+   "ual1": "DEF-thumb03R",
+   "mannequin": "rightThumbDistal",
+   "inRigMap": true
+  },
+  {
+   "index": 45,
+   "ual1": "DEF-thighL",
+   "mannequin": "leftUpperLeg",
+   "inRigMap": true
+  },
+  {
+   "index": 46,
+   "ual1": "DEF-shinL",
+   "mannequin": "leftLowerLeg",
+   "inRigMap": true
+  },
+  {
+   "index": 47,
+   "ual1": "DEF-footL",
+   "mannequin": "leftFoot",
+   "inRigMap": true
+  },
+  {
+   "index": 48,
+   "ual1": "DEF-toeL",
+   "mannequin": "leftToes",
+   "inRigMap": true
+  },
+  {
+   "index": 49,
+   "ual1": "DEF-thighR",
+   "mannequin": "rightUpperLeg",
+   "inRigMap": true
+  },
+  {
+   "index": 50,
+   "ual1": "DEF-shinR",
+   "mannequin": "rightLowerLeg",
+   "inRigMap": true
+  },
+  {
+   "index": 51,
+   "ual1": "DEF-footR",
+   "mannequin": "rightFoot",
+   "inRigMap": true
+  },
+  {
+   "index": 52,
+   "ual1": "DEF-toeR",
+   "mannequin": "rightToes",
+   "inRigMap": true
+  }
+ ]
+}

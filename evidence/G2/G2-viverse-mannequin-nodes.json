@@ -1,0 +1,595 @@
+{
+  "file": ".cache/extract/viverse-defaults/mannequin.glb",
+  "generator": "glTF-Transform v4.2.0",
+  "extensionsUsed": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ],
+  "nodes": [
+    {
+      "i": 0,
+      "name": "head",
+      "sanitized": "head",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 1,
+      "name": "neck",
+      "sanitized": "neck",
+      "children": [
+        0
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 2,
+      "name": "leftIndexDistal",
+      "sanitized": "leftIndexDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 3,
+      "name": "leftIndexIntermediate",
+      "sanitized": "leftIndexIntermediate",
+      "children": [
+        2
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 4,
+      "name": "leftIndexProximal",
+      "sanitized": "leftIndexProximal",
+      "children": [
+        3
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 5,
+      "name": "leftMiddleDistal",
+      "sanitized": "leftMiddleDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 6,
+      "name": "leftMiddleIntermediate",
+      "sanitized": "leftMiddleIntermediate",
+      "children": [
+        5
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 7,
+      "name": "leftMiddleProximal",
+      "sanitized": "leftMiddleProximal",
+      "children": [
+        6
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 8,
+      "name": "leftLittleDistal",
+      "sanitized": "leftLittleDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 9,
+      "name": "leftLittleIntermediate",
+      "sanitized": "leftLittleIntermediate",
+      "children": [
+        8
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 10,
+      "name": "leftLittleProximal",
+      "sanitized": "leftLittleProximal",
+      "children": [
+        9
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 11,
+      "name": "leftRingDistal",
+      "sanitized": "leftRingDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 12,
+      "name": "leftRingIntermediate",
+      "sanitized": "leftRingIntermediate",
+      "children": [
+        11
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 13,
+      "name": "leftRingProximal",
+      "sanitized": "leftRingProximal",
+      "children": [
+        12
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 14,
+      "name": "leftThumbDistal",
+      "sanitized": "leftThumbDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 15,
+      "name": "leftThumbProximal",
+      "sanitized": "leftThumbProximal",
+      "children": [
+        14
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 16,
+      "name": "leftThumbMetacarpal",
+      "sanitized": "leftThumbMetacarpal",
+      "children": [
+        15
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 17,
+      "name": "leftHand",
+      "sanitized": "leftHand",
+      "children": [
+        4,
+        7,
+        10,
+        13,
+        16
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 18,
+      "name": "leftLowerArm",
+      "sanitized": "leftLowerArm",
+      "children": [
+        17
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 19,
+      "name": "leftUpperArm",
+      "sanitized": "leftUpperArm",
+      "children": [
+        18
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 20,
+      "name": "leftShoulder",
+      "sanitized": "leftShoulder",
+      "children": [
+        19
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 21,
+      "name": "rightIndexDistal",
+      "sanitized": "rightIndexDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 22,
+      "name": "rightIndexIntermediate",
+      "sanitized": "rightIndexIntermediate",
+      "children": [
+        21
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 23,
+      "name": "rightIndexProximal",
+      "sanitized": "rightIndexProximal",
+      "children": [
+        22
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 24,
+      "name": "rightMiddleDistal",
+      "sanitized": "rightMiddleDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 25,
+      "name": "rightMiddleIntermediate",
+      "sanitized": "rightMiddleIntermediate",
+      "children": [
+        24
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 26,
+      "name": "rightMiddleProximal",
+      "sanitized": "rightMiddleProximal",
+      "children": [
+        25
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 27,
+      "name": "rightLittleDistal",
+      "sanitized": "rightLittleDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 28,
+      "name": "rightLittleIntermediate",
+      "sanitized": "rightLittleIntermediate",
+      "children": [
+        27
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 29,
+      "name": "rightLittleProximal",
+      "sanitized": "rightLittleProximal",
+      "children": [
+        28
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 30,
+      "name": "rightRingDistal",
+      "sanitized": "rightRingDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 31,
+      "name": "rightRingIntermediate",
+      "sanitized": "rightRingIntermediate",
+      "children": [
+        30
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 32,
+      "name": "rightRingProximal",
+      "sanitized": "rightRingProximal",
+      "children": [
+        31
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 33,
+      "name": "rightThumbDistal",
+      "sanitized": "rightThumbDistal",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 34,
+      "name": "rightThumbProximal",
+      "sanitized": "rightThumbProximal",
+      "children": [
+        33
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 35,
+      "name": "rightThumbMetacarpal",
+      "sanitized": "rightThumbMetacarpal",
+      "children": [
+        34
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 36,
+      "name": "rightHand",
+      "sanitized": "rightHand",
+      "children": [
+        23,
+        26,
+        29,
+        32,
+        35
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 37,
+      "name": "rightLowerArm",
+      "sanitized": "rightLowerArm",
+      "children": [
+        36
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 38,
+      "name": "rightUpperArm",
+      "sanitized": "rightUpperArm",
+      "children": [
+        37
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 39,
+      "name": "rightShoulder",
+      "sanitized": "rightShoulder",
+      "children": [
+        38
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 40,
+      "name": "upperChest",
+      "sanitized": "upperChest",
+      "children": [
+        1,
+        20,
+        39
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 41,
+      "name": "chest",
+      "sanitized": "chest",
+      "children": [
+        40
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 42,
+      "name": "spine",
+      "sanitized": "spine",
+      "children": [
+        41
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 43,
+      "name": "leftToes",
+      "sanitized": "leftToes",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 44,
+      "name": "leftFoot",
+      "sanitized": "leftFoot",
+      "children": [
+        43
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 45,
+      "name": "leftLowerLeg",
+      "sanitized": "leftLowerLeg",
+      "children": [
+        44
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 46,
+      "name": "leftUpperLeg",
+      "sanitized": "leftUpperLeg",
+      "children": [
+        45
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 47,
+      "name": "rightToes",
+      "sanitized": "rightToes",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 48,
+      "name": "rightFoot",
+      "sanitized": "rightFoot",
+      "children": [
+        47
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 49,
+      "name": "rightLowerLeg",
+      "sanitized": "rightLowerLeg",
+      "children": [
+        48
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 50,
+      "name": "rightUpperLeg",
+      "sanitized": "rightUpperLeg",
+      "children": [
+        49
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 51,
+      "name": "hips",
+      "sanitized": "hips",
+      "children": [
+        42,
+        46,
+        50
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 52,
+      "name": "root",
+      "sanitized": "root",
+      "children": [
+        51
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 53,
+      "name": "Mannequin",
+      "sanitized": "Mannequin",
+      "children": [],
+      "mesh": 0,
+      "skin": 0
+    }
+  ],
+  "skins": [
+    {
+      "name": "Rig",
+      "joints": [
+        "root",
+        "hips",
+        "spine",
+        "chest",
+        "upperChest",
+        "neck",
+        "head",
+        "leftShoulder",
+        "leftUpperArm",
+        "leftLowerArm",
+        "leftHand",
+        "leftIndexProximal",
+        "leftIndexIntermediate",
+        "leftIndexDistal",
+        "leftMiddleProximal",
+        "leftMiddleIntermediate",
+        "leftMiddleDistal",
+        "leftLittleProximal",
+        "leftLittleIntermediate",
+        "leftLittleDistal",
+        "leftRingProximal",
+        "leftRingIntermediate",
+        "leftRingDistal",
+        "leftThumbMetacarpal",
+        "leftThumbProximal",
+        "leftThumbDistal",
+        "rightShoulder",
+        "rightUpperArm",
+        "rightLowerArm",
+        "rightHand",
+        "rightIndexProximal",
+        "rightIndexIntermediate",
+        "rightIndexDistal",
+        "rightMiddleProximal",
+        "rightMiddleIntermediate",
+        "rightMiddleDistal",
+        "rightLittleProximal",
+        "rightLittleIntermediate",
+        "rightLittleDistal",
+        "rightRingProximal",
+        "rightRingIntermediate",
+        "rightRingDistal",
+        "rightThumbMetacarpal",
+        "rightThumbProximal",
+        "rightThumbDistal",
+        "leftUpperLeg",
+        "leftLowerLeg",
+        "leftFoot",
+        "leftToes",
+        "rightUpperLeg",
+        "rightLowerLeg",
+        "rightFoot",
+        "rightToes"
+      ]
+    }
+  ],
+  "animations": []
+}

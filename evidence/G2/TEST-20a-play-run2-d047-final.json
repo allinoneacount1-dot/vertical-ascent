@@ -1,0 +1,18 @@
+{
+  "state": "VICTORY",
+  "pos": [
+    3.561,
+    8.8,
+    -7.881
+  ],
+  "run": {
+    "timerMs": 39573,
+    "heightM": 8,
+    "highestM": 8,
+    "killPlaneRespawns": 0,
+    "bigFalls": 0,
+    "metersLost": 0,
+    "focusUsed": false,
+    "started": true
+  }
+}

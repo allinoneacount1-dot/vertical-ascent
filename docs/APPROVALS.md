@@ -1,4 +1,4 @@
-| "Setujui A1–A5" | 2026-10-30 06:15 | session 1, G2 gap closure || "Setujui A1–A5" | 2026-10-30 06:15 | session 1, G2 gap closure || "Setujui A1–A5" | 2026-10-30 06:15 | session 1, G2 gap closure || "Setujui A1–A5" | 2026-10-30 06:15 | session 1, G2 gap closure || "Setujui A1–A5" | 2026-10-30 06:15 | session 1, G2 gap closure |# APPROVALS — records only; approval comes from the owner's chat message in the current session
+# APPROVALS — records only; approval comes from the owner's chat message in the current session
 
 ## Session 1 (G0) — package and source approvals
 

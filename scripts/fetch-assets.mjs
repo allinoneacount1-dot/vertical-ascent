@@ -42,4 +42,6 @@ mkdirSync(dir, { recursive: true })
 const file = join(dir, name)
 writeFileSync(file, data)
 const sha256 = createHash('sha256').update(data).digest('hex')
-console.log(JSON.stringify({ id, url, finalUrl: res.url, file: file.split('\\').join('/'), bytes: data.length, sha256, obtainedOn: new Date().toISOString().slice(0, 10) }))
+const now = new Date()
+const local = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}` // manifest obtained_on is the local date
+console.log(JSON.stringify({ id, url, finalUrl: res.url, file: file.split('\\').join('/'), bytes: data.length, sha256, obtainedOn: local, obtainedAt: now.toISOString() }))

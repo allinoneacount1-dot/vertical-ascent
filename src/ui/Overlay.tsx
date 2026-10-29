@@ -92,6 +92,7 @@ function CreditsPanel() {
       <h2>{t('credits')}</h2>
       <ul className="list">
         <li>{t('creditsLibs')}</li>
+        <li>{t('creditsAssets')}</li>
         <li>{t('creditsPlaceholders')}</li>
         <li>{t('creditsFont')}</li>
       </ul>
