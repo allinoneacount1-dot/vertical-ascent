@@ -27,6 +27,9 @@ function snapshotGame() {
   for (const [id, p] of game.motion.platforms) platforms[id] = { phase: r3(p.phase) }
   const info = renderer?.info
   return {
+    level: game.level.id,
+    inFinish: game.inFinish,
+    records: { ...game.records },
     ready: ui.snapshot.state !== 'LOADING',
     worldReady: ui.worldReady,
     state: ui.snapshot.state,

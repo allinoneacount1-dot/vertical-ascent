@@ -11,13 +11,14 @@ run 31 framerate -- --timeout 120 ./vitexec/physics-framerate.ts
 run 11a platforms -- --timeout 150 ./vitexec/physics-platforms.ts
 run 06 physics -- --timeout 120 ./vitexec/physics-jump.ts
 run 08 physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts
-run 01 load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts
-run 04 move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts
-for m in toggle hold always; do run 05 sprint-$m -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-$m.png ./vitexec/smoke-sprint-$m.ts; done
-run 06 smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts
-run 08 smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts
-run 09 camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts
-run 14a pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts
-run 28a visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts
-run 32 frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts
+run 01 load -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts
+run 04 move -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts
+for m in toggle hold always; do run 05 sprint-$m -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-$m.png ./vitexec/smoke-sprint-$m.ts; done
+run 06 smoke -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts
+run 08 smoke-hold -- --path ?level=g1-blockout --timeout 120 ./vitexec/smoke-hold-jump.ts
+run 09 camera -- --path ?level=g1-blockout --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts
+run 14a pause -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts
+run 28a visibility -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts
+run 10 camera-walls -- --path ?level=g1-blockout --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts
+run 32 frame-order -- --path ?level=g1-blockout --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts
 echo "SUITE DONE"
