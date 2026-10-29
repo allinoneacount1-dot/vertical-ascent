@@ -23,7 +23,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-04 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-05 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-06 | G1 | NOT-STARTED | 0 | | | | |
-| TEST-07 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-07 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | f7f00d4 | 2026-10-29 |
 | TEST-07b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-08 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-09 | G1 | NOT-STARTED | 0 | | | | |
