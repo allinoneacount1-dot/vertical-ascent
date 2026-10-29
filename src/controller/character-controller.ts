@@ -64,6 +64,7 @@ export class CharacterController {
   /** Seconds since the last landing (animation landing window). */
   sinceLanding = Number.POSITIVE_INFINITY
   private fallingFor = 0
+  private lastTakeoffAt = Number.NEGATIVE_INFINITY
   private airborneTopY = 0
   private lastVy = 0
 
@@ -97,6 +98,7 @@ export class CharacterController {
     this.airborne = false
     this.bigFall = false
     this.fallingFor = 0
+    this.lastTakeoffAt = Number.NEGATIVE_INFINITY
     this.facingYaw = facingYaw
     this.sinceLanding = Number.POSITIVE_INFINITY
   }
@@ -118,6 +120,7 @@ export class CharacterController {
         this.port.jump(LOCOMOTION.jumpSpeed)
         if (ground != null) this.port.impulse(ground.linearVelocity, IMPULSE_CAP)
         this.groundBody = null
+        this.lastTakeoffAt = this.simTime
         this.events.onTakeoff?.(this.simTime)
       }
       this.port.step(sliceDt)
@@ -132,8 +135,10 @@ export class CharacterController {
   private carry(): KinematicPlatform | null {
     const feet = this.port.position
     const ground = probeGroundPlatform(this.motion, feet, this.port.settings.capsuleRadius)
-    // Rising clearly faster than the platform = just jumped off it: not carried.
-    if (ground == null || this.port.velocity.y > ground.linearVelocity.y + 1) {
+    // Just jumped off it (takeoff within the re-jump window and rising clearly faster than the platform): not
+    // carried. Without the takeoff condition an idle player on a descending platform (vy -0.2 vs -2) was never carried.
+    const justJumped = this.simTime - this.lastTakeoffAt < LOCOMOTION.rejumpS
+    if (ground == null || (justJumped && this.port.velocity.y > ground.linearVelocity.y + 1)) {
       this.groundBody = null
       return null
     }
