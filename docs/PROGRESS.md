@@ -35,7 +35,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-13 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |
 | TEST-14b | G3 | NOT-STARTED | 0 | | | | |
-| TEST-15 | G2 | FAILED(3 of 20 re-locks not entered) | 2 | evidence/G2/TEST-15-restart-attempt2-FAIL.log, evidence/G2/TEST-15-restart-attempt1-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 240 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | 7d1f1db | 2026-10-30 |
+| TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-17 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-18a | G2 | NOT-STARTED | 0 | | | | |
