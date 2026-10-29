@@ -26,7 +26,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-07 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | 76bd3ff | 2026-10-30 |
 | TEST-07b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-08 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-08-smoke-hold.log, evidence/G1/TEST-08-physics.log | `node scripts/run-test.mjs 08 --slug physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts` ; `node scripts/run-test.mjs 08 --slug smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts` | 75fcb28 | 2026-10-30 |
-| TEST-09 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-09 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-09-camera.log, evidence/G1/TEST-09-camera.png | `node scripts/run-test.mjs 09 --slug camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts` | 9b27e45 | 2026-10-30 |
 | TEST-10 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-11a | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | 7b067d6 | 2026-10-30 |
 | TEST-11b | G2 | NOT-STARTED | 0 | | | | |
