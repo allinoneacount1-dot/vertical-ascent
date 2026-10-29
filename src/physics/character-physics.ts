@@ -1,4 +1,4 @@
-// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); drops sub-nanosecond substep remainders and reports isGroundedRaw over the whole step (D-036); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
+// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); drops sub-nanosecond substep remainders and reports isGroundedRaw over the whole step (D-036); writes back the landing substep (D-037); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
 //
 // The only module that writes character position and velocity (ref/02 Pemilik besaran).
 import { Box3, Line3, Matrix4, Object3D, Vector3 } from 'three'
@@ -63,6 +63,8 @@ export class CharacterPhysics {
   private notGroundedSeconds = 0
   private groundedRaw = false
   private carryPending = false
+  /** Ground contact of the most recent substep (landing detection for the write-back, D-037). */
+  private prevSubstepGrounded = false
 
   private readonly segment = new Line3()
   private readonly aabbox = new Box3()
@@ -107,6 +109,7 @@ export class CharacterPhysics {
     this.stateVelocity.y = speed
     this.notGroundedSeconds = Math.max(this.notGroundedSeconds, this.options.coyoteTime)
     this.groundedRaw = false
+    this.prevSubstepGrounded = false
   }
 
   /** Adds an inherited platform velocity, each axis capped to ±capPerAxis (ref/04 Carry 5). */
@@ -131,6 +134,7 @@ export class CharacterPhysics {
     this.resetVelocity()
     this.notGroundedSeconds = 0
     this.groundedRaw = false
+    this.prevSubstepGrounded = false
   }
 
   /** Moves the feet by a world-space rigid transform delta (platform carry); forces write-back on the next update(). */
@@ -182,15 +186,19 @@ export class CharacterPhysics {
       }
       // Library: write back only when airborne or moving (prevents creeping on slopes while idle).
       // Vendored: also when this step carries the character or the capsule is near a kinematic body,
-      // otherwise an idle player is neither carried nor pushed out (physics/index.ts:111-113, D-012).
+      // otherwise an idle player is neither carried nor pushed out (physics/index.ts:111-113, D-012);
+      // and on the landing substep (previous substep airborne), otherwise the landing correction is dropped and
+      // the player hovers one substep of fall travel above the ground, then falls again (D-037).
       if (
         !isGrounded ||
+        !this.prevSubstepGrounded ||
         this.inputVelocity.lengthSq() > 0 ||
         forceWriteBack ||
         this.nearKinematic(capsuleBox(collisionFreePosition, options, nearBox))
       ) {
         model.position.copy(collisionFreePosition).applyMatrix4(invertedParentMatrix)
       }
+      this.prevSubstepGrounded = isGrounded
       //compute new velocity
       //  apply gravity
       this.stateVelocity.y += options.gravity * partialDelta
