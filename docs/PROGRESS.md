@@ -33,7 +33,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-12a | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12b | G4 | NOT-STARTED | 0 | | | | |
 | TEST-13 | G2 | NOT-STARTED | 0 | | | | |
-| TEST-14a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-14a | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | 8da8e4a | 2026-10-30 |
 | TEST-14b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-15 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
