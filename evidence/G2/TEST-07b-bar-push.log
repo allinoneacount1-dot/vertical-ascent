@@ -1,0 +1,9 @@
+# run-test TEST-07b slug=bar-push gate=G2 commit=27ef10e started=2026-10-29T22:53:48.824Z
+# command: pnpm exec vitexec --timeout 240 ./vitexec/physics-bar-push.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] TEST-07b PASS {"bar":{"size":[0.5,0.5,6],"y":0.9,"speed":8},"runs":[{"dt":0.016666666666666666,"walking":false,"passes":56,"contactS":60.233,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.016666666666666666,"walking":true,"passes":40,"contactS":61.033,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0}],"control":{"dt":0.016666666666666666,"walking":false,"passes":28,"contactS":5.133,"maxPenetrationM":0.4,"maxPenetrationAfterPushS":0.4,"maxPushOutS":0,"tunnels":1542,"nonFinite":0},"controlDetected":true}
+# exit=0 flagged=0 seconds=6.3 result=PASS
+# log: evidence/G2/TEST-07b-bar-push.log

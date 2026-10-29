@@ -24,7 +24,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-05 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | ec416ee | 2026-10-30 |
 | TEST-06 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-06-smoke.log, evidence/G1/TEST-06-physics.log, evidence/G1/TEST-06-smoke.png | `node scripts/run-test.mjs 06 --slug physics -- --timeout 120 ./vitexec/physics-jump.ts` ; `node scripts/run-test.mjs 06 --slug smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts` | ec416ee | 2026-10-30 |
 | TEST-07 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | ec416ee | 2026-10-30 |
-| TEST-07b | G2 | NOT-STARTED | 0 | | | | |
+| TEST-07b | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-07b-bar-push.log | `node scripts/run-test.mjs 07b --slug bar-push -- --timeout 240 ./vitexec/physics-bar-push.ts` | 27ef10e | 2026-10-30 |
 | TEST-08 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-08-smoke-hold.log, evidence/G1/TEST-08-physics.log | `node scripts/run-test.mjs 08 --slug physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts` ; `node scripts/run-test.mjs 08 --slug smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts` | ec416ee | 2026-10-30 |
 | TEST-09 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-09-camera.log, evidence/G1/TEST-09-camera.png | `node scripts/run-test.mjs 09 --slug camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts` | ec416ee | 2026-10-30 |
 | TEST-10 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-10-camera-walls.log, evidence/G1/TEST-10-camera-walls.png, evidence/G1/TEST-10-camera-walls-attempt1-FAIL.log, evidence/G1/TEST-10-camera-walls-attempt2-FAIL.log | `node scripts/run-test.mjs 10 --slug camera-walls -- --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts` | 74469ea | 2026-10-30 |
@@ -60,7 +60,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-32 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | ec416ee | 2026-10-30 |
 | TEST-33 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-34 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | ec416ee | 2026-10-30 |
-| TEST-34b | G2 | NOT-STARTED | 0 | | | | |
+| TEST-34b | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-34b-bar-tunnel.log | `node scripts/run-test.mjs 34b --slug bar-tunnel -- --timeout 240 ./vitexec/physics-bar-tunnel.ts` | 27ef10e | 2026-10-30 |
 | TEST-35a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-35a-state.log | `node scripts/run-test.mjs 35a --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ec416ee | 2026-10-30 |
 | TEST-35b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-36 | G3 | NOT-STARTED | 0 | | | | |

@@ -1,0 +1,9 @@
+# run-test TEST-34b slug=bar-tunnel gate=G2 commit=27ef10e started=2026-10-29T22:54:03.145Z
+# command: pnpm exec vitexec --timeout 240 ./vitexec/physics-bar-tunnel.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] TEST-34b PASS {"bar":{"size":[0.5,0.5,6],"y":0.9,"speed":8},"tunnels":0,"runs":[{"dt":0.016666666666666666,"walking":false,"passes":14,"contactS":15.433,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.016666666666666666,"walking":true,"passes":10,"contactS":15.533,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.05,"walking":false,"passes":14,"contactS":15.9,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.05,"walking":true,"passes":10,"contactS":15.9,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.1,"walking":false,"passes":14,"contactS":15.9,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0},{"dt":0.1,"walking":true,"passes":10,"contactS":15.4,"maxPenetrationM":0,"maxPenetrationAfterPushS":0,"maxPushOutS":0,"tunnels":0,"nonFinite":0}]}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+# exit=0 flagged=0 seconds=4.9 result=PASS
+# log: evidence/G2/TEST-34b-bar-tunnel.log
