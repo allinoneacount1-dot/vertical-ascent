@@ -1,4 +1,4 @@
-RESUME HERE: G2 IN-PROGRESS (started 2026-10-30 05:36 in the planning session, D-041), next action: asset-free G2 work; asset ids not yet approved
+RESUME HERE: G2 IN-PROGRESS (D-041), next action: TEST-15 restarts, TEST-13 HUD/timer rules, TEST-18a HAR, stub plugin + asset scripts; TEST-03 waits for approved asset ids; TEST-11b N/A(D-012)
 
 # PROGRESS — Vertical Ascent
 ## Environment
