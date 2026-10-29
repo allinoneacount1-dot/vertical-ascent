@@ -1,0 +1,11 @@
+G0 step 10 preview check, 2026-10-30.
+Source: built-in browser pane, tab at http://localhost:5179/ (title "Vertical Ascent", canvas present).
+Server: `npm run dev -- --port 5179 --strictPort` via Bash background (preview_start by name resolved D:\CLAUDE\.claude\launch.json, see D-027). Vite v8.3.5.
+read_console_messages (all levels, after 4 s):
+[debug] [vite] connecting...
+[debug] [vite] connected.
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warn] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+Errors: 0. The setPointerCapture InvalidStateError noted in DIRECTIVE §4 step 9 did not appear.
+Pane screenshot is for eyes only and is not evidence (DIRECTIVE §6).

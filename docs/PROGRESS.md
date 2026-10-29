@@ -1,0 +1,82 @@
+RESUME HERE: G1, next action: wait for the owner's G1 kickoff in a fresh session opened in D:\CLAUDE\vertical-ascent, then DIRECTIVE §5 G1 step 1 (ref/04 §Bacaan per gate, G1)
+
+# PROGRESS — Vertical Ascent
+## Environment
+node: v24.14.1 | pnpm: 11.22.0 | git: 2.55.0.windows.3 | renderer (vitexec default): ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11) | renderer (--force_low_power_gpu): ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11) | preview pane renderer: ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11) | upstream HEAD: b88c0e734ae87c9c6a1b3a8d0b84064f4b4fa3ef | date: 2026-10-30
+## Stack (resolved, from pnpm why)
+three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 | @react-three/viverse: 0.2.29 | @pmndrs/viverse: 0.2.29 | @react-three/timeline: 0.3.9 | @pmndrs/timeline: 0.3.9 | react: 19.3.1 | vite: 8.3.5 | typescript: 7.0.2 | vitexec: 0.9.0 | playwright: 1.63.0-beta-1788477194000
+## Gates
+| Gate | Status | Started | Finished | Commit | Compactions | Evidence |
+|---|---|---|---|---|---|---|
+| G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:27 | (see G0 report) | 1 | evidence/G0 |
+| G1 Foundation | NOT-STARTED | | | | | evidence/G1 |
+| G2 Vertical slice | NOT-STARTED | | | | | evidence/G2 |
+| G3 Full world | NOT-STARTED | | | | | evidence/G3 |
+| G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
+| G5 Delivery | NOT-STARTED | | | | | evidence/G5 |
+## TESTs (one row per ID in DIRECTIVE §7, incl. 07b 11a 11b 12a 12b 14a 14b 18a 18b 19a 19b 20a 20b 23b 28a 28b 34b 35a 35b)
+| ID | Gate | Status | Attempts | Artifact | Command | Commit | Date |
+|---|---|---|---|---|---|---|---|
+| TEST-01 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-02 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-03 | G2 | NOT-STARTED | 0 | | | | |
+| TEST-04 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-05 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-06 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-07 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-07b | G2 | NOT-STARTED | 0 | | | | |
+| TEST-08 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-09 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-10 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-11a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-11b | G2 | NOT-STARTED | 0 | | | | |
+| TEST-12a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-12b | G4 | NOT-STARTED | 0 | | | | |
+| TEST-13 | G2 | NOT-STARTED | 0 | | | | |
+| TEST-14a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-14b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-15 | G2 | NOT-STARTED | 0 | | | | |
+| TEST-16 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-17 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-18a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-18b | G5 | NOT-STARTED | 0 | | | | |
+| TEST-19a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-19b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-20a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-20b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-21 | G5 | NOT-STARTED | 0 | | | | |
+| TEST-22 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-23 | G5 | NOT-STARTED | 0 | | | | |
+| TEST-23b | G5 | NOT-STARTED | 0 | | | | |
+| TEST-24 | G4, G5 | NOT-STARTED | 0 | | | | |
+| TEST-25 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-26 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-27 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-28a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-28b | G1 | NOT-STARTED | 0 | | | | |
+| TEST-29 | G2 | NOT-STARTED | 0 | | | | |
+| TEST-30 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-31 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-32 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-33 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-34 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-34b | G2 | NOT-STARTED | 0 | | | | |
+| TEST-35a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-35b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-36 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-37 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-38 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-39 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-40 | G3 | NOT-STARTED | 0 | | | | |
+## Placeholders still present
+| What | Where referenced | Expected in gate | Replacement |
+|---|---|---|---|
+| Smoke scene with `<SimpleCharacter>` | src/App.tsx | G0 | Hybrid controller (D-001), G1 |
+| Mannequin (library default model) | `<SimpleCharacter>` default in src/App.tsx | G0, G1 | Final character (D-017), G2 |
+| Default animation clips | `<SimpleCharacter>` defaults in src/App.tsx | G0, G1 | Split licensed clips (ref/05), G2 |
+| `PrototypeBox` texture | src/App.tsx | G0, G1 | Level art (ref/05), G2 |
+## Blocked / needs owner
+- (none for G0)
+- Owner actions due at the end of G0 (OWNER_RUNBOOK "Tindakan owner per gate"): answer Q1–Q11 or accept the defaults; review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
+## Gate reports
+(append DIRECTIVE §5.7 blocks here)

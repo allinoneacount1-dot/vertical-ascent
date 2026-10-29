@@ -1,0 +1,22 @@
+@pmndrs/timeline@0.3.9
+├─┬ @pmndrs/viverse@0.2.29
+│ ├─┬ @react-three/viverse@0.2.29
+│ │ └── vertical-ascent@0.0.0 (dependencies)
+│ └── vertical-ascent@0.0.0 (dependencies)
+└─┬ @react-three/timeline@0.3.9
+  ├── @react-three/viverse@0.2.29 [deduped]
+  └── vertical-ascent@0.0.0 (dependencies)
+
+@pmndrs/viverse@0.2.29
+├─┬ @react-three/viverse@0.2.29
+│ └── vertical-ascent@0.0.0 (dependencies)
+└── vertical-ascent@0.0.0 (dependencies)
+
+@react-three/timeline@0.3.9
+├─┬ @react-three/viverse@0.2.29
+│ └── vertical-ascent@0.0.0 (dependencies)
+└── vertical-ascent@0.0.0 (dependencies)
+
+Found 1 version of @pmndrs/timeline
+Found 1 version of @pmndrs/viverse
+Found 1 version of @react-three/timeline

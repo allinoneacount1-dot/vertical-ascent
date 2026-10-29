@@ -1,0 +1,2 @@
+public/favicon.svg: binary: unspecified
+evidence/G0/00-first-run.png: binary: set
