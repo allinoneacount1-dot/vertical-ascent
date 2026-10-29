@@ -30,6 +30,9 @@ export const CAMERA = Object.freeze({
 })
 
 const pivotOffset = new Vector3()
+const sideRay = new Ray()
+/** Minimum free space kept between the shifted pivot and any blocker (whisker 0.25 m + 0.1 m). */
+const SIDE_MARGIN = 0.35
 const right = new Vector3()
 const up = new Vector3()
 const whiskerRay = new Ray()
@@ -150,9 +153,13 @@ export class CameraRig {
       if (r.t >= 1) this.recentre = null
     }
 
-    // below -50° pitch the pivot shifts 0.6 m sideways (eased so the view does not jump)
-    const sideTarget = this.behavior.rotationPitch < CAMERA.steepPitch ? CAMERA.steepSideShift : 0
-    this.side += (sideTarget - this.side) * (1 - Math.exp(-dt / 0.15))
+    // below -50° pitch the pivot shifts 0.6 m sideways (eased so the view does not jump), but never closer than
+    // SIDE_MARGIN to a blocker in any horizontal direction: a pivot inside a wall makes the collision ray start inside
+    // the closed hull, miss its near faces and leave the camera in the wall (TEST-10 attempt 2, D-039)
+    const sideWanted = this.behavior.rotationPitch < CAMERA.steepPitch ? CAMERA.steepSideShift : 0
+    const sideAllowed = Math.max(0, Math.min(sideWanted, this.sideClearance(target) - SIDE_MARGIN))
+    if (sideAllowed < this.side) this.side = sideAllowed // snap in, like the collision distance
+    else this.side += (sideAllowed - this.side) * (1 - Math.exp(-dt / 0.15))
     pivotOffset.set(this.side, CAMERA.pivotHeight, 0)
 
     if (performance.now() < this.suppressUntil) this.dropRotationInput()
@@ -192,6 +199,26 @@ export class CameraRig {
       this.smoothed += (target - this.smoothed) * (1 - Math.exp(-this.frameDt / CAMERA.easeOutTau))
     }
     return Math.max(this.smoothed, CAMERA.minReturn)
+  }
+
+  /** Shortest horizontal free distance from the base pivot (feet + pivotHeight) over 8 directions, capped. */
+  private sideClearance(target: Object3D): number {
+    target.getWorldPosition(sideRay.origin)
+    sideRay.origin.y += CAMERA.pivotHeight
+    const reach = CAMERA.steepSideShift + SIDE_MARGIN + 0.05
+    let shortest = reach
+    for (let k = 0; k < 8; k++) {
+      const a = (k * Math.PI) / 4
+      sideRay.direction.set(Math.cos(a), 0, Math.sin(a))
+      const hit = this.world.raycast(sideRay, reach)
+      if (hit != null && hit.distance < shortest) shortest = hit.distance
+    }
+    return shortest
+  }
+
+  /** Current sideways pivot shift (m), for tests and __game. */
+  get sideShift(): number {
+    return this.side
   }
 
   dispose(): void {
