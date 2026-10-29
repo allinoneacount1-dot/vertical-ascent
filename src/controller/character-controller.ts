@@ -25,7 +25,8 @@ export const IMPULSE_CAP = 8
 export type ControllerEvents = {
   /** Platform yaw carried this slice (rad); the camera adds it to its yaw (ref/04 §Carry 4). */
   onCarryYaw?: (dYaw: number) => void
-  onTakeoff?: (simTime: number) => void
+  /** kind 'air' = the double jump (D-038). */
+  onTakeoff?: (simTime: number, kind: 'ground' | 'air') => void
   /** Landed after being airborne; fallMeters = highest airborne feet y minus landing feet y. */
   onLand?: (info: { simTime: number; fallMeters: number; bigFall: boolean; impactVy: number }) => void
   /** After every physics slice (sensors, victory and lastSafe hook in here from G2). */
@@ -65,6 +66,10 @@ export class CharacterController {
   sinceLanding = Number.POSITIVE_INFINITY
   private fallingFor = 0
   private lastTakeoffAt = Number.NEGATIVE_INFINITY
+  /** Air jumps left in this airborne phase (granted by a ground takeoff, cleared on landing). */
+  private airJumpsLeft = 0
+  /** Total air jumps performed (animation replays jumpUp when it changes). */
+  airJumpCount = 0
   private airborneTopY = 0
   private lastVy = 0
 
@@ -99,6 +104,7 @@ export class CharacterController {
     this.bigFall = false
     this.fallingFor = 0
     this.lastTakeoffAt = Number.NEGATIVE_INFINITY
+    this.airJumpsLeft = 0
     this.facingYaw = facingYaw
     this.sinceLanding = Number.POSITIVE_INFINITY
   }
@@ -121,7 +127,18 @@ export class CharacterController {
         if (ground != null) this.port.impulse(ground.linearVelocity, IMPULSE_CAP)
         this.groundBody = null
         this.lastTakeoffAt = this.simTime
-        this.events.onTakeoff?.(this.simTime)
+        this.airJumpsLeft = LOCOMOTION.airJumps
+        this.events.onTakeoff?.(this.simTime, 'ground')
+      } else if (
+        this.airJumpsLeft > 0 &&
+        !this.port.canJump &&
+        this.jumps.tryAirJump(this.simTime, this.lastTakeoffAt + LOCOMOTION.airJumpMinS)
+      ) {
+        // double jump (D-038): same fixed arc, only after a ground takeoff, once per airborne phase
+        this.port.jump(LOCOMOTION.jumpSpeed)
+        this.airJumpsLeft--
+        this.airJumpCount++
+        this.events.onTakeoff?.(this.simTime, 'air')
       }
       this.port.step(sliceDt)
       this.simTime += sliceDt
@@ -170,6 +187,7 @@ export class CharacterController {
     }
     if (this.airborne) {
       this.airborne = false
+      this.airJumpsLeft = 0
       const info = { simTime: this.simTime, fallMeters: Math.max(0, this.airborneTopY - y), bigFall: this.bigFall, impactVy: this.lastVy }
       this.bigFall = false
       this.fallingFor = 0

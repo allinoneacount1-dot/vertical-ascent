@@ -118,7 +118,7 @@ class Game {
     this.port = createCharacterPhysicsPort(world, root, {}, this.motion.nearKinematic)
     this.controller = new CharacterController(this.port, this.motion, {
       onCarryYaw: (dy) => this.cameraRig?.addYaw(dy),
-      onTakeoff: (t) => this.log('takeoff', { simTime: t }),
+      onTakeoff: (t, kind) => this.log('takeoff', { simTime: t, kind }),
       onLand: (info) => this.log('land', info),
     })
     this.port.teleport(this.spawn)

@@ -11,8 +11,12 @@ export const LOCOMOTION = Object.freeze({
   jumpSpeed: 8,
   /** seconds a jump press stays buffered */
   jumpBufferS: 0.1,
-  /** minimum seconds between two takeoffs */
+  /** minimum seconds between two ground takeoffs */
   rejumpS: 0.3,
+  /** double jump (owner request, D-038): earliest air jump after the ground takeoff, seconds */
+  airJumpMinS: 0.1,
+  /** air jumps allowed per airborne phase that started with a ground takeoff */
+  airJumps: 1,
 })
 
 /**
@@ -68,6 +72,21 @@ export class JumpBuffer {
     if (!canJump || simTime - this.lastTakeoff < LOCOMOTION.rejumpS) return false
     this.pressedAt = null
     this.lastTakeoff = simTime
+    return true
+  }
+
+  /**
+   * Air jump (D-038): consumes a buffered press that is still fresh once simTime ≥ earliest. Does not touch the
+   * ground re-jump timer.
+   */
+  tryAirJump(simTime: number, earliest: number): boolean {
+    if (this.pressedAt == null) return false
+    if (simTime - this.pressedAt > LOCOMOTION.jumpBufferS) {
+      this.pressedAt = null
+      return false
+    }
+    if (simTime < earliest) return false
+    this.pressedAt = null
     return true
   }
 

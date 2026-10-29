@@ -30,6 +30,7 @@ const out = {
   apexM: measured.apexM,
   airtimeS: measured.airtimeS,
   reach: measured.reach,
+  ...(measured.doubleJump ? { doubleJump: measured.doubleJump } : {}),
   coyoteS: measured.coyoteS,
   measuredAt: new Date().toISOString(),
   commit,

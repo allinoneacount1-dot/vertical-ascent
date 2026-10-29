@@ -46,6 +46,15 @@ let activeClip: string | null = null
 const clip = (name: string) => () => {
   activeClip = name
 }
+
+/** Air jumps already shown; a new one (double jump, D-038) replays jumpUp from jumpLoop. */
+let seenAirJumps = 0
+const airJumpCount = () => game.controller?.airJumpCount ?? 0
+const startJumpUp = () => {
+  activeClip = 'jumpUp'
+  seenAirJumps = airJumpCount()
+}
+const newAirJump = () => airJumpCount() !== seenAirJumps
 setClipReporter(() => activeClip)
 
 export function CharacterVisual() {
@@ -87,10 +96,13 @@ export function CharacterVisual() {
             }}
           >
             <Suspense fallback={null}>
-              <CharacterAnimationAction {...CLIPS.jumpUp} loop={LoopOnce} fadeDuration={FADE_S} init={clip('jumpUp')} />
+              <CharacterAnimationAction {...CLIPS.jumpUp} loop={LoopOnce} fadeDuration={FADE_S} init={startJumpUp} />
             </Suspense>
           </GrapthState>
-          <GrapthState name="jumpLoop" transitionTo={{ jumpDown: { whenUpdate: () => readFlags().grounded } }}>
+          <GrapthState
+            name="jumpLoop"
+            transitionTo={{ jumpDown: { whenUpdate: () => readFlags().grounded }, jumpUp: { whenUpdate: () => !readFlags().grounded && newAirJump() } }}
+          >
             <Suspense fallback={null}>
               <CharacterAnimationAction {...CLIPS.jumpLoop} loop={LoopRepeat} until={forever} fadeDuration={FADE_S} init={clip('jumpLoop')} />
             </Suspense>

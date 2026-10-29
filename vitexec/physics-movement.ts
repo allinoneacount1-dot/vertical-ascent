@@ -7,7 +7,7 @@ import { LOCOMOTION } from '/src/controller/locomotion.ts'
 
 const DT = 1 / 240 // sample finely; the physics substeps at ≤1/240 anyway
 
-function trajectory(speed: number) {
+function trajectory(speed: number, airJumpAtApex = false) {
   const h = createHarness([{ id: 'pillar', size: [1, 1, 1], pos: [0, -0.5, 0] }], [0, 0.02, 0])
   // settle on the pillar
   for (let i = 0; i < 240 && !h.port.isGroundedRaw; i++) h.port.step(DT)
@@ -17,9 +17,15 @@ function trajectory(speed: number) {
   h.port.inputVelocity.set(speed, 0, 0)
   const samples: Array<{ t: number; x: number; y: number }> = [{ t: 0, x: 0, y: 0 }]
   let t = 0
-  while (t < 3) {
+  let airJumped = false
+  while (t < 4) {
     h.port.step(DT)
     t += DT
+    // double jump (D-038): the second jump fired at the apex of the first gives the maximum height
+    if (airJumpAtApex && !airJumped && h.port.velocity.y <= 0) {
+      h.port.jump(LOCOMOTION.jumpSpeed)
+      airJumped = true
+    }
     const p = h.port.position
     samples.push({ t, x: p.x - start.x, y: p.y - start.y })
     if (p.y - start.y < -2.5) break
@@ -60,11 +66,32 @@ for (const [gait, speed] of [
     result.airtimeS = round(flat.t, 4)
   }
 }
+const doubleReach: Record<string, Record<string, number>> = {}
+let doubleApex = 0
+let doubleAirtime = 0
+for (const [gait, speed] of [
+  ['walk', LOCOMOTION.walkSpeed],
+  ['run', LOCOMOTION.runSpeed],
+] as const) {
+  const s = trajectory(speed, true)
+  const flat = crossingDescending(s, 0)
+  doubleReach[gait] = {
+    flat: round(flat.x, 3),
+    up1m: round(crossingDescending(s, 1).x, 3),
+    up2m: round(crossingDescending(s, 2).x, 3),
+    down2m: round(crossingDescending(s, -2).x, 3),
+  }
+  if (gait === 'run') {
+    doubleApex = round(Math.max(...s.map((p) => p.y)), 4)
+    doubleAirtime = round(flat.t, 4)
+  }
+}
 const movement = {
   ups: 240,
   apexM: result.apexM,
   airtimeS: result.airtimeS,
   reach,
+  doubleJump: { apexM: doubleApex, airtimeS: doubleAirtime, reach: doubleReach, airJumpAt: 'apex of the first jump' },
   coyoteS: 0.12,
   definition:
     'apex = max feet rise above takeoff; airtime = takeoff to descending crossing of takeoff height; reach = horizontal feet distance to the descending crossing of takeoff + dh, ballistic, constant input velocity (instant air control)',
