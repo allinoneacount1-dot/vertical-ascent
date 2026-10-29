@@ -1,0 +1,49 @@
+=== listing .cache/downloads/ual1-standard-oga/universal_animation_librarystandard.zip
+11
+  Animation Library[Standard]/
+  Animation Library[Standard]/Godot/
+  Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb
+  Animation Library[Standard]/License.txt
+  Animation Library[Standard]/Preview.png
+  Animation Library[Standard]/Unity/
+  Animation Library[Standard]/Unity/AnimationLibrary_Unity_Standard.fbx
+  Animation Library[Standard]/Unity_Setup.png
+  Animation Library[Standard]/Unreal Engine/
+  Animation Library[Standard]/Unreal Engine/AL_Standard.fbx
+  Animation Library[Standard]/UnrealEngine_Setup.png
+=== listing .cache/downloads/ual2-standard-oga/universal_animation_library_2standard.zip
+16
+  Universal Animation Library 2 [Standard]/
+  Universal Animation Library 2 [Standard]/Female Mannequin/
+  Universal Animation Library 2 [Standard]/Female Mannequin/Mannequin_F.blend
+  Universal Animation Library 2 [Standard]/Female Mannequin/README.txt
+  Universal Animation Library 2 [Standard]/Female Mannequin/Unity/
+  Universal Animation Library 2 [Standard]/Female Mannequin/Unity/Mannequin_F.fbx
+  Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/
+  Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/Mannequin_F.glb
+  Universal Animation Library 2 [Standard]/Godot_Setup.png
+  Universal Animation Library 2 [Standard]/License.txt
+  Universal Animation Library 2 [Standard]/Unity/
+  Universal Animation Library 2 [Standard]/Unity/UAL2_Standard.fbx
+  Universal Animation Library 2 [Standard]/Unity_Setup.png
+  Universal Animation Library 2 [Standard]/Unreal-Godot/
+  Universal Animation Library 2 [Standard]/Unreal-Godot/UAL2_Standard.glb
+  Universal Animation Library 2 [Standard]/Unreal_Setup.png
+=== listing .cache/downloads/vroid-alpha-cc0/avatarsample_e.zip
+1
+  AvatarSample_E.vrm
+=== listing .cache/downloads/vroid-alpha-cc0/avatarsample_f.zip
+1
+  AvatarSample_F.vrm
+=== listing .cache/downloads/vroid-alpha-cc0/avatarsample_g.zip
+1
+  AvatarSample_G.vrm
+1b7bf67866360665426bb99e4c71bd619f19b408453c24e30f0c3071601eee5c *.cache/extract/ual1-standard-oga/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb
+11eac7504a28077e9d8dbac8ddfca2566510efba7eef46e11f21cdd2bc96d4d5 *.cache/extract/ual1-standard-oga/Animation Library[Standard]/License.txt
+3447416d55d5cf3a82311c4941578068d544cc4cfa1d49a6a26a28c98b96c393 *.cache/extract/ual2-standard-oga/Universal Animation Library 2 [Standard]/Female Mannequin/README.txt
+2ee6cc3fe888d9b144afa8cc4b2ab7bfc5d13a0d5b7548df777f61f64ad65fa6 *.cache/extract/ual2-standard-oga/Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/Mannequin_F.glb
+f9b1de4e8feff135555ac1c7d2eec65035a05fd74e4d632a3f826ac985c3f22c *.cache/extract/ual2-standard-oga/Universal Animation Library 2 [Standard]/License.txt
+0815dd05531cae9bc313fc9c0ba81330bc72f8e19ec45f73738e74ddc5796a43 *.cache/extract/ual2-standard-oga/Universal Animation Library 2 [Standard]/Unreal-Godot/UAL2_Standard.glb
+aea824cc43a95dd022a57d460ed901534a45fc2ac195f26ffc4d0d5beb0d7911 *.cache/extract/vroid-alpha-cc0/avatarsample_e/AvatarSample_E.vrm
+d8eff1ed09b41afb94e30da27997560fb901dde925c813f835ab1986708521bb *.cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm
+ad5750ce944b708155abb7ac6807e19d7f5e73a939f0ee32daf0539acfca57c0 *.cache/extract/vroid-alpha-cc0/avatarsample_g/AvatarSample_G.vrm

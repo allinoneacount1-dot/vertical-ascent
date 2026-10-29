@@ -1,0 +1,788 @@
+{
+  "file": ".cache/extract/ual1-standard-oga/Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+  "generator": "Khronos glTF Blender I/O v4.3.47",
+  "extensionsUsed": [],
+  "nodes": [
+    {
+      "i": 0,
+      "name": "DEF-head",
+      "sanitized": "DEF-head",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 1,
+      "name": "DEF-neck",
+      "sanitized": "DEF-neck",
+      "children": [
+        0
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 2,
+      "name": "DEF-f_index.03.L",
+      "sanitized": "DEF-f_index03L",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 3,
+      "name": "DEF-f_index.02.L",
+      "sanitized": "DEF-f_index02L",
+      "children": [
+        2
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 4,
+      "name": "DEF-f_index.01.L",
+      "sanitized": "DEF-f_index01L",
+      "children": [
+        3
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 5,
+      "name": "DEF-f_middle.03.L",
+      "sanitized": "DEF-f_middle03L",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 6,
+      "name": "DEF-f_middle.02.L",
+      "sanitized": "DEF-f_middle02L",
+      "children": [
+        5
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 7,
+      "name": "DEF-f_middle.01.L",
+      "sanitized": "DEF-f_middle01L",
+      "children": [
+        6
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 8,
+      "name": "DEF-f_pinky.03.L",
+      "sanitized": "DEF-f_pinky03L",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 9,
+      "name": "DEF-f_pinky.02.L",
+      "sanitized": "DEF-f_pinky02L",
+      "children": [
+        8
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 10,
+      "name": "DEF-f_pinky.01.L",
+      "sanitized": "DEF-f_pinky01L",
+      "children": [
+        9
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 11,
+      "name": "DEF-f_ring.03.L",
+      "sanitized": "DEF-f_ring03L",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 12,
+      "name": "DEF-f_ring.02.L",
+      "sanitized": "DEF-f_ring02L",
+      "children": [
+        11
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 13,
+      "name": "DEF-f_ring.01.L",
+      "sanitized": "DEF-f_ring01L",
+      "children": [
+        12
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 14,
+      "name": "DEF-thumb.03.L",
+      "sanitized": "DEF-thumb03L",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 15,
+      "name": "DEF-thumb.02.L",
+      "sanitized": "DEF-thumb02L",
+      "children": [
+        14
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 16,
+      "name": "DEF-thumb.01.L",
+      "sanitized": "DEF-thumb01L",
+      "children": [
+        15
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 17,
+      "name": "DEF-hand.L",
+      "sanitized": "DEF-handL",
+      "children": [
+        4,
+        7,
+        10,
+        13,
+        16
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 18,
+      "name": "DEF-forearm.L",
+      "sanitized": "DEF-forearmL",
+      "children": [
+        17
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 19,
+      "name": "DEF-upper_arm.L",
+      "sanitized": "DEF-upper_armL",
+      "children": [
+        18
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 20,
+      "name": "DEF-shoulder.L",
+      "sanitized": "DEF-shoulderL",
+      "children": [
+        19
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 21,
+      "name": "DEF-f_index.03.R",
+      "sanitized": "DEF-f_index03R",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 22,
+      "name": "DEF-f_index.02.R",
+      "sanitized": "DEF-f_index02R",
+      "children": [
+        21
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 23,
+      "name": "DEF-f_index.01.R",
+      "sanitized": "DEF-f_index01R",
+      "children": [
+        22
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 24,
+      "name": "DEF-f_middle.03.R",
+      "sanitized": "DEF-f_middle03R",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 25,
+      "name": "DEF-f_middle.02.R",
+      "sanitized": "DEF-f_middle02R",
+      "children": [
+        24
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 26,
+      "name": "DEF-f_middle.01.R",
+      "sanitized": "DEF-f_middle01R",
+      "children": [
+        25
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 27,
+      "name": "DEF-f_pinky.03.R",
+      "sanitized": "DEF-f_pinky03R",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 28,
+      "name": "DEF-f_pinky.02.R",
+      "sanitized": "DEF-f_pinky02R",
+      "children": [
+        27
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 29,
+      "name": "DEF-f_pinky.01.R",
+      "sanitized": "DEF-f_pinky01R",
+      "children": [
+        28
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 30,
+      "name": "DEF-f_ring.03.R",
+      "sanitized": "DEF-f_ring03R",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 31,
+      "name": "DEF-f_ring.02.R",
+      "sanitized": "DEF-f_ring02R",
+      "children": [
+        30
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 32,
+      "name": "DEF-f_ring.01.R",
+      "sanitized": "DEF-f_ring01R",
+      "children": [
+        31
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 33,
+      "name": "DEF-thumb.03.R",
+      "sanitized": "DEF-thumb03R",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 34,
+      "name": "DEF-thumb.02.R",
+      "sanitized": "DEF-thumb02R",
+      "children": [
+        33
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 35,
+      "name": "DEF-thumb.01.R",
+      "sanitized": "DEF-thumb01R",
+      "children": [
+        34
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 36,
+      "name": "DEF-hand.R",
+      "sanitized": "DEF-handR",
+      "children": [
+        23,
+        26,
+        29,
+        32,
+        35
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 37,
+      "name": "DEF-forearm.R",
+      "sanitized": "DEF-forearmR",
+      "children": [
+        36
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 38,
+      "name": "DEF-upper_arm.R",
+      "sanitized": "DEF-upper_armR",
+      "children": [
+        37
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 39,
+      "name": "DEF-shoulder.R",
+      "sanitized": "DEF-shoulderR",
+      "children": [
+        38
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 40,
+      "name": "DEF-spine.003",
+      "sanitized": "DEF-spine003",
+      "children": [
+        1,
+        20,
+        39
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 41,
+      "name": "DEF-spine.002",
+      "sanitized": "DEF-spine002",
+      "children": [
+        40
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 42,
+      "name": "DEF-spine.001",
+      "sanitized": "DEF-spine001",
+      "children": [
+        41
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 43,
+      "name": "DEF-toe.L",
+      "sanitized": "DEF-toeL",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 44,
+      "name": "DEF-foot.L",
+      "sanitized": "DEF-footL",
+      "children": [
+        43
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 45,
+      "name": "DEF-shin.L",
+      "sanitized": "DEF-shinL",
+      "children": [
+        44
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 46,
+      "name": "DEF-thigh.L",
+      "sanitized": "DEF-thighL",
+      "children": [
+        45
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 47,
+      "name": "DEF-toe.R",
+      "sanitized": "DEF-toeR",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 48,
+      "name": "DEF-foot.R",
+      "sanitized": "DEF-footR",
+      "children": [
+        47
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 49,
+      "name": "DEF-shin.R",
+      "sanitized": "DEF-shinR",
+      "children": [
+        48
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 50,
+      "name": "DEF-thigh.R",
+      "sanitized": "DEF-thighR",
+      "children": [
+        49
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 51,
+      "name": "DEF-hips",
+      "sanitized": "DEF-hips",
+      "children": [
+        42,
+        46,
+        50
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 52,
+      "name": "root",
+      "sanitized": "root",
+      "children": [
+        51
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 53,
+      "name": "Mannequin",
+      "sanitized": "Mannequin",
+      "children": [],
+      "mesh": 0,
+      "skin": 0
+    },
+    {
+      "i": 54,
+      "name": "Rig",
+      "sanitized": "Rig",
+      "children": [
+        53,
+        52
+      ],
+      "mesh": null,
+      "skin": null
+    }
+  ],
+  "skins": [
+    {
+      "name": "Rig",
+      "joints": [
+        "root",
+        "DEF-hips",
+        "DEF-spine001",
+        "DEF-spine002",
+        "DEF-spine003",
+        "DEF-neck",
+        "DEF-head",
+        "DEF-shoulderL",
+        "DEF-upper_armL",
+        "DEF-forearmL",
+        "DEF-handL",
+        "DEF-f_index01L",
+        "DEF-f_index02L",
+        "DEF-f_index03L",
+        "DEF-f_middle01L",
+        "DEF-f_middle02L",
+        "DEF-f_middle03L",
+        "DEF-f_pinky01L",
+        "DEF-f_pinky02L",
+        "DEF-f_pinky03L",
+        "DEF-f_ring01L",
+        "DEF-f_ring02L",
+        "DEF-f_ring03L",
+        "DEF-thumb01L",
+        "DEF-thumb02L",
+        "DEF-thumb03L",
+        "DEF-shoulderR",
+        "DEF-upper_armR",
+        "DEF-forearmR",
+        "DEF-handR",
+        "DEF-f_index01R",
+        "DEF-f_index02R",
+        "DEF-f_index03R",
+        "DEF-f_middle01R",
+        "DEF-f_middle02R",
+        "DEF-f_middle03R",
+        "DEF-f_pinky01R",
+        "DEF-f_pinky02R",
+        "DEF-f_pinky03R",
+        "DEF-f_ring01R",
+        "DEF-f_ring02R",
+        "DEF-f_ring03R",
+        "DEF-thumb01R",
+        "DEF-thumb02R",
+        "DEF-thumb03R",
+        "DEF-thighL",
+        "DEF-shinL",
+        "DEF-footL",
+        "DEF-toeL",
+        "DEF-thighR",
+        "DEF-shinR",
+        "DEF-footR",
+        "DEF-toeR"
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "A_TPose",
+      "channels": 159
+    },
+    {
+      "name": "Crouch_Fwd_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Crouch_Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Dance_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Death01",
+      "channels": 159
+    },
+    {
+      "name": "Driving_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Fixing_Kneeling",
+      "channels": 159
+    },
+    {
+      "name": "Hit_Chest",
+      "channels": 159
+    },
+    {
+      "name": "Hit_Head",
+      "channels": 159
+    },
+    {
+      "name": "Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Idle_Talking_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Idle_Torch_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Interact",
+      "channels": 159
+    },
+    {
+      "name": "Jog_Fwd_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Jump_Land",
+      "channels": 159
+    },
+    {
+      "name": "Jump_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Jump_Start",
+      "channels": 159
+    },
+    {
+      "name": "PickUp_Table",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Down",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Neutral",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Aim_Up",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Reload",
+      "channels": 159
+    },
+    {
+      "name": "Pistol_Shoot",
+      "channels": 159
+    },
+    {
+      "name": "Punch_Cross",
+      "channels": 159
+    },
+    {
+      "name": "Punch_Enter",
+      "channels": 159
+    },
+    {
+      "name": "Punch_Jab",
+      "channels": 159
+    },
+    {
+      "name": "Push_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Roll",
+      "channels": 159
+    },
+    {
+      "name": "Roll_RM",
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Enter",
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Exit",
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Sitting_Talking_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Enter",
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Exit",
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Spell_Simple_Shoot",
+      "channels": 159
+    },
+    {
+      "name": "Sprint_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Swim_Fwd_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Swim_Idle_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Sword_Attack",
+      "channels": 159
+    },
+    {
+      "name": "Sword_Attack_RM",
+      "channels": 159
+    },
+    {
+      "name": "Sword_Idle",
+      "channels": 159
+    },
+    {
+      "name": "Walk_Formal_Loop",
+      "channels": 159
+    },
+    {
+      "name": "Walk_Loop",
+      "channels": 159
+    }
+  ]
+}

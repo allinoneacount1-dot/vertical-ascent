@@ -1,0 +1,735 @@
+{
+  "file": ".cache/extract/ual2-standard-oga/Universal Animation Library 2 [Standard]/Female Mannequin/Unreal-Godot/Mannequin_F.glb",
+  "generator": "Khronos glTF Blender I/O v4.3.47",
+  "extensionsUsed": [],
+  "nodes": [
+    {
+      "i": 0,
+      "name": "Head",
+      "sanitized": "Head",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 1,
+      "name": "neck_01",
+      "sanitized": "neck_01",
+      "children": [
+        0
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 2,
+      "name": "index_04_leaf_l",
+      "sanitized": "index_04_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 3,
+      "name": "index_03_l",
+      "sanitized": "index_03_l",
+      "children": [
+        2
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 4,
+      "name": "index_02_l",
+      "sanitized": "index_02_l",
+      "children": [
+        3
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 5,
+      "name": "index_01_l",
+      "sanitized": "index_01_l",
+      "children": [
+        4
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 6,
+      "name": "middle_04_leaf_l",
+      "sanitized": "middle_04_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 7,
+      "name": "middle_03_l",
+      "sanitized": "middle_03_l",
+      "children": [
+        6
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 8,
+      "name": "middle_02_l",
+      "sanitized": "middle_02_l",
+      "children": [
+        7
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 9,
+      "name": "middle_01_l",
+      "sanitized": "middle_01_l",
+      "children": [
+        8
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 10,
+      "name": "pinky_04_leaf_l",
+      "sanitized": "pinky_04_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 11,
+      "name": "pinky_03_l",
+      "sanitized": "pinky_03_l",
+      "children": [
+        10
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 12,
+      "name": "pinky_02_l",
+      "sanitized": "pinky_02_l",
+      "children": [
+        11
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 13,
+      "name": "pinky_01_l",
+      "sanitized": "pinky_01_l",
+      "children": [
+        12
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 14,
+      "name": "ring_04_leaf_l",
+      "sanitized": "ring_04_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 15,
+      "name": "ring_03_l",
+      "sanitized": "ring_03_l",
+      "children": [
+        14
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 16,
+      "name": "ring_02_l",
+      "sanitized": "ring_02_l",
+      "children": [
+        15
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 17,
+      "name": "ring_01_l",
+      "sanitized": "ring_01_l",
+      "children": [
+        16
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 18,
+      "name": "thumb_04_leaf_l",
+      "sanitized": "thumb_04_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 19,
+      "name": "thumb_03_l",
+      "sanitized": "thumb_03_l",
+      "children": [
+        18
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 20,
+      "name": "thumb_02_l",
+      "sanitized": "thumb_02_l",
+      "children": [
+        19
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 21,
+      "name": "thumb_01_l",
+      "sanitized": "thumb_01_l",
+      "children": [
+        20
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 22,
+      "name": "hand_l",
+      "sanitized": "hand_l",
+      "children": [
+        5,
+        9,
+        13,
+        17,
+        21
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 23,
+      "name": "lowerarm_l",
+      "sanitized": "lowerarm_l",
+      "children": [
+        22
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 24,
+      "name": "upperarm_l",
+      "sanitized": "upperarm_l",
+      "children": [
+        23
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 25,
+      "name": "clavicle_l",
+      "sanitized": "clavicle_l",
+      "children": [
+        24
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 26,
+      "name": "index_04_leaf_r",
+      "sanitized": "index_04_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 27,
+      "name": "index_03_r",
+      "sanitized": "index_03_r",
+      "children": [
+        26
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 28,
+      "name": "index_02_r",
+      "sanitized": "index_02_r",
+      "children": [
+        27
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 29,
+      "name": "index_01_r",
+      "sanitized": "index_01_r",
+      "children": [
+        28
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 30,
+      "name": "middle_04_leaf_r",
+      "sanitized": "middle_04_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 31,
+      "name": "middle_03_r",
+      "sanitized": "middle_03_r",
+      "children": [
+        30
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 32,
+      "name": "middle_02_r",
+      "sanitized": "middle_02_r",
+      "children": [
+        31
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 33,
+      "name": "middle_01_r",
+      "sanitized": "middle_01_r",
+      "children": [
+        32
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 34,
+      "name": "pinky_04_leaf_r",
+      "sanitized": "pinky_04_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 35,
+      "name": "pinky_03_r",
+      "sanitized": "pinky_03_r",
+      "children": [
+        34
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 36,
+      "name": "pinky_02_r",
+      "sanitized": "pinky_02_r",
+      "children": [
+        35
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 37,
+      "name": "pinky_01_r",
+      "sanitized": "pinky_01_r",
+      "children": [
+        36
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 38,
+      "name": "ring_04_leaf_r",
+      "sanitized": "ring_04_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 39,
+      "name": "ring_03_r",
+      "sanitized": "ring_03_r",
+      "children": [
+        38
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 40,
+      "name": "ring_02_r",
+      "sanitized": "ring_02_r",
+      "children": [
+        39
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 41,
+      "name": "ring_01_r",
+      "sanitized": "ring_01_r",
+      "children": [
+        40
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 42,
+      "name": "thumb_04_leaf_r",
+      "sanitized": "thumb_04_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 43,
+      "name": "thumb_03_r",
+      "sanitized": "thumb_03_r",
+      "children": [
+        42
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 44,
+      "name": "thumb_02_r",
+      "sanitized": "thumb_02_r",
+      "children": [
+        43
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 45,
+      "name": "thumb_01_r",
+      "sanitized": "thumb_01_r",
+      "children": [
+        44
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 46,
+      "name": "hand_r",
+      "sanitized": "hand_r",
+      "children": [
+        29,
+        33,
+        37,
+        41,
+        45
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 47,
+      "name": "lowerarm_r",
+      "sanitized": "lowerarm_r",
+      "children": [
+        46
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 48,
+      "name": "upperarm_r",
+      "sanitized": "upperarm_r",
+      "children": [
+        47
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 49,
+      "name": "clavicle_r",
+      "sanitized": "clavicle_r",
+      "children": [
+        48
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 50,
+      "name": "spine_03",
+      "sanitized": "spine_03",
+      "children": [
+        1,
+        25,
+        49
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 51,
+      "name": "spine_02",
+      "sanitized": "spine_02",
+      "children": [
+        50
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 52,
+      "name": "spine_01",
+      "sanitized": "spine_01",
+      "children": [
+        51
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 53,
+      "name": "ball_leaf_l",
+      "sanitized": "ball_leaf_l",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 54,
+      "name": "ball_l",
+      "sanitized": "ball_l",
+      "children": [
+        53
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 55,
+      "name": "foot_l",
+      "sanitized": "foot_l",
+      "children": [
+        54
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 56,
+      "name": "calf_l",
+      "sanitized": "calf_l",
+      "children": [
+        55
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 57,
+      "name": "thigh_l",
+      "sanitized": "thigh_l",
+      "children": [
+        56
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 58,
+      "name": "ball_leaf_r",
+      "sanitized": "ball_leaf_r",
+      "children": [],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 59,
+      "name": "ball_r",
+      "sanitized": "ball_r",
+      "children": [
+        58
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 60,
+      "name": "foot_r",
+      "sanitized": "foot_r",
+      "children": [
+        59
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 61,
+      "name": "calf_r",
+      "sanitized": "calf_r",
+      "children": [
+        60
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 62,
+      "name": "thigh_r",
+      "sanitized": "thigh_r",
+      "children": [
+        61
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 63,
+      "name": "pelvis",
+      "sanitized": "pelvis",
+      "children": [
+        52,
+        57,
+        62
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 64,
+      "name": "root",
+      "sanitized": "root",
+      "children": [
+        63
+      ],
+      "mesh": null,
+      "skin": null
+    },
+    {
+      "i": 65,
+      "name": "Mannequin_F",
+      "sanitized": "Mannequin_F",
+      "children": [],
+      "mesh": 0,
+      "skin": 0
+    },
+    {
+      "i": 66,
+      "name": "Armature",
+      "sanitized": "Armature",
+      "children": [
+        65,
+        64
+      ],
+      "mesh": null,
+      "skin": null
+    }
+  ],
+  "skins": [
+    {
+      "name": "Armature",
+      "joints": [
+        "root",
+        "pelvis",
+        "spine_01",
+        "spine_02",
+        "spine_03",
+        "neck_01",
+        "Head",
+        "clavicle_l",
+        "upperarm_l",
+        "lowerarm_l",
+        "hand_l",
+        "index_01_l",
+        "index_02_l",
+        "index_03_l",
+        "index_04_leaf_l",
+        "middle_01_l",
+        "middle_02_l",
+        "middle_03_l",
+        "middle_04_leaf_l",
+        "pinky_01_l",
+        "pinky_02_l",
+        "pinky_03_l",
+        "pinky_04_leaf_l",
+        "ring_01_l",
+        "ring_02_l",
+        "ring_03_l",
+        "ring_04_leaf_l",
+        "thumb_01_l",
+        "thumb_02_l",
+        "thumb_03_l",
+        "thumb_04_leaf_l",
+        "clavicle_r",
+        "upperarm_r",
+        "lowerarm_r",
+        "hand_r",
+        "index_01_r",
+        "index_02_r",
+        "index_03_r",
+        "index_04_leaf_r",
+        "middle_01_r",
+        "middle_02_r",
+        "middle_03_r",
+        "middle_04_leaf_r",
+        "pinky_01_r",
+        "pinky_02_r",
+        "pinky_03_r",
+        "pinky_04_leaf_r",
+        "ring_01_r",
+        "ring_02_r",
+        "ring_03_r",
+        "ring_04_leaf_r",
+        "thumb_01_r",
+        "thumb_02_r",
+        "thumb_03_r",
+        "thumb_04_leaf_r",
+        "thigh_l",
+        "calf_l",
+        "foot_l",
+        "ball_l",
+        "ball_leaf_l",
+        "thigh_r",
+        "calf_r",
+        "foot_r",
+        "ball_r",
+        "ball_leaf_r"
+      ]
+    }
+  ],
+  "animations": []
+}
