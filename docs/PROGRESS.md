@@ -42,7 +42,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-18b | G5 | NOT-STARTED | 0 | | | | |
 | TEST-19a | G2 | NOT-STARTED | 0 | | | | |
 | TEST-19b | G3 | NOT-STARTED | 0 | | | | |
-| TEST-20a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-20a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-20a-play-run2.log, evidence/G2/TEST-20a-play-run1.log, evidence/G2/TEST-20a-play-run1-milestones.json, evidence/G2/TEST-20a-play-run2-milestones.json, evidence/G2/TEST-20a-play-run2-final.json, evidence/G2/TEST-20a-play-run2.png, evidence/G2/TEST-20a-play-run{1,2}.mp4 (gitignored) | `node scripts/run-test.mjs 20a --slug play-run<n> -- --timeout 300 --record ./evidence/G2/TEST-20a-play-run<n>.mp4 --screenshot ./evidence/G2/TEST-20a-play-run<n>.png ./vitexec/play.ts` (n = 1, 2, consecutive) | 8ea689f | 2026-10-30 |
 | TEST-20b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-21 | G5 | NOT-STARTED | 0 | | | | |
 | TEST-22 | G4 | NOT-STARTED | 0 | | | | |
