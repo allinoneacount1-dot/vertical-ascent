@@ -54,7 +54,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-27 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-28a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-28a-visibility.log, evidence/G1/TEST-28a-visibility.png | `node scripts/run-test.mjs 28a --slug visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts` | ec416ee | 2026-10-30 |
 | TEST-28b | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 120 ./vitexec/physics-dt-clamp.ts` | ec416ee | 2026-10-30 |
-| TEST-29 | G2 | NOT-STARTED | 0 | | | | |
+| TEST-29 | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-29-killplane.log, evidence/G2/TEST-29-killplane.png | `node scripts/run-test.mjs 29 --slug killplane -- --timeout 150 --screenshot ./evidence/G2/TEST-29-killplane.png ./vitexec/smoke-killplane.ts` | c0b9422 | 2026-10-30 |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-31 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 120 ./vitexec/physics-framerate.ts` | ec416ee | 2026-10-30 |
 | TEST-32 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | ec416ee | 2026-10-30 |
