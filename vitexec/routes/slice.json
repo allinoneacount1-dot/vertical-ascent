@@ -1,0 +1,500 @@
+{
+  "level": "slice",
+  "generatedFrom": "level/slice.json",
+  "generatedBy": "scripts/build-routes.mjs",
+  "spawn": [
+    0,
+    0,
+    0
+  ],
+  "finish": "s-r14",
+  "waypoints": [
+    {
+      "id": "s-r01",
+      "zone": "slice",
+      "pos": [
+        0,
+        0.6,
+        -5
+      ],
+      "half": [
+        2,
+        2
+      ],
+      "padRadius": 2,
+      "takeoff": [
+        0,
+        0,
+        -2.3
+      ],
+      "target": [
+        0,
+        0.6,
+        -3.8
+      ],
+      "distM": 1.5,
+      "riseM": 0.6,
+      "needsJump": true,
+      "needsSprint": false,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r02",
+      "zone": "slice",
+      "pos": [
+        0,
+        1.5,
+        -9.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        0,
+        0.6,
+        -6.55
+      ],
+      "target": [
+        0,
+        1.5,
+        -8.8
+      ],
+      "distM": 2.25,
+      "riseM": 0.9,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r03",
+      "zone": "slice",
+      "pos": [
+        3.5,
+        2.4,
+        -12.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        1.05,
+        1.5,
+        -10.55
+      ],
+      "target": [
+        2.8,
+        2.4,
+        -11.8
+      ],
+      "distM": 2.151,
+      "riseM": 0.9,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r04",
+      "zone": "slice",
+      "pos": [
+        7,
+        3.2,
+        -12.5
+      ],
+      "half": [
+        1,
+        1
+      ],
+      "padRadius": 1,
+      "takeoff": [
+        4.55,
+        2.4,
+        -12.5
+      ],
+      "target": [
+        6.8,
+        3.2,
+        -12.5
+      ],
+      "distM": 2.25,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": true
+    },
+    {
+      "id": "s-r05",
+      "zone": "slice",
+      "pos": [
+        11,
+        3.2,
+        -12.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        7.55,
+        3.2,
+        -12.5
+      ],
+      "target": [
+        10.3,
+        3.2,
+        -12.5
+      ],
+      "distM": 2.75,
+      "riseM": 0,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": {
+        "platform": "s-r05"
+      },
+      "waitPhase": {
+        "platform": "s-r05",
+        "window": [
+          0.875,
+          0.934
+        ],
+        "repeatEvery": 1
+      },
+      "precision": false
+    },
+    {
+      "id": "s-r06",
+      "zone": "slice",
+      "pos": [
+        11,
+        4,
+        -1
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        11,
+        3.2,
+        -3.45
+      ],
+      "target": [
+        11,
+        4,
+        -1.7
+      ],
+      "distM": 1.75,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": {
+        "platform": "s-r05",
+        "window": [
+          0.375,
+          0.48
+        ],
+        "repeatEvery": 1
+      },
+      "precision": false
+    },
+    {
+      "id": "s-r07",
+      "zone": "slice",
+      "pos": [
+        7.5,
+        4.8,
+        1
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        9.95,
+        4,
+        0.05
+      ],
+      "target": [
+        8.2,
+        4.8,
+        0.3
+      ],
+      "distM": 1.768,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r08",
+      "zone": "slice",
+      "pos": [
+        2.5,
+        4.8,
+        1
+      ],
+      "half": [
+        2,
+        2
+      ],
+      "padRadius": 2,
+      "takeoff": [
+        6.45,
+        4.8,
+        1
+      ],
+      "target": [
+        3.7,
+        4.8,
+        1
+      ],
+      "distM": 2.75,
+      "riseM": 0,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r09",
+      "zone": "slice",
+      "pos": [
+        -4.5,
+        4.8,
+        1
+      ],
+      "half": [
+        2,
+        2
+      ],
+      "padRadius": 2,
+      "takeoff": [
+        0.95,
+        4.8,
+        1
+      ],
+      "target": [
+        -3.3,
+        4.8,
+        1
+      ],
+      "distM": 4.25,
+      "riseM": 0,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": {
+        "platform": "s-h01",
+        "windows": [
+          [
+            0.079,
+            0.278
+          ],
+          [
+            0.579,
+            0.778
+          ]
+        ],
+        "repeatEvery": 1,
+        "clearWindows": [
+          [
+            0.133,
+            0.368
+          ],
+          [
+            0.633,
+            0.868
+          ]
+        ]
+      },
+      "precision": false
+    },
+    {
+      "id": "s-r10",
+      "zone": "slice",
+      "pos": [
+        -8.5,
+        5.6,
+        -1.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        -6.05,
+        4.8,
+        -0.55
+      ],
+      "target": [
+        -7.8,
+        5.6,
+        -0.8
+      ],
+      "distM": 1.768,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r11",
+      "zone": "slice",
+      "pos": [
+        -8.5,
+        6.4,
+        -5.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        -8.5,
+        5.6,
+        -2.55
+      ],
+      "target": [
+        -8.5,
+        6.4,
+        -4.8
+      ],
+      "distM": 2.25,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r12",
+      "zone": "slice",
+      "pos": [
+        -5,
+        7.2,
+        -7.5
+      ],
+      "half": [
+        1,
+        1
+      ],
+      "padRadius": 1,
+      "takeoff": [
+        -7.45,
+        6.4,
+        -6.55
+      ],
+      "target": [
+        -5.2,
+        7.2,
+        -7.3
+      ],
+      "distM": 2.372,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": true
+    },
+    {
+      "id": "s-r13",
+      "zone": "slice",
+      "pos": [
+        -1.5,
+        8,
+        -7.5
+      ],
+      "half": [
+        1.5,
+        1.5
+      ],
+      "padRadius": 1.5,
+      "takeoff": [
+        -4.45,
+        7.2,
+        -7.5
+      ],
+      "target": [
+        -2.2,
+        8,
+        -7.5
+      ],
+      "distM": 2.25,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    },
+    {
+      "id": "s-r14",
+      "zone": "slice",
+      "pos": [
+        3,
+        8.8,
+        -7.5
+      ],
+      "half": [
+        2,
+        2
+      ],
+      "padRadius": 2,
+      "takeoff": [
+        -0.45,
+        8,
+        -7.5
+      ],
+      "target": [
+        1.8,
+        8.8,
+        -7.5
+      ],
+      "distM": 2.25,
+      "riseM": 0.8,
+      "needsJump": true,
+      "needsSprint": true,
+      "needsDoubleJump": false,
+      "moving": null,
+      "waitPhase": null,
+      "precision": false
+    }
+  ]
+}
