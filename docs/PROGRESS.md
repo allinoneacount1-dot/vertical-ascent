@@ -1,4 +1,4 @@
-RESUME HERE: G1, next action: wait for the owner's G1 kickoff in a fresh session opened in D:\CLAUDE\vertical-ascent, then DIRECTIVE §5 G1 step 1 (ref/04 §Bacaan per gate, G1)
+RESUME HERE: G1 IN-PROGRESS (started 2026-10-30 01:33 in the planning session, D-030), next action: see the newest G1 commit and the TEST rows below
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -9,7 +9,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | Gate | Status | Started | Finished | Commit | Compactions | Evidence |
 |---|---|---|---|---|---|---|
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
-| G1 Foundation | NOT-STARTED | | | | | evidence/G1 |
+| G1 Foundation | IN-PROGRESS | 2026-10-30 01:33 | | | 0 | evidence/G1 |
 | G2 Vertical slice | NOT-STARTED | | | | | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
