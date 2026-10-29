@@ -17,7 +17,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## TESTs (one row per ID in DIRECTIVE §7, incl. 07b 11a 11b 12a 12b 14a 14b 18a 18b 19a 19b 20a 20b 23b 28a 28b 34b 35a 35b)
 | ID | Gate | Status | Attempts | Artifact | Command | Commit | Date |
 |---|---|---|---|---|---|---|---|
-| TEST-01 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-01 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-01-load.log, evidence/G1/TEST-01-load.png | `node scripts/run-test.mjs 01 --slug load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts` | c40aed4 | 2026-10-30 |
 | TEST-02 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-03 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-04 | G1 | NOT-STARTED | 0 | | | | |
