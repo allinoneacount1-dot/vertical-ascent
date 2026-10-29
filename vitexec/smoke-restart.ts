@@ -65,13 +65,23 @@ for (let i = 0; i < 20; i++) {
     const ev = (g().snapshot() as unknown as { events: Array<{ t: number; type: string; data?: unknown }> }).events.filter((e) => e.type === 'state' || e.type === 'lockRejected').slice(-10)
     throw new Error(`TEST-15 FAIL restart ${i}: P did not pause; state=${g().snapshot().state} locked=${document.pointerLockElement === canvas} active=${document.activeElement?.tagName} events=${JSON.stringify(ev)}`)
   }
-  await sleep(220)
-  await click('[data-testid=restart]')
-  const dialog = await waitFor(() => document.querySelector('[data-testid=panel-confirm-restart]') != null, 60)
-  const stillPausedWithDialog = g().snapshot().state === 'PAUSED'
-  await click('[data-testid=confirm-restart]')
+  await sleep(400)
+  let dialog = false
+  let stillPausedWithDialog = false
   let entry: Full | null = null
-  if (await waitFor(() => g().snapshot().state === 'PLAYING' && document.pointerLockElement === canvas, 120)) entry = g().snapshot()
+  let lockRetries = 0
+  // a rejected pointer-lock request leaves the pause menu with the "Click again" hint (D-004): click again like a person
+  for (let attempt = 0; attempt < 2 && entry == null; attempt++) {
+    if (attempt > 0) {
+      lockRetries++
+      await sleep(400)
+    }
+    await click('[data-testid=restart]')
+    dialog = await waitFor(() => document.querySelector('[data-testid=panel-confirm-restart]') != null, 60)
+    stillPausedWithDialog = g().snapshot().state === 'PAUSED'
+    await click('[data-testid=confirm-restart]')
+    if (await waitFor(() => g().snapshot().state === 'PLAYING' && document.pointerLockElement === canvas, 120)) entry = g().snapshot()
+  }
   // 10 frames with W still physically held: the new run must not move
   const f0 = g().snapshot().frame
   let maxH = 0
@@ -94,10 +104,12 @@ for (let i = 0; i < 20; i++) {
     heightM: s?.run.heightM,
     worldClock: s?.worldClock,
     maxHorizontalSpeed10Frames: r3(maxH),
+    lockRetries,
   })
   await sleep(300)
 }
 const restarts = g().snapshot().records.restartCount - restarts0
+const lockRejected = (g().snapshot() as unknown as { events: Array<{ type: string }> }).events.filter((e) => e.type === 'lockRejected').length
 const failures: string[] = []
 if (!dialogText || !/height will be lost|ketinggianmu/i.test(dialogText)) failures.push(`dialog text: ${dialogText}`)
 if (afterCancel.state !== 'PAUSED' || !afterCancel.pausePanel) failures.push(`Cancel did not keep the pause menu (${JSON.stringify(afterCancel)})`)
@@ -118,7 +130,7 @@ for (const r of rows) {
   if ((r.maxHorizontalSpeed10Frames as number) !== 0) failures.push(`${id}: moved with W held (${r.maxHorizontalSpeed10Frames} m/s)`)
 }
 if (restarts !== 20) failures.push(`restartCount +${restarts} (expected 20)`)
-const numbers = { dialogText, afterCancel, restarts, rows }
+const numbers = { dialogText, afterCancel, restarts, lockRejected, rows }
 if (failures.length) {
   console.log('TEST-15 numbers ' + JSON.stringify(numbers))
   throw new Error('TEST-15 FAIL ' + failures.slice(0, 8).join('; '))
