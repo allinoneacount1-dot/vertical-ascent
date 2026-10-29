@@ -10,7 +10,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 |---|---|---|---|---|---|---|
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
 | G1 Foundation | PASS | 2026-10-30 01:33 | 2026-10-30 05:34 | 390d1ea | 0 | evidence/G1 |
-| G2 Vertical slice | PASS-WITH-GAPS: TEST-03 | 2026-10-30 05:36 | 2026-10-30 06:12 | f0b3d96 | 1 | evidence/G2 |
+| G2 Vertical slice | PASS-WITH-GAPS: TEST-03 | 2026-10-30 05:36 | 2026-10-30 06:12 (addendum 06:48) | f88d246 | 1 | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
 | G5 Delivery | NOT-STARTED | | | | | evidence/G5 |
@@ -38,11 +38,11 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-17 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-18a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-18a-har-run.log, evidence/G2/TEST-18a-har-check.log, evidence/G2/TEST-18a-slice.har (gitignored) | `node scripts/run-test.mjs 18a --slug har-run -- --timeout 150 --network-trace ./evidence/G2/TEST-18a-slice.har ./vitexec/smoke-network.ts` then `node scripts/run-test.mjs 18a --slug har-check --cmd "node scripts/har-check.mjs evidence/G2/TEST-18a-slice.har --host 127.0.0.1 --any-port"` | 85a744a | 2026-10-30 |
+| TEST-18a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-18a-har-run-d047.log, evidence/G2/TEST-18a-har-check-d047.log, evidence/G2/TEST-18a-d047-asset-responses.log, evidence/G2/TEST-18a-slice-d047.har (gitignored), first run: evidence/G2/TEST-18a-har-run.log | `node scripts/run-test.mjs 18a --slug har-run-d047 -- --timeout 150 --network-trace ./evidence/G2/TEST-18a-slice-d047.har ./vitexec/smoke-network.ts` then `node scripts/run-test.mjs 18a --slug har-check-d047 --cmd "node scripts/har-check.mjs evidence/G2/TEST-18a-slice-d047.har --host 127.0.0.1 --any-port"` (rerun after D-047) | 7e6088d | 2026-10-30 |
 | TEST-18b | G5 | NOT-STARTED | 0 | | | | |
 | TEST-19a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-19a-slice-data.log | `node scripts/run-test.mjs 19a --slug slice-data --cmd "pnpm vitest run src/level/slice.test.ts"` | fa34c17 | 2026-10-30 |
 | TEST-19b | G3 | NOT-STARTED | 0 | | | | |
-| TEST-20a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-20a-play-run2.log, evidence/G2/TEST-20a-play-run1.log, evidence/G2/TEST-20a-play-run1-milestones.json, evidence/G2/TEST-20a-play-run2-milestones.json, evidence/G2/TEST-20a-play-run2-final.json, evidence/G2/TEST-20a-play-run2.png, evidence/G2/TEST-20a-play-run{1,2}.mp4 (gitignored) | `node scripts/run-test.mjs 20a --slug play-run<n> -- --timeout 300 --record ./evidence/G2/TEST-20a-play-run<n>.mp4 --screenshot ./evidence/G2/TEST-20a-play-run<n>.png ./vitexec/play.ts` (n = 1, 2, consecutive) | 8ea689f | 2026-10-30 |
+| TEST-20a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-20a-play-run2-d047.log, evidence/G2/TEST-20a-play-run1-d047.log, evidence/G2/TEST-20a-play-run1-d047-milestones.json, evidence/G2/TEST-20a-play-run2-d047-milestones.json, evidence/G2/TEST-20a-play-run2-d047-final.json, evidence/G2/TEST-20a-play-run2-d047.png, evidence/G2/TEST-20a-play-run{1,2}-d047.mp4 (gitignored), diagnostic 3rd run without parallel load: evidence/G2/TEST-20a-play-diag-d047.log, first pair: evidence/G2/TEST-20a-play-run{1,2}.log | `node scripts/run-test.mjs 20a --slug play-run<n>-d047 -- --timeout 300 --record ./evidence/G2/TEST-20a-play-run<n>-d047.mp4 --screenshot ./evidence/G2/TEST-20a-play-run<n>-d047.png ./vitexec/play.ts` (n = 1, 2, consecutive; rerun after D-047) | 7e6088d | 2026-10-30 |
 | TEST-20b | G3 | NOT-STARTED | 0 | | | | |
 | TEST-21 | G5 | NOT-STARTED | 0 | | | | |
 | TEST-22 | G4 | NOT-STARTED | 0 | | | | |
@@ -121,3 +121,15 @@ Blocked / needs owner: TEST-03 and slice art — approve A1–A6 in chat (asset-
 Decisions added: D-041 … D-044
 Budget: compactions 1/2 · TESTs at attempt cap: TEST-15 passed on its 3rd attempt · wall-clock 05:36–06:12
 Next gate first action: close TEST-03 — ref/05 pipeline on the approved or dropped assets, final character (D-017), slice prefab art, shrink the stub keep list; then G3 in a new session
+
+## Gate G2 report addendum — 2026-10-30 06:48 — commit f88d246
+Status: PASS-WITH-GAPS: TEST-03 (unchanged; the gap is narrower)
+Owner: "Setujui A1–A5" (06:15, D-045) and the viverse licence request (D-046). Downloaded A1–A5 via fetch-assets (7 files, all within ±25 %, sha256 in evidence/G2/G2-asset-downloads.log); quarantine listings clean (evidence/G2/G2-asset-listings.log); licence snapshots in licenses/.
+Integrated: UAL1 clips idle/walk/run/jumpUp/jumpLoop/jumpDown (BUILD-ONLY under QAL v1.0, rebuilt by scripts/build-only-assets.sh, UAL1_BONE_MAP 52/53 joints), HDRI A3 as IBL; stub keep list = mannequin only; viverse MIT text in licenses/ + THIRD_PARTY_NOTICES.md (D-046, D-047)
+TESTs after the change: TEST-18a:VERIFIED-PASS(evidence/G2/TEST-18a-har-check-d047.log, 74 requests, 0 foreign/errors/html assets) · TEST-20a:VERIFIED-PASS(evidence/G2/TEST-20a-play-run1-d047.log, run2-d047.log; 0 retries, 0 anim samples without a clip) · TEST-03 check-assets part PASS(evidence/G2/TEST-03-check-assets.log) · regressions TEST-01 (evidence/G2/TEST-01-load-d047.log, worldReady 5.3 s) and TEST-14a (evidence/G2/TEST-14a-pause-d047.log, Δmixer 0) PASS
+Timing note: the two TEST-20a runs took 39.5 / 39.9 s while a read-only review workflow ran in parallel; a third run without parallel load took 35.45 s (evidence/G2/TEST-20a-play-diag-d047.log), same as before the change (35.3 s)
+Review: 9-agent read-only review (D-048) — 4 record defects confirmed and fixed, 1 claim refuted, code reviewer found none
+Expected placeholders still present: mannequin (stub gap slot); procedural slice prefab visuals (no kit delivered); G1 blockout as DEV test level
+Blocked / needs owner: TEST-03 final character — A5 AvatarSample_G (1.74 m) or _F (1.71 m) needs the owner to paste the CC0 sentence from pixiv's first-party page (agent access refused as bot-check circumvention), or O1/O2 drops; slice art needs O3–O8 drops
+Decisions added: D-045 … D-048
+Budget: compactions 1/2 · TESTs at attempt cap: none new · wall-clock 06:15–06:48
