@@ -1,0 +1,14 @@
+# run-test TEST-10 slug=camera-walls gate=G1 commit=3c720d2 started=2026-10-29T22:16:28.218Z
+# command: pnpm exec vitexec --timeout 240 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[log] menu after ms 242
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] TEST-10 numbers {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","walks":[{"label":"thin wall (west face)","target":[8.15,6],"reached":[8.186,6.028],"offM":0.046},{"label":"thick wall (east face)","target":[-12.4,8],"reached":[-9.293,6.578],"offM":3.417},{"label":"inside corner","target":[-12.4,12.4],"reached":[-12.404,12.401],"offM":0.004},{"label":"pole strafe start","target":[1,1],"reached":[0.998,0.998],"offM":0.003}],"orbits":[{"label":"thin wall (west face) @ -20°","samples":188,"sweptRad":6.262,"pitch":-0.349,"minDist":0.35,"pulledInSamples":116,"insideSamples":0,"insideOf":[]},{"label":"thin wall (west face) @ +35°","samples":180,"sweptRad":11.69,"pitch":0.613,"minDist":0.35,"pulledInSamples":180,"insideSamples":0,"insideOf":[]},{"label":"thick wall (east face) @ -20°","samples":180,"sweptRad":-1.74,"pitch":-0.655,"minDist":3.209,"pulledInSamples":71,"insideSamples":0,"insideOf":[]},{"label":"thick wall (east face) @ +35°","samples":183,"sweptRad":2.472,"pitch":0.873,"minDist":1.287,"pulledInSamples":183,"insideSamples":0,"insideOf":[]},{"label":"inside corner @ -20°","samples":180,"sweptRad":6.267,"pitch":-0.35,"minDist":0.35,"pulledInSamples":161,"insideSamples":0,"insideOf":[]},{"label":"inside corner @ +35°","samples":177,"sweptRad":6.266,"pitch":0.612,"minDist":0.352,"pulledInSamples":177,"insideSamples":0,"insideOf":[]}],"wallPulledInSamples":888,"strafe":{"samples":114,"feetX":[1.037,5.198],"zoom":4,"distRange":[3.928,4],"rayCrossedPoleSamples":3,"distChangedSamples":38},"allSamples":{"n":6097,"minDist":0.35,"insideAnyFrame":9}}
+vitexec failed: page.evaluate: Error: TEST-10 FAIL thick wall (east face) @ -20°: orbit swept only -1.74 rad; thick wall (east face) @ +35°: orbit swept only 2.472 rad; pole strafe: distance changed or blocker hit in 38 samples
+    at http://127.0.0.1:26171/__vitexec/code/377e42e4-7d96-40c5-9041-8a9d0581307b:207:8
+# exit=1 flagged=0 seconds=87.8 result=FAIL
+# log: evidence/G1/TEST-10-camera-walls.log
