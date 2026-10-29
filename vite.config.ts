@@ -9,7 +9,24 @@ export default defineConfig({
   appType: 'mpa',
   plugins: [react()],
   resolve: { dedupe: ['three', '@react-three/fiber'] },
-  optimizeDeps: { entries: ['index.html'] },
+  // include: vitexec harness scripts import '@pmndrs/viverse' directly; without pre-bundling, the first cold run
+  // discovers it, re-optimizes and reloads the page mid-script (D-031).
+  optimizeDeps: {
+    entries: ['index.html'],
+    include: [
+      '@pmndrs/viverse',
+      '@react-three/drei',
+      '@react-three/fiber',
+      '@react-three/viverse',
+      'react',
+      'react-dom',
+      'react-dom/client',
+      'react/jsx-dev-runtime',
+      'react/jsx-runtime',
+      'three',
+      'zustand',
+    ],
+  },
   server: { watch: { ignored: ['**/.cache/**', '**/.tmp/**', '**/evidence/**', '**/licenses/**'] } },
   test: {
     include: ['src/**/*.test.ts'],
