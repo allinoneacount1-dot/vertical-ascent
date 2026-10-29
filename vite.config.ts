@@ -1,13 +1,18 @@
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { DEFAULT_SLOTS, stubViverseDefaults } from './scripts/stub-viverse-defaults.ts'
 
-// Spec: docs/directive/ref/01-templates.md §vite.config.ts.
-// G2 adds stubViverseDefaults (./scripts/stub-viverse-defaults.ts), G5 adds the license plugin.
+// Slots still waiting for a licensed replacement (gaps, ref/05 §Stub): the final character and its clips need
+// owner-approved assets (TEST-03). jump-forward is only used by SimpleCharacter, which the game does not render
+// (D-001), so it is stubbed now. Remove a slot from this list once its replacement is integrated.
+const GAP_SLOTS = DEFAULT_SLOTS.filter((slot) => slot !== 'jump-forward')
+
+// Spec: docs/directive/ref/01-templates.md §vite.config.ts. G5 adds the license plugin.
 export default defineConfig({
   base: './',
   appType: 'mpa',
-  plugins: [react()],
+  plugins: [react(), stubViverseDefaults(GAP_SLOTS)],
   resolve: { dedupe: ['three', '@react-three/fiber'] },
   // include: vitexec harness scripts import '@pmndrs/viverse' directly; without pre-bundling, the first cold run
   // discovers it, re-optimizes and reloads the page mid-script (D-031).

@@ -1,0 +1,6 @@
+# run-test TEST-11b slug=na-check gate=G2 commit=ee1b8e7+dirty started=2026-10-29T23:10:39.532Z
+# command: node scripts/stood-on-rotating.mjs level/slice.json level/prefabs.json
+rotating [{"id":"s-h01","prefab":"blade-5","tag":"hazard","axis":[1,0,0],"walkable":false,"stoodOn":false}]
+stood-on rotating platforms: 0 → TEST-11b N/A(D-012)
+# exit=0 flagged=0 seconds=0.1 result=PASS
+# log: evidence/G2/TEST-11b-na-check.log
