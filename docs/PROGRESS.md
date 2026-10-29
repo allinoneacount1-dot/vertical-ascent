@@ -30,7 +30,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-10 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-10-camera-walls.log, evidence/G1/TEST-10-camera-walls.png, evidence/G1/TEST-10-camera-walls-attempt1-FAIL.log, evidence/G1/TEST-10-camera-walls-attempt2-FAIL.log | `node scripts/run-test.mjs 10 --slug camera-walls -- --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts` | 74469ea | 2026-10-30 |
 | TEST-11a | G1 | VERIFIED-PASS | 4 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | ec416ee | 2026-10-30 |
 | TEST-11b | G2 | NOT-STARTED | 0 | | | | |
-| TEST-12a | G2 | FAILED(bigFall one slice early) | 1 | evidence/G2/TEST-12a-physics-attempt1-FAIL.log | `node scripts/run-test.mjs 12a --slug physics -- --timeout 150 ./vitexec/physics-fall.ts` | 3b63a01 | 2026-10-30 |
+| TEST-12a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-12a-smoke.log, evidence/G2/TEST-12a-physics.log, evidence/G2/TEST-12a-smoke.png, evidence/G2/TEST-12a-physics-attempt1-FAIL.log | `node scripts/run-test.mjs 12a --slug physics -- --timeout 150 ./vitexec/physics-fall.ts` ; `node scripts/run-test.mjs 12a --slug smoke -- --timeout 150 --screenshot ./evidence/G2/TEST-12a-smoke.png ./vitexec/smoke-bigfall.ts` | 0460656 | 2026-10-30 |
 | TEST-12b | G4 | NOT-STARTED | 0 | | | | |
 | TEST-13 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |

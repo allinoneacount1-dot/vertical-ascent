@@ -1,0 +1,9 @@
+# run-test TEST-12a slug=physics gate=G2 commit=1bae72c started=2026-10-29T22:55:35.062Z
+# command: pnpm exec vitexec --timeout 150 ./vitexec/physics-fall.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] TEST-12a PASS {"part":"physics","thresholds":{"landS":1.3,"vyAfter2":0.5,"bigFallVy":-12,"bigFallS":0.6},"results":{"cliff 60 fps":{"fps":60,"leftAt":1.1833,"landAt":2.2,"fallS":1.0167,"monotonic":true,"vyAfter2Frames":-0.2,"yFinal":0},"fall200 60 fps":{"fps":60,"vyBelow12At":0.6333,"flagAt":1.2333,"eventAt":1.2333,"flagDelayAfterVy12S":0.6,"landedWithBigFall":true,"fallM":200},"cliff 144 fps":{"fps":144,"leftAt":1.1736,"landAt":2.1875,"fallS":1.0139,"monotonic":true,"vyAfter2Frames":-0.2,"yFinal":0},"fall200 144 fps":{"fps":144,"vyBelow12At":0.625,"flagAt":1.2292,"eventAt":1.2292,"flagDelayAfterVy12S":0.6042,"landedWithBigFall":true,"fallM":200}}}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+# exit=0 flagged=0 seconds=4.3 result=PASS
+# log: evidence/G2/TEST-12a-physics.log
