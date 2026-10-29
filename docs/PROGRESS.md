@@ -56,7 +56,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-28b | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 120 ./vitexec/physics-dt-clamp.ts` | 74e6d03 | 2026-10-30 |
 | TEST-29 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-31 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-31 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 120 ./vitexec/physics-framerate.ts` | 658d16b | 2026-10-30 |
 | TEST-32 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-33 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-34 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | fa0d803+dirty | 2026-10-30 |
