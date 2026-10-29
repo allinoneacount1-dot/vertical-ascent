@@ -27,7 +27,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-07b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-08 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-08-smoke-hold.log, evidence/G1/TEST-08-physics.log | `node scripts/run-test.mjs 08 --slug physics -- --timeout 150 ./vitexec/physics-jump-repeat.ts` ; `node scripts/run-test.mjs 08 --slug smoke-hold -- --timeout 120 ./vitexec/smoke-hold-jump.ts` | 75fcb28 | 2026-10-30 |
 | TEST-09 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-09-camera.log, evidence/G1/TEST-09-camera.png | `node scripts/run-test.mjs 09 --slug camera -- --timeout 180 --screenshot ./evidence/G1/TEST-09-camera.png ./vitexec/smoke-camera.ts` | 9b27e45 | 2026-10-30 |
-| TEST-10 | G1 | FAILED(test setup: relative mouse spikes misaimed the walk) | 1 | evidence/G1/TEST-10-camera-walls-attempt1-FAIL.log | `node scripts/run-test.mjs 10 --slug camera-walls -- --timeout 240 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts` | 3c720d2 | 2026-10-30 |
+| TEST-10 | G1 | FAILED(camera inside wall-thin: side shift pushed the pivot into the wall; strafe blocker hit) | 2 | evidence/G1/TEST-10-camera-walls-attempt2-FAIL.log, evidence/G1/TEST-10-camera-walls-attempt1-FAIL.log | `node scripts/run-test.mjs 10 --slug camera-walls -- --timeout 300 --screenshot ./evidence/G1/TEST-10-camera-walls.png ./vitexec/smoke-camera-walls.ts` | fa1eae3 | 2026-10-30 |
 | TEST-11a | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | 7b067d6 | 2026-10-30 |
 | TEST-11b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12a | G2 | NOT-STARTED | 0 | | | | |
@@ -71,10 +71,9 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## Placeholders still present
 | What | Where referenced | Expected in gate | Replacement |
 |---|---|---|---|
-| Smoke scene with `<SimpleCharacter>` | src/App.tsx | G0 | Hybrid controller (D-001), G1 |
-| Mannequin (library default model) | `<SimpleCharacter>` default in src/App.tsx | G0, G1 | Final character (D-017), G2 |
-| Default animation clips | `<SimpleCharacter>` defaults in src/App.tsx | G0, G1 | Split licensed clips (ref/05), G2 |
-| `PrototypeBox` texture | src/App.tsx | G0, G1 | Level art (ref/05), G2 |
+| Mannequin (library default model, no url) | src/character/rig.ts MODEL_OPTIONS | G0, G1 | Final character (D-017), G2 |
+| Default animation clips (Idle/Walk/Run/JumpUp/JumpLoop/JumpDown) | src/character/rig.ts CLIPS | G0, G1 | Split licensed clips (ref/05), G2 |
+| Flat-colour blockout boxes (G1 level) | src/level/blockout.ts | G1 | level/*.json + prefabs with licensed art (ref/03, ref/05), G2 |
 ## Blocked / needs owner
 - (none for G0)
 - Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
