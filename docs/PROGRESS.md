@@ -21,7 +21,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-02 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-03 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-04 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-04-move.log, evidence/G1/TEST-04-move.png | `node scripts/run-test.mjs 04 --slug move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts` | 1f62efd | 2026-10-30 |
-| TEST-05 | G1 | NOT-STARTED | 0 | | | | |
+| TEST-05 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | a8c8788 | 2026-10-30 |
 | TEST-06 | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-06-smoke.log, evidence/G1/TEST-06-physics.log, evidence/G1/TEST-06-smoke.png | `node scripts/run-test.mjs 06 --slug physics -- --timeout 120 ./vitexec/physics-jump.ts` ; `node scripts/run-test.mjs 06 --slug smoke -- --timeout 150 --screenshot ./evidence/G1/TEST-06-smoke.png ./vitexec/smoke-jump.ts` | 7b233c2 | 2026-10-30 |
 | TEST-07 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-07-phase-sweep.log | `node scripts/run-test.mjs 07 --slug phase-sweep -- --timeout 170 ./vitexec/physics-phase-sweep.ts` | 76bd3ff | 2026-10-30 |
 | TEST-07b | G2 | NOT-STARTED | 0 | | | | |

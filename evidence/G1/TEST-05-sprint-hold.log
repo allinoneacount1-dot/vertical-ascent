@@ -1,0 +1,14 @@
+# run-test TEST-05 slug=sprint-hold gate=G1 commit=a8c8788 started=2026-10-29T22:13:14.781Z
+# command: pnpm exec vitexec --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-hold.png ./vitexec/smoke-sprint-hold.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] menu after ms 551
+[log] synthetic: settings-seed {"sprintMode":"hold"}
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] TEST-05 PASS {"mode":"hold","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","turn":{"from":0,"to":3.139,"dxPx":-565},"walk2s":{"heldMs":2013.9,"distM":6.035,"sprintShare":0,"glyphShare":0,"samples":148},"sprint2sShiftHeld":{"heldMs":2015.3,"distM":12.07,"sprintShare":1,"glyphShare":0,"samples":148},"afterShiftRelease":{"medianSpeed":3,"sprint":false,"glyph":false},"glyphEverShown":false,"endPos":[-0.054,0,19.968],"failures":[]}
+[screenshot] ./evidence/G1/TEST-05-sprint-hold.png
+# exit=0 flagged=0 seconds=12.9 result=PASS
+# log: evidence/G1/TEST-05-sprint-hold.log
