@@ -1,0 +1,11 @@
+# owner-check 2026-10-30T02:05:12+07:00 commit c2d9b19
+## camera writes outside src/camera
+$ rg -n camera\.(position|rotation)\.(set|copy|add)|zoomDistance\s*= src -g !src/camera/**
+-> PASS (0 hits)
+## inputVelocity outside physics/controller
+$ rg -n inputVelocity src -g !src/physics/** -g !src/controller/**
+-> PASS (0 hits)
+## applyVelocity/stateVelocity outside physics
+$ rg -n applyVelocity|stateVelocity src -g !src/physics/**
+-> PASS (0 hits)
+OWNER-CHECK PASS
