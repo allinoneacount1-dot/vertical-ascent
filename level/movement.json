@@ -14,9 +14,28 @@
       "down2m": 5.99
     }
   },
+  "doubleJump": {
+    "apexM": 3.1512,
+    "airtimeS": 1.3569,
+    "reach": {
+      "walk": {
+        "flat": 4.071,
+        "up1m": 3.773,
+        "up2m": 3.394,
+        "down2m": 4.55
+      },
+      "run": {
+        "flat": 8.142,
+        "up1m": 7.546,
+        "up2m": 6.789,
+        "down2m": 9.1
+      }
+    },
+    "airJumpAt": "apex of the first jump"
+  },
   "coyoteS": 0.12,
-  "measuredAt": "2026-10-29T18:44:37.220Z",
-  "commit": "e332a09",
+  "measuredAt": "2026-10-29T22:06:18.995Z",
+  "commit": "a61a0bf",
   "source": "evidence/G1/movement.log",
   "definition": "apex = max feet rise above takeoff; airtime = takeoff to descending crossing of takeoff height; reach = horizontal feet distance to the descending crossing of takeoff + dh, ballistic, constant input velocity (instant air control)"
 }
