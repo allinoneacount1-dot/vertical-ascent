@@ -1,0 +1,6 @@
+# run-test TEST-18a slug=har-check gate=G2 commit=85a744a started=2026-10-29T23:05:46.932Z
+# command: node scripts/har-check.mjs evidence/G2/TEST-18a-slice.har --host 127.0.0.1 --any-port
+har {"file":"evidence/G2/TEST-18a-slice.har","requests":72,"hosts":{"127.0.0.1:34991":71,"127.0.0.1:24678":1},"pageHost":"127.0.0.1:34991","foreign":0,"errors":0,"htmlAssets":0}
+HAR PASS
+# exit=0 flagged=0 seconds=0.3 result=PASS
+# log: evidence/G2/TEST-18a-har-check.log

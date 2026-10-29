@@ -38,7 +38,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-17 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-18a | G2 | NOT-STARTED | 0 | | | | |
+| TEST-18a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-18a-har-run.log, evidence/G2/TEST-18a-har-check.log, evidence/G2/TEST-18a-slice.har (gitignored) | `node scripts/run-test.mjs 18a --slug har-run -- --timeout 150 --network-trace ./evidence/G2/TEST-18a-slice.har ./vitexec/smoke-network.ts` then `node scripts/run-test.mjs 18a --slug har-check --cmd "node scripts/har-check.mjs evidence/G2/TEST-18a-slice.har --host 127.0.0.1 --any-port"` | 85a744a | 2026-10-30 |
 | TEST-18b | G5 | NOT-STARTED | 0 | | | | |
 | TEST-19a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-19a-slice-data.log | `node scripts/run-test.mjs 19a --slug slice-data --cmd "pnpm vitest run src/level/slice.test.ts"` | fa34c17 | 2026-10-30 |
 | TEST-19b | G3 | NOT-STARTED | 0 | | | | |
