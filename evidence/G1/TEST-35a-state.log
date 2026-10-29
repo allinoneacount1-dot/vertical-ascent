@@ -1,0 +1,13 @@
+# run-test TEST-35a slug=state gate=G1 commit=cd2ff6a started=2026-10-29T19:05:21.639Z
+# command: pnpm vitest run src/game/state.test.ts
+
+ RUN  v5.0.5 D:/CLAUDE/vertical-ascent
+
+
+ Test Files  1 passed (1)
+      Tests  107 passed (107)
+   Start at  02:05:22
+   Duration  250ms (transform 50%, import 21%, tests 21%, worker 8%)
+
+# exit=0 flagged=0 seconds=1.6 result=PASS
+# log: evidence/G1/TEST-35a-state.log
