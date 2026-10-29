@@ -15,6 +15,11 @@ export type Hud = {
   tick: number
 }
 
+export type Toast = { id: number; text: string }
+
+/** Overlay sub-screens of MENU and PAUSED. */
+export type Panel = 'main' | 'settings' | 'controls' | 'credits' | 'confirmRestart'
+
 export type UiStore = {
   snapshot: Snapshot
   worldReady: boolean
@@ -23,6 +28,10 @@ export type UiStore = {
   /** "Click again" hint after a rejected pointer lock request (D-004). */
   hint: string | null
   hud: Hud
+  toasts: Toast[]
+  /** performance.now() of the last kill-plane respawn (300 ms fade, D-007), or 0 */
+  fadeAt: number
+  panel: Panel
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -31,4 +40,7 @@ export const useUi = create<UiStore>(() => ({
   pendingIntent: null,
   hint: null,
   hud: { heightM: 0, targetM: 0, timerMs: 0, showTimer: true, sprintGlyph: false, tick: 0 },
+  toasts: [],
+  fadeAt: 0,
+  panel: 'main',
 }))

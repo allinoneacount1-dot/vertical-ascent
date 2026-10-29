@@ -147,3 +147,80 @@ canvas:focus {
     color: CanvasText;
   }
 }
+
+.menu-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.panel button.secondary {
+  font-size: 18px;
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--fg);
+  border-color: rgba(242, 244, 248, 0.6);
+}
+
+.panel .row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.panel select,
+.panel input[type='checkbox'] {
+  font: inherit;
+  font-size: 18px;
+}
+
+.panel .list {
+  text-align: left;
+  margin: 0 0 16px;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.panel .big {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 6px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.toast {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+/* kill-plane respawn: 300 ms fade from black (D-007) */
+.fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+  animation: fade-out 300ms ease-out forwards;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade {
+    animation-duration: 1ms;
+  }
+}

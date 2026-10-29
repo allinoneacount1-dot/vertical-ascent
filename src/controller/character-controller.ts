@@ -31,6 +31,8 @@ export type ControllerEvents = {
   onLand?: (info: { simTime: number; fallMeters: number; bigFall: boolean; impactVy: number }) => void
   /** After every physics slice (sensors, victory and lastSafe hook in here from G2). */
   afterSlice?: (sliceDt: number) => void
+  /** bigFall became true: vy < -12 m/s for more than 0.6 s (D-023, TEST-12a). */
+  onBigFall?: (simTime: number) => void
 }
 
 const euler = new Euler(0, 0, 0, 'YXZ')
@@ -181,7 +183,10 @@ export class CharacterController {
       }
       if (y > this.airborneTopY) this.airborneTopY = y
       this.fallingFor = v.y < BIG_FALL_VY ? this.fallingFor + sliceDt : 0
-      if (this.fallingFor > BIG_FALL_S) this.bigFall = true
+      if (this.fallingFor > BIG_FALL_S && !this.bigFall) {
+        this.bigFall = true
+        this.events.onBigFall?.(this.simTime)
+      }
       this.lastVy = v.y
       return
     }
@@ -194,6 +199,15 @@ export class CharacterController {
       this.sinceLanding = 0
       this.events.onLand?.(info)
     }
+  }
+
+  /** Kill-plane respawn: forget the airborne phase (no landing event, no bigFall count for the void fall). */
+  resetAir(): void {
+    this.airborne = false
+    this.bigFall = false
+    this.fallingFor = 0
+    this.airJumpsLeft = 0
+    this.groundBody = null
   }
 
   /** Visual facing toward the input direction at ≤ MAX_YAW_RATE (update-rotation.ts logic). */

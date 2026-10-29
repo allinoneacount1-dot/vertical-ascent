@@ -1,0 +1,24 @@
+{
+  "zone": "slice",
+  "seed": null,
+  "spawn": [0, 0, 0],
+  "finish": "s-r14",
+  "platforms": [
+    { "id": "s-floor", "prefab": "floor-60", "pos": [0, 0, -4], "rotY": 0, "tag": "floor", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r01", "prefab": "pad-l", "pos": [0, 0.6, -5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r02", "prefab": "pad-m", "pos": [0, 1.5, -9.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r03", "prefab": "pad-m", "pos": [3.5, 2.4, -12.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r04", "prefab": "pad-s", "pos": [7, 3.2, -12.5], "rotY": 0, "tag": "route", "precision": true, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r05", "prefab": "mover-m", "pos": [11, 3.2, -12.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": { "type": "linear", "points": [[0, 0, 0], [0, 0, 8]], "periodS": 12, "phaseS": 0, "dwellS": 1.5 } },
+    { "id": "s-r06", "prefab": "pad-m", "pos": [11, 4.0, -1], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r07", "prefab": "pad-m", "pos": [7.5, 4.8, 1], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r08", "prefab": "pad-l", "pos": [2.5, 4.8, 1], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-h01", "prefab": "blade-5", "pos": [-1, 8.6, 1], "rotY": 0, "tag": "hazard", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": { "type": "rotate", "points": [[0, 0, 0]], "axis": [1, 0, 0], "periodS": 5, "phaseS": 0, "dwellS": 0 } },
+    { "id": "s-r09", "prefab": "pad-l", "pos": [-4.5, 4.8, 1], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r10", "prefab": "pad-m", "pos": [-8.5, 5.6, -1.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r11", "prefab": "pad-m", "pos": [-8.5, 6.4, -5.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r12", "prefab": "pad-s", "pos": [-5, 7.2, -7.5], "rotY": 0, "tag": "route", "precision": true, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r13", "prefab": "pad-m", "pos": [-1.5, 8.0, -7.5], "rotY": 0, "tag": "route", "precision": false, "landmark": false, "fakeSummit": false, "trap": null, "motion": null },
+    { "id": "s-r14", "prefab": "finish-pad", "pos": [3, 8.8, -7.5], "rotY": 0, "tag": "route", "precision": false, "landmark": true, "fakeSummit": false, "trap": null, "motion": null }
+  ]
+}

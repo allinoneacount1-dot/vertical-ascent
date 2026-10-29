@@ -1,4 +1,4 @@
-// G1 app shell: hybrid controller in the G1 blockout (DIRECTIVE §5 G1). <BvhPhysicsWorld> without <Viverse> (D-003).
+// App shell: hybrid controller in the level chosen by src/level/levels.ts (G2 slice; G1 blockout via ?level= in DEV). <BvhPhysicsWorld> without <Viverse> (D-003).
 // The Canvas never unmounts between menu and game (D-005).
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
@@ -59,7 +59,7 @@ export default function App() {
           <Sky sunPosition={[-12, 20, 10]} />
           <Lights />
           <Suspense fallback={null}>
-            <Level />
+            <Level level={game.level} />
           </Suspense>
           <Player />
           <GameLoop />

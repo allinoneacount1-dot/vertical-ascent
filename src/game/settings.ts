@@ -121,6 +121,17 @@ export function loadSettings(storage: Pick<Storage, 'getItem'> | null = safeStor
   return settings
 }
 
+/** Merges a change into the stored settings (written when a setting changes, ref/02 §Storage). */
+export function saveSettings(change: Partial<Settings>): Settings {
+  const next = { ...loadSettings(), ...change, v: 1 as const }
+  try {
+    safeStorage()?.setItem(SETTINGS_KEY, JSON.stringify(next))
+  } catch {
+    // storage unavailable (private mode): the change still applies to this session
+  }
+  return next
+}
+
 function safeStorage(): Storage | null {
   try {
     return typeof localStorage === 'undefined' ? null : localStorage

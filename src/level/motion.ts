@@ -11,7 +11,7 @@ export type Motion = {
   type: 'linear' | 'loop' | 'rotate'
   /** linear: ping-pong along the polyline; loop: closed loop through the points (offsets from the platform pos). */
   points: Vec3[]
-  /** rotate only: rotation axis (only [0, 1, 0] is supported in G1). */
+  /** rotate only: rotation axis in the platform's yawed frame (default [0, 1, 0]). */
   axis?: Vec3
   periodS: number
   phaseS: number
@@ -127,6 +127,8 @@ const pose: Pose = { offset: new Vector3(), yaw: 0 }
 const posePrev: Pose = { offset: new Vector3(), yaw: 0 }
 const q = new Quaternion()
 const yAxis = new Vector3(0, 1, 0)
+const spinAxis = new Vector3()
+const spin = new Quaternion()
 const p0 = new Vector3()
 const p1 = new Vector3()
 
@@ -168,7 +170,12 @@ export class PlatformMotion {
   private place(p: KinematicPlatform, t: number): void {
     evaluateMotion(p.motion, t, pose)
     p.mover.position.copy(p.basePos).add(pose.offset)
-    q.setFromAxisAngle(yAxis, p.baseYaw + pose.yaw)
+    q.setFromAxisAngle(yAxis, p.baseYaw)
+    if (p.motion.type === 'rotate') {
+      // rotation axis in the platform's yawed frame (G2: horizontal axes for windmill obstacles)
+      spinAxis.fromArray(p.motion.axis ?? [0, 1, 0]).normalize()
+      q.multiply(spin.setFromAxisAngle(spinAxis, pose.yaw))
+    }
     p.mover.quaternion.copy(q)
     p.mover.updateMatrixWorld(true)
     p.cur.copy(p.body.matrixWorld)
@@ -186,10 +193,10 @@ export class PlatformMotion {
       evaluateMotion(p.motion, this.worldClock + dt, pose)
       let d = p0.copy(posePrev.offset).distanceTo(p1.copy(pose.offset))
       if (p.motion.type === 'rotate') {
-        // surface speed at the collider's farthest corner from the axis
+        // surface travel at the collider's farthest point from the centre (bounded by half the AABB diagonal)
         const size = p.worldAabb.getSize(p0)
-        const radius = Math.hypot(size.x, size.z) / 2
-        d += Math.abs(pose.yaw - posePrev.yaw) * radius
+        const radius = size.length() / 2
+        d += Math.abs(Math.atan2(Math.sin(pose.yaw - posePrev.yaw), Math.cos(pose.yaw - posePrev.yaw))) * radius
       }
       if (d > max) max = d
     }
@@ -229,8 +236,9 @@ export class PlatformMotion {
       if (dt > 0) p.linearVelocity.copy(p1).sub(p0).divideScalar(dt)
       else p.linearVelocity.set(0, 0, 0)
       evaluateMotion(p.motion, this.worldClock, pose)
-      // wrap to (-π, π]: rotate motions jump from 2π back to 0 once per period
-      p.yawDelta = Math.atan2(Math.sin(pose.yaw - posePrev.yaw), Math.cos(pose.yaw - posePrev.yaw))
+      // wrap to (-π, π]: rotate motions jump from 2π back to 0 once per period; only a vertical axis carries yaw
+      const vertical = p.motion.type !== 'rotate' || p.motion.axis == null || (p.motion.axis[0] === 0 && p.motion.axis[2] === 0)
+      p.yawDelta = vertical ? Math.atan2(Math.sin(pose.yaw - posePrev.yaw), Math.cos(pose.yaw - posePrev.yaw)) : 0
     }
   }
 
