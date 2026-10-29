@@ -1,4 +1,4 @@
-// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
+// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; see THIRD_PARTY_LICENSES. Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); drops sub-nanosecond substep remainders and reports isGroundedRaw over the whole step (D-036); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
 //
 // The only module that writes character position and velocity (ref/02 Pemilik besaran).
 import { Box3, Line3, Matrix4, Object3D, Vector3 } from 'three'
@@ -31,6 +31,8 @@ export const DEFAULT_PHYSICS_OPTIONS: Readonly<CharacterPhysicsOptions> = Object
 
 /** Margin around the capsule AABB for the near-kinematic test (ref/04 Checklist vendoring 5). */
 const KINEMATIC_MARGIN = 0.1
+/** Remaining step time below this is dropped (floating-point remainder of dt / substep), D-036. */
+const SUBSTEP_EPSILON = 1e-9
 
 /** Returns true when the given world-space box overlaps any registered kinematic body's world AABB. */
 export type KinematicProximityTest = (worldBox: Box3) => boolean
@@ -81,7 +83,7 @@ export class CharacterPhysics {
     return this.notGroundedSeconds < 0.2
   }
 
-  /** Ground contact (with downward state velocity) in the last substep of the last update(). */
+  /** Ground contact (with downward state velocity) in any substep of the last update() (D-036). */
   get isGroundedRaw(): boolean {
     return this.groundedRaw
   }
@@ -154,8 +156,11 @@ export class CharacterPhysics {
     const capsuleRadius = options.capsuleRadius
     const forceWriteBack = this.carryPending
     this.carryPending = false
+    let anyGrounded = false
 
-    while (fullDelta > 0) {
+    // Vendored: stop at a sub-nanosecond remainder (1/60 - 4·(1/240) leaves ~1e-18 s in floating point); such a
+    // substep moves nothing, cannot touch the ground and used to report "not grounded" for the whole step (D-036).
+    while (fullDelta > SUBSTEP_EPSILON) {
       const speed = velocity.copy(this.inputVelocity).add(this.stateVelocity).length()
       const maxCollisionDelta = speed === 0 ? maxPhysicsDelta : capsuleRadius / speed
       const partialDelta = Math.min(fullDelta, maxPhysicsDelta, maxCollisionDelta)
@@ -173,8 +178,8 @@ export class CharacterPhysics {
       this.notGroundedSeconds += partialDelta
       if (isGrounded) {
         this.notGroundedSeconds = 0
+        anyGrounded = true
       }
-      this.groundedRaw = isGrounded
       // Library: write back only when airborne or moving (prevents creeping on slopes while idle).
       // Vendored: also when this step carries the character or the capsule is near a kinematic body,
       // otherwise an idle player is neither carried nor pushed out (physics/index.ts:111-113, D-012).
@@ -197,6 +202,8 @@ export class CharacterPhysics {
         this.stateVelocity.set(0, options.gravity * 0.01, 0)
       }
     }
+    // ground contact in any substep of this step (ref/04 Checklist vendoring 4: "kontak pada step terakhir")
+    this.groundedRaw = anyGrounded
     // Sensors must stay: without this call BvhPhysicsSensor never fires (D-002).
     this.updateBoundingShapes()
     centerHelper.addVectors(this.segment.start, this.segment.end).multiplyScalar(0.5)
