@@ -26,11 +26,11 @@ const waitFor = async (pred: () => boolean, ms: number) => {
   return true
 }
 
-// seeded positions: route pad tops, mid-air above them, and open floor
+// seeded positions: route pad tops and mid-air above them — never the finish pad (landing there is a victory)
 let seed = 1515
 const rand = () => ((seed = (seed * 1103515245 + 12345) >>> 0) / 4294967296)
 const spots: Array<[number, number, number]> = [
-  [0, 0.6, -5], [3.5, 2.4, -12.5], [7, 3.2, -12.5], [11, 4, -1], [2.5, 4.8, 1], [-4.5, 4.8, 1], [-8.5, 6.4, -5.5], [-1.5, 8, -7.5], [3, 8.8, -7.5],
+  [0, 0.6, -5], [3.5, 2.4, -12.5], [7, 3.2, -12.5], [11, 4, -1], [2.5, 4.8, 1], [-4.5, 4.8, 1], [-8.5, 6.4, -5.5], [-1.5, 8, -7.5],
 ]
 
 // one Cancel check first: the dialog must not restart by itself
@@ -61,7 +61,10 @@ for (let i = 0; i < 20; i++) {
   g().__debugTeleport(p)
   await sleep(200 + Math.floor(rand() * 300))
   await keyboard.press('KeyP')
-  if (!(await waitFor(() => g().snapshot().state === 'PAUSED', 60))) throw new Error(`TEST-15 FAIL restart ${i}: P did not pause`)
+  if (!(await waitFor(() => g().snapshot().state === 'PAUSED', 60))) {
+    const ev = (g().snapshot() as unknown as { events: Array<{ t: number; type: string; data?: unknown }> }).events.filter((e) => e.type === 'state' || e.type === 'lockRejected').slice(-10)
+    throw new Error(`TEST-15 FAIL restart ${i}: P did not pause; state=${g().snapshot().state} locked=${document.pointerLockElement === canvas} active=${document.activeElement?.tagName} events=${JSON.stringify(ev)}`)
+  }
   await sleep(220)
   await click('[data-testid=restart]')
   const dialog = await waitFor(() => document.querySelector('[data-testid=panel-confirm-restart]') != null, 60)
