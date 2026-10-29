@@ -67,6 +67,7 @@ export class CharacterController {
   /** Seconds since the last landing (animation landing window). */
   sinceLanding = Number.POSITIVE_INFINITY
   private fallingFor = 0
+  private belowBigFallVy = false
   private lastTakeoffAt = Number.NEGATIVE_INFINITY
   /** Air jumps left in this airborne phase (granted by a ground takeoff, cleared on landing). */
   private airJumpsLeft = 0
@@ -105,6 +106,7 @@ export class CharacterController {
     this.airborne = false
     this.bigFall = false
     this.fallingFor = 0
+    this.belowBigFallVy = false
     this.lastTakeoffAt = Number.NEGATIVE_INFINITY
     this.airJumpsLeft = 0
     this.facingYaw = facingYaw
@@ -180,9 +182,18 @@ export class CharacterController {
         this.airborne = true
         this.airborneTopY = y
         this.fallingFor = 0
+        this.belowBigFallVy = false
       }
       if (y > this.airborneTopY) this.airborneTopY = y
-      this.fallingFor = v.y < BIG_FALL_VY ? this.fallingFor + sliceDt : 0
+      // count time only after the slice in which vy first dropped below -12 (that slice crossed it part-way),
+      // so bigFall fires strictly more than 0.6 s after the crossing (TEST-12a attempt 1)
+      if (v.y < BIG_FALL_VY) {
+        if (this.belowBigFallVy) this.fallingFor += sliceDt
+        this.belowBigFallVy = true
+      } else {
+        this.belowBigFallVy = false
+        this.fallingFor = 0
+      }
       if (this.fallingFor > BIG_FALL_S && !this.bigFall) {
         this.bigFall = true
         this.events.onBigFall?.(this.simTime)
@@ -196,6 +207,7 @@ export class CharacterController {
       const info = { simTime: this.simTime, fallMeters: Math.max(0, this.airborneTopY - y), bigFall: this.bigFall, impactVy: this.lastVy }
       this.bigFall = false
       this.fallingFor = 0
+      this.belowBigFallVy = false
       this.sinceLanding = 0
       this.events.onLand?.(info)
     }
@@ -206,6 +218,7 @@ export class CharacterController {
     this.airborne = false
     this.bigFall = false
     this.fallingFor = 0
+    this.belowBigFallVy = false
     this.airJumpsLeft = 0
     this.groundBody = null
   }
