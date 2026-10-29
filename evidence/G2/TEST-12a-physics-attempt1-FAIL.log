@@ -1,0 +1,11 @@
+# run-test TEST-12a slug=physics gate=G2 commit=3b63a01 started=2026-10-29T22:54:45.445Z
+# command: pnpm exec vitexec --timeout 150 ./vitexec/physics-fall.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] TEST-12a numbers {"cliff 60 fps":{"fps":60,"leftAt":1.1833,"landAt":2.2,"fallS":1.0167,"monotonic":true,"vyAfter2Frames":-0.2,"yFinal":0},"fall200 60 fps":{"fps":60,"vyBelow12At":0.6333,"flagAt":1.2167,"eventAt":1.2167,"flagDelayAfterVy12S":0.5833,"landedWithBigFall":true,"fallM":200},"cliff 144 fps":{"fps":144,"leftAt":1.1736,"landAt":2.1875,"fallS":1.0139,"monotonic":true,"vyAfter2Frames":-0.2,"yFinal":0},"fall200 144 fps":{"fps":144,"vyBelow12At":0.625,"flagAt":1.2222,"eventAt":1.2222,"flagDelayAfterVy12S":0.5972,"landedWithBigFall":true,"fallM":200}}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+vitexec failed: page.evaluate: Error: TEST-12a FAIL fall200 60 fps: bigFall set 0.5833333333333336 s after vy < -12 (must be > 0.6); fall200 144 fps: bigFall set 0.5972222222222202 s after vy < -12 (must be > 0.6)
+    at http://127.0.0.1:4802/__vitexec/code/ca6f1639-87df-4bac-9d10-125eddeecabb:167:8
+# exit=1 flagged=0 seconds=5.0 result=FAIL
+# log: evidence/G2/TEST-12a-physics.log
