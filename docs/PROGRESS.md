@@ -52,7 +52,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-25 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-26 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-27 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-28a | G1 | NOT-STARTED | 0 | | | | |
+| TEST-28a | G1 | VERIFIED-PASS | 1 | evidence/G1/TEST-28a-visibility.log, evidence/G1/TEST-28a-visibility.png | `node scripts/run-test.mjs 28a --slug visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts` | a234a25 | 2026-10-30 |
 | TEST-28b | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 170 ./vitexec/physics-dt-clamp.ts` | 76bd3ff+dirty | 2026-10-30 |
 | TEST-29 | G2 | NOT-STARTED | 0 | | | | |
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
