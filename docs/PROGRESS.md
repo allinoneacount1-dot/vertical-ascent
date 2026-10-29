@@ -28,7 +28,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-08 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-09 | G1 | NOT-STARTED | 0 | | | | |
 | TEST-10 | G1 | NOT-STARTED | 0 | | | | |
-| TEST-11a | G1 | FAILED(descending-platform carry skipped) | 1 | evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | 5bf964d | 2026-10-30 |
+| TEST-11a | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | 7b067d6 | 2026-10-30 |
 | TEST-11b | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12a | G2 | NOT-STARTED | 0 | | | | |
 | TEST-12b | G4 | NOT-STARTED | 0 | | | | |
