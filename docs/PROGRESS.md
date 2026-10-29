@@ -1,4 +1,4 @@
-RESUME HERE: G1 IN-PROGRESS (started 2026-10-30 01:33, D-030), next action: G1 TEST scripts — physics harness (07, 34, 08, 06, 31, 28b, 11a) and smoke (01, 32, 04, 05, 09, 10, 14a, 28a), 35a unit; then official runs via scripts/run-test.mjs
+RESUME HERE: G1 PAUSED by owner ("stop dulu", 2026-10-30) — next action: review the untracked TEST scripts in vitexec/ (written by the stopped authoring workflow, not yet reviewed), finish the missing ones (TEST-05 hold/always/toggle, 06 smoke, 08 hold-Space, 10, 14a, 28a), then official runs via scripts/run-test.mjs; TEST-35a done
 
 # PROGRESS — Vertical Ascent
 ## Environment
