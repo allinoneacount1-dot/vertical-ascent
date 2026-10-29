@@ -1,0 +1,100 @@
+[
+  {
+    "file": ".cache/work/vroid-g/AvatarSample_G-1024.vrm",
+    "fileBytes": 8878364,
+    "generator": "UniGLTF-1.24",
+    "extensionsUsed": [
+      "KHR_materials_unlit",
+      "VRM"
+    ],
+    "vrmVersion": "0",
+    "meta": {
+      "version": "",
+      "author": "VRoidプロジェクト",
+      "contactInformation": "",
+      "reference": "",
+      "title": "ヴィクトリア・ルービン",
+      "allowedUserName": "Everyone",
+      "violentUssageName": "Allow",
+      "sexualUssageName": "Allow",
+      "commercialUssageName": "Allow",
+      "otherPermissionUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow",
+      "licenseName": "Other",
+      "otherLicenseUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow"
+    },
+    "humanBones": 54,
+    "meshes": 3,
+    "materials": 16,
+    "mtoon": 16,
+    "images": 28,
+    "imageBytes": 5054558,
+    "largestImages": [
+      {
+        "i": 27,
+        "name": "Thumbnail",
+        "mime": "image/png",
+        "bytes": 655465,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 17,
+        "name": "F00_002_Onepiece_01",
+        "mime": "image/png",
+        "bytes": 613207,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 16,
+        "name": "F00_002_02_Body_00_nml",
+        "mime": "image/png",
+        "bytes": 537234,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 15,
+        "name": "F00_002_Body_00",
+        "mime": "image/png",
+        "bytes": 500677,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 12,
+        "name": "F00_000_00_Face_00_nml",
+        "mime": "image/png",
+        "bytes": 388272,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 11,
+        "name": "F00_000_Face_00",
+        "mime": "image/png",
+        "bytes": 374771,
+        "size": [
+          1024,
+          1024
+        ]
+      }
+    ],
+    "over1024": 0,
+    "bindPoseY": [
+      0,
+      1.7371
+    ],
+    "bindPoseHeightM": 1.7371
+  }
+]

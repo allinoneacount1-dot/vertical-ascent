@@ -1,0 +1,43 @@
+{
+  "input": ".cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm",
+  "output": ".cache/work/vroid-f/AvatarSample_F-1024.vrm",
+  "max": 1024,
+  "bytesBefore": 14198800,
+  "bytesAfter": 8827428,
+  "viewsTotal": 210,
+  "viewsCopiedIdentical": 206,
+  "imagesResized": [
+    {
+      "image": 15,
+      "name": "F00_002_Body_00",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "bytesBefore": 2159641,
+      "bytesAfter": 572894
+    },
+    {
+      "image": 16,
+      "name": "F00_002_02_Body_00_nml",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "bytesBefore": 2155898,
+      "bytesAfter": 537234
+    },
+    {
+      "image": 17,
+      "name": "F00_002_Onepiece_01",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "bytesBefore": 1167396,
+      "bytesAfter": 370925
+    },
+    {
+      "image": 27,
+      "name": "Thumbnail",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "bytesBefore": 2039785,
+      "bytesAfter": 670508
+    }
+  ]
+}
