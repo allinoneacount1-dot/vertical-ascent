@@ -115,6 +115,20 @@ export class CameraRig {
     this.zoomReader.update()
   }
 
+  private suppressUntil = 0
+
+  /** Ignore rotation input for ms after pointer lock is acquired (first-event movement spike, D-033). */
+  suppressRotation(ms: number): void {
+    this.suppressUntil = performance.now() + ms
+  }
+
+  private dropRotationInput(): void {
+    const b = this.behavior as unknown as { yawReader: { update(): void }; pitchReader: { update(): void } }
+    // moving queued deltas into "current" now means the library's own update() sees an empty queue
+    b.yawReader.update()
+    b.pitchReader.update()
+  }
+
   /** Priority -1. target = the physics root (feet). */
   update(camera: PerspectiveCamera, target: Object3D, dt: number): void {
     this.frameDt = dt
@@ -138,6 +152,7 @@ export class CameraRig {
     this.side += (sideTarget - this.side) * (1 - Math.exp(-dt / 0.15))
     pivotOffset.set(this.side, CAMERA.pivotHeight, 0)
 
+    if (performance.now() < this.suppressUntil) this.dropRotationInput()
     this.behavior.update(camera, target, dt, this.camRaycast, this.options)
 
     const fov = Math.min(this.fov, CAMERA.maxFov)

@@ -1,21 +1,73 @@
-// G0 smoke scene: the App.tsx block of pmndrs-viverse references/tutorials/remove-viverse-integrations.md, unchanged.
-// Replaced in G1 by the hybrid controller (D-001); <SimpleCharacter> is allowed only here.
-import { Sky } from '@react-three/drei'
+// G1 app shell: hybrid controller in the G1 blockout (DIRECTIVE §5 G1). <BvhPhysicsWorld> without <Viverse> (D-003).
+// The Canvas never unmounts between menu and game (D-005).
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { BvhPhysicsWorld, SimpleCharacter, BvhPhysicsBody, PrototypeBox } from '@react-three/viverse'
+import { Sky } from '@react-three/drei'
+import { BvhPhysicsWorld, useKeyboardLocomotionActionBindings, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
+import { Level } from './level/Level.tsx'
+import { Player } from './controller/Player.tsx'
+import { GameLoop } from './controller/GameLoop.tsx'
+import { CameraDriver } from './camera/CameraDriver.tsx'
+import { HudAndShadow } from './ui/HudSampler.tsx'
+import { Overlay } from './ui/Overlay.tsx'
+import { game } from './game/game.ts'
+import { installPlayGuards } from './game/enter-playing.ts'
+import { attachRenderer } from './game/debug.ts'
+import { CAMERA } from './camera/camera-rig.ts'
+
+/** Bindings mounted once at the Canvas root (D-004). Keyboard listens on the canvas, so it must have focus. */
+function Bindings() {
+  useKeyboardLocomotionActionBindings({ requiresPointerLock: true })
+  usePointerLockRotateZoomActionBindings({ lockOnClick: false })
+  return null
+}
+
+function Lights() {
+  return (
+    <>
+      <ambientLight intensity={0.8} />
+      <directionalLight
+        intensity={1.6}
+        position={[-12, 20, 10]}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-40}
+        shadow-camera-right={40}
+        shadow-camera-top={40}
+        shadow-camera-bottom={-40}
+      />
+    </>
+  )
+}
 
 export default function App() {
   return (
-    <Canvas shadows style={{ position: "absolute", inset: "0", touchAction: "none" }}>
-      <BvhPhysicsWorld>
-        <Sky />
-        <directionalLight intensity={1.2} position={[-10, 10, -10]} castShadow />
-        <ambientLight intensity={1} />
-        <SimpleCharacter />
-        <BvhPhysicsBody>
-          <PrototypeBox scale={[10, 1, 15]} position={[0, -0.5, 0]} />
-        </BvhPhysicsBody>
-      </BvhPhysicsWorld>
-    </Canvas>
+    <div className="app">
+      <Canvas
+        shadows
+        dpr={[1, 1.5]}
+        camera={{ fov: CAMERA.defaultFov, near: 0.1, far: 500, position: [0, 3, 6] }}
+        style={{ position: 'absolute', inset: '0', touchAction: 'none' }}
+        onCreated={({ gl }) => {
+          game.attachCanvas(gl.domElement)
+          attachRenderer(gl)
+          installPlayGuards(gl.domElement)
+        }}
+      >
+        <BvhPhysicsWorld>
+          <Bindings />
+          <Sky sunPosition={[-12, 20, 10]} />
+          <Lights />
+          <Suspense fallback={null}>
+            <Level />
+          </Suspense>
+          <Player />
+          <GameLoop />
+          <CameraDriver />
+          <HudAndShadow />
+        </BvhPhysicsWorld>
+      </Canvas>
+      <Overlay />
+    </div>
   )
 }
