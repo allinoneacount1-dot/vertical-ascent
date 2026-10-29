@@ -1,4 +1,4 @@
-RESUME HERE: G2 IN-PROGRESS (D-041), next action: TEST-15 restarts, TEST-13 HUD/timer rules, TEST-18a HAR, stub plugin + asset scripts; TEST-03 waits for approved asset ids; TEST-11b N/A(D-012)
+RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 2026-10-30 06:12), next action: owner approves APPROVALS ids in chat and/or drops OWNER-ONLY files → run the ref/05 asset pipeline, close TEST-03 (final character, D-017), swap slice prefab art, shrink the stub keep list (D-044); then G3 in a new session
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -10,7 +10,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 |---|---|---|---|---|---|---|
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
 | G1 Foundation | PASS | 2026-10-30 01:33 | 2026-10-30 05:34 | 390d1ea | 0 | evidence/G1 |
-| G2 Vertical slice | IN-PROGRESS | 2026-10-30 05:36 | | | 0 | evidence/G2 |
+| G2 Vertical slice | PASS-WITH-GAPS: TEST-03 | 2026-10-30 05:36 | 2026-10-30 06:12 | f0b3d96 | 1 | evidence/G2 |
 | G3 Full world | NOT-STARTED | | | | | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
 | G5 Delivery | NOT-STARTED | | | | | evidence/G5 |
@@ -71,13 +71,16 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 ## Placeholders still present
 | What | Where referenced | Expected in gate | Replacement |
 |---|---|---|---|
-| Mannequin (library default model, no url) | src/character/rig.ts MODEL_OPTIONS | G0, G1 | Final character (D-017), G2 |
-| Default animation clips (Idle/Walk/Run/JumpUp/JumpLoop/JumpDown) | src/character/rig.ts CLIPS | G0, G1 | Split licensed clips (ref/05), G2 |
-| Flat-colour blockout boxes (G1 level) | src/level/blockout.ts | G1 | level/*.json + prefabs with licensed art (ref/03, ref/05), G2 |
+| Mannequin (library default model, no url) | src/character/rig.ts MODEL_OPTIONS; stub keep list vite.config.ts GAP_SLOTS (D-044) | G0, G1; G2 gap (TEST-03) | Final character (D-017): O1 UBC + O2 Outfits, or A5 VRoid fallback |
+| Default animation clips (Idle/Walk/Run/JumpUp/JumpLoop/JumpDown) | src/character/rig.ts CLIPS; stub keep list (D-044) | G0, G1; G2 gap (TEST-03) | Split licensed clips (ref/05): A1/A2 UAL |
+| Procedural slice prefab visuals (coloured boxes, blade bands; `glb: null`) | level/prefabs.json, used by level/slice.json | G2 gap (no kit delivered) | Kenney kits O3–O8 (or A6 OGA mirrors) |
+| Flat-colour blockout boxes (G1 level) | src/level/blockout.ts, DEV-only `?level=g1-blockout` (D-042) | G1; kept as a DEV test level | none needed (not shipped as a level) |
 ## Blocked / needs owner
 - (none for G0, none for G1)
+- G2 gap TEST-03 BLOCKED(owner-asset-approval): no final character. Owner: approve in chat any of A1–A6 (asset-id, host, file pattern, size ±25 %), and/or drop O1/O2 (character), O3–O8 (kits), O9–O12 (audio) into `.cache/inbox/<slot>/` and reply "dropped <slot>". First action of the next gate.
+- G2 gap (same owner action): slice prefab art is procedural until a kit is delivered.
 - Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
-- Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
+- Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in chat (this session, or the kickoff of the session that closes the G2 gap); place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/.
 ## Gate reports
 (append DIRECTIVE §5.7 blocks here)
 
@@ -107,3 +110,14 @@ Blocked / needs owner: none for G1; for G2 the kickoff must name approved APPROV
 Decisions added: D-030 … D-040 (D-038 double jump = owner request)
 Budget: compactions 0/2 · TESTs at attempt cap: TEST-10 and TEST-11a passed on their 3rd cycle · wall-clock 01:33–05:34
 Next gate first action: owner G2 kickoff (fresh session recommended) naming approved asset ids; agent runs the ref/05 asset pipeline; route jumps must state whether they need the double jump (D-038)
+
+## Gate G2 report — 2026-10-30 06:12 — commit f0b3d96
+Status: PASS-WITH-GAPS: TEST-03
+TESTs: TEST-07b:VERIFIED-PASS(evidence/G2/TEST-07b-bar-push.log) · TEST-34b:VERIFIED-PASS(evidence/G2/TEST-34b-bar-tunnel.log) · TEST-12a:VERIFIED-PASS(evidence/G2/TEST-12a-physics.log, TEST-12a-smoke.log; attempt 2) · TEST-13:VERIFIED-PASS(evidence/G2/TEST-13-hud-timer.log; attempt 2) · TEST-15:VERIFIED-PASS(evidence/G2/TEST-15-restart.log; attempt 3) · TEST-18a:VERIFIED-PASS(evidence/G2/TEST-18a-har-check.log) · TEST-19a:VERIFIED-PASS(evidence/G2/TEST-19a-slice-data.log) · TEST-20a:VERIFIED-PASS(evidence/G2/TEST-20a-play-run1.log, TEST-20a-play-run2.log) · TEST-29:VERIFIED-PASS(evidence/G2/TEST-29-killplane.log) · TEST-11b:N/A(D-012)(evidence/G2/TEST-11b-na-check.log) · TEST-03:BLOCKED(owner-asset-approval)
+Key numbers: play.ts two runs in a row, 14/14 waypoints, 0 retries, gameplay 35.279 s / 35.314 s, 0 animation samples without a clip; bar at 8 m/s: 0 tunnels, max penetration 0 m over 60 s of contact; bigFall flag 601 ms after vy < -12; kill-plane respawn ≤15.8 ms, HUD 0 m ≤31 ms; 20/20 restarts to spawn with v 0, timer 0; HUD height 5/5 points match, timer/wall 1.000; HAR 72 requests, all 127.0.0.1, 0 errors, 0 html assets
+Steps: (3) schema, prefabs, level/slice.json (14 route pads, 1 mover, 1 sweeping blade, finish sensor, kill plane, floor), build-routes.mjs; (4) HUD, menu, pause, confirmed Restart; (5) rehearsal, then play.ts twice with --record; (6) stub plugin (D-044); (7) GAME_DESIGN.md; (1) pipeline scripts written (fetch-assets, split-clips, vrm-meta, check-assets, glb-nodes) but not run on any asset: none approved; (2) final character: blocked
+Expected placeholders still present: mannequin + 6 default clips (stub gap slots, D-044); procedural slice prefab visuals (level/prefabs.json `glb: null`); G1 blockout kept as a DEV test level (D-042)
+Blocked / needs owner: TEST-03 and slice art — approve A1–A6 in chat (asset-id, host, file pattern, size ±25 %) and/or drop O1/O2 (character), O3–O8 (kits), O9–O12 (audio) into .cache/inbox/<slot>/
+Decisions added: D-041 … D-044
+Budget: compactions 1/2 · TESTs at attempt cap: TEST-15 passed on its 3rd attempt · wall-clock 05:36–06:12
+Next gate first action: close TEST-03 — ref/05 pipeline on the approved or dropped assets, final character (D-017), slice prefab art, shrink the stub keep list; then G3 in a new session
