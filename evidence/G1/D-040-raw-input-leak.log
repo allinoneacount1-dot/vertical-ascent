@@ -1,0 +1,5 @@
+# D-040 evidence, 2026-10-30 ~05:30 local, commit after commit of D-039 camera fix
+# One-off probe (same logic as vitexec/probes/raw-input-leak.ts): no vitexec mouse input during either 6 s window.
+[log] rawdiag {"rawLockIdle6s":{"n":191,"sumX":-1513,"sumY":-239,"maxAbsX":118,"dYaw":8.406,"rawLock":true},"plainLockIdle6s":{"n":0,"sumX":0,"sumY":0,"maxAbsX":0,"dYaw":0,"rawLock":false}}
+# Strafe diagnostic before it (no mouse.move at all): camera rotated from yaw ≈ -0.37 rad and dropped to y 0.29 m,
+# 53 of 114 frames hit the floor (lastHit), feet moved 1.6 m instead of ~4.2 m (strafe direction turned with the yaw).

@@ -9,6 +9,7 @@ import { CharacterCameraBehavior } from '@pmndrs/viverse'
 import { PlatformMotion } from '/src/level/motion.ts'
 import { CharacterController } from '/src/controller/character-controller.ts'
 import { HudSampler } from '/src/ui/HudSampler.tsx'
+import { seedNoRawInput } from '/vitexec/lib/move-smoke.ts'
 
 type Snap = { state: string; player: { pos: number[] }; camera: { yaw: number; pitch: number } }
 type G = Snap & { snapshot(): Snap }
@@ -48,6 +49,7 @@ while (g()?.state !== 'MENU') {
   if (performance.now() - tMenu0 > 30000) throw new Error('TEST-32 FAIL no MENU, state=' + g()?.state)
   await sleep(50)
 }
+seedNoRawInput() // D-040 test isolation from the machine's physical mouse
 const button = document.querySelector('.panel button')
 if (!(button instanceof HTMLElement)) throw new Error('TEST-32 FAIL no Play button')
 const rect = button.getBoundingClientRect()

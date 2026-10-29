@@ -37,6 +37,23 @@ export function logRenderer(): string {
 }
 
 /**
+ * Test isolation (D-040): with unadjustedMovement (raw input) pointer lock, headless Chromium on Windows also receives
+ * the physical mouse of the machine, so camera input is no longer only vitexec's. Smoke TESTs seed rawInput:false
+ * (merged into any other allowlisted seed) right before the Play click; the app reads it when requesting the lock.
+ */
+export function seedNoRawInput(): void {
+  let stored: Record<string, unknown> = {}
+  try {
+    stored = JSON.parse(localStorage.getItem('va.settings.v1') ?? '{}') as Record<string, unknown>
+  } catch {
+    stored = {}
+  }
+  const seed = { ...stored, v: 1, rawInput: false }
+  localStorage.setItem('va.settings.v1', JSON.stringify(seed))
+  console.log('synthetic: settings-seed ' + JSON.stringify({ rawInput: false, reason: 'D-040 test isolation' }))
+}
+
+/**
  * LOADING → MENU, optional setup right before the click (allowlisted seed only), real click on Play, then
  * pointer lock on the canvas + PLAYING within 120 frames, then 300 ms (first delta discarded, 150 ms rotation
  * settle, D-033).
@@ -49,6 +66,7 @@ export async function bootToPlaying(beforePlay?: () => void): Promise<HTMLCanvas
   }
   console.log('menu after ms ' + Math.round(performance.now() - t0))
   beforePlay?.()
+  seedNoRawInput()
   const button = document.querySelector('.panel button')
   if (!(button instanceof HTMLButtonElement)) throw new Error('no Play button (.panel button)')
   const r = button.getBoundingClientRect()

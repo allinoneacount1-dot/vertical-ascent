@@ -6,6 +6,7 @@ import type { EnterIntent } from './state.ts'
 import { useUi } from './store.ts'
 import { game } from './game.ts'
 import { resumeAudio } from '../audio/context.ts'
+import { loadSettings } from './settings.ts'
 import { t } from '../ui/strings.ts'
 
 type LockOptions = { unadjustedMovement?: boolean }
@@ -20,6 +21,8 @@ export async function enterPlaying(intent: EnterIntent): Promise<void> {
   const { snapshot } = useUi.getState()
   if (canvas == null || !game.isWorldReady || !canEnter(snapshot, intent)) return
   resumeAudio()
+  // stored settings apply at the moment of entering play (D-034, D-040): raw input decides the lock options
+  game.rawInput = loadSettings().rawInput
   useUi.setState({ pendingIntent: intent, hint: null })
   if (document.pointerLockElement === canvas) {
     // already locked (e.g. P pause keeps no lock, but be safe): enter directly

@@ -15,6 +15,7 @@
 //   (x -2..4, z 8..24) by re-aiming the yaw with mouse.move from fresh state for 10 s. Per-frame |Δdistance| ≤ 2 m
 //   for every consecutive sample pair in the loop where neither sample is a collision frame (lastHit != null).
 import { keyboard, mouse } from 'vitexec'
+import { seedNoRawInput } from '/vitexec/lib/move-smoke.ts'
 
 type V3 = [number, number, number]
 type Snap = {
@@ -66,6 +67,7 @@ while (g()?.state !== 'MENU') {
 const canvas = document.querySelector('canvas')
 const play = document.querySelector<HTMLButtonElement>('.panel button')
 if (!canvas || !play) throw new Error(`${ID} FAIL setup: canvas or Play button missing`)
+seedNoRawInput() // D-040 test isolation from the machine's physical mouse
 {
   const r = play.getBoundingClientRect()
   await mouse.moveTo(r.x + r.width / 2, r.y + r.height / 2)

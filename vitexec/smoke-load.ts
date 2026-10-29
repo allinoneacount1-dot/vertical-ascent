@@ -5,6 +5,7 @@
 // Timing: performance.now() counts from navigation start (timeOrigin). Runner error lines: scripts/run-test.mjs.
 import { keyboard, mouse } from 'vitexec'
 import { useUi } from '/src/game/store.ts'
+import { seedNoRawInput } from '/vitexec/lib/move-smoke.ts'
 
 type Snap = {
   state: string
@@ -101,6 +102,7 @@ for (const n of names) {
 }
 
 // ---- 3. Play (real click), pointer lock on the canvas, PLAYING -------------------------------------------------
+seedNoRawInput() // D-040 test isolation from the machine's physical mouse
 const button = document.querySelector('.panel button')
 if (!(button instanceof HTMLElement)) throw new Error('TEST-01 FAIL no Play button')
 const rect = button.getBoundingClientRect()
