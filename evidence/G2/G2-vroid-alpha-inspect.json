@@ -1,0 +1,296 @@
+[
+  {
+    "file": ".cache/extract/vroid-alpha-cc0/avatarsample_e/AvatarSample_E.vrm",
+    "fileBytes": 17936516,
+    "generator": "UniGLTF-1.24",
+    "extensionsUsed": [
+      "KHR_materials_unlit",
+      "VRM"
+    ],
+    "vrmVersion": "0",
+    "meta": {
+      "version": "",
+      "author": "VRoidプロジェクト",
+      "contactInformation": "",
+      "reference": "",
+      "title": "ビビ",
+      "allowedUserName": "Everyone",
+      "violentUssageName": "Allow",
+      "sexualUssageName": "Allow",
+      "commercialUssageName": "Allow",
+      "otherPermissionUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow",
+      "licenseName": "Other",
+      "otherLicenseUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow"
+    },
+    "humanBones": 54,
+    "meshes": 3,
+    "materials": 16,
+    "mtoon": 16,
+    "images": 28,
+    "imageBytes": 14280143,
+    "largestImages": [
+      {
+        "i": 15,
+        "name": "F00_002_Body_00",
+        "mime": "image/png",
+        "bytes": 3339643,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 27,
+        "name": "Thumbnail",
+        "mime": "image/png",
+        "bytes": 2755853,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 17,
+        "name": "F00_002_Onepiece_01",
+        "mime": "image/png",
+        "bytes": 2658938,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 16,
+        "name": "F00_002_02_Body_00_nml",
+        "mime": "image/png",
+        "bytes": 2155898,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 11,
+        "name": "F00_000_Face_00",
+        "mime": "image/png",
+        "bytes": 562185,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 12,
+        "name": "F00_000_00_Face_00_nml",
+        "mime": "image/png",
+        "bytes": 388272,
+        "size": [
+          1024,
+          1024
+        ]
+      }
+    ],
+    "over1024": 4,
+    "bindPoseY": [
+      0.0008,
+      1.4132
+    ],
+    "bindPoseHeightM": 1.4123
+  },
+  {
+    "file": ".cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm",
+    "fileBytes": 14198800,
+    "generator": "UniGLTF-1.24",
+    "extensionsUsed": [
+      "KHR_materials_unlit",
+      "VRM"
+    ],
+    "vrmVersion": "0",
+    "meta": {
+      "version": "",
+      "author": "VRoidプロジェクト",
+      "contactInformation": "",
+      "reference": "",
+      "title": "ヴィータ",
+      "allowedUserName": "Everyone",
+      "violentUssageName": "Allow",
+      "sexualUssageName": "Allow",
+      "commercialUssageName": "Allow",
+      "otherPermissionUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow",
+      "licenseName": "Other",
+      "otherLicenseUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow"
+    },
+    "humanBones": 54,
+    "meshes": 3,
+    "materials": 16,
+    "mtoon": 16,
+    "images": 28,
+    "imageBytes": 10523604,
+    "largestImages": [
+      {
+        "i": 15,
+        "name": "F00_002_Body_00",
+        "mime": "image/png",
+        "bytes": 2159641,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 16,
+        "name": "F00_002_02_Body_00_nml",
+        "mime": "image/png",
+        "bytes": 2155898,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 27,
+        "name": "Thumbnail",
+        "mime": "image/png",
+        "bytes": 2039785,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 17,
+        "name": "F00_002_Onepiece_01",
+        "mime": "image/png",
+        "bytes": 1167396,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 11,
+        "name": "F00_000_Face_00",
+        "mime": "image/png",
+        "bytes": 582506,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 12,
+        "name": "F00_000_00_Face_00_nml",
+        "mime": "image/png",
+        "bytes": 388272,
+        "size": [
+          1024,
+          1024
+        ]
+      }
+    ],
+    "over1024": 4,
+    "bindPoseY": [
+      -0.0001,
+      1.7129
+    ],
+    "bindPoseHeightM": 1.713
+  },
+  {
+    "file": ".cache/extract/vroid-alpha-cc0/avatarsample_g/AvatarSample_G.vrm",
+    "fileBytes": 15321932,
+    "generator": "UniGLTF-1.24",
+    "extensionsUsed": [
+      "KHR_materials_unlit",
+      "VRM"
+    ],
+    "vrmVersion": "0",
+    "meta": {
+      "version": "",
+      "author": "VRoidプロジェクト",
+      "contactInformation": "",
+      "reference": "",
+      "title": "ヴィクトリア・ルービン",
+      "allowedUserName": "Everyone",
+      "violentUssageName": "Allow",
+      "sexualUssageName": "Allow",
+      "commercialUssageName": "Allow",
+      "otherPermissionUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow",
+      "licenseName": "Other",
+      "otherLicenseUrl": "https://hub.vroid.com/license?allowed_to_use_user=everyone&characterization_allowed_user=everyone&corporate_commercial_use=allow&credit=unnecessary&modification=allow&personal_commercial_use=profit&redistribution=allow&sexual_expression=allow&version=1&violent_expression=allow"
+    },
+    "humanBones": 54,
+    "meshes": 3,
+    "materials": 16,
+    "mtoon": 16,
+    "images": 28,
+    "imageBytes": 11497892,
+    "largestImages": [
+      {
+        "i": 17,
+        "name": "F00_002_Onepiece_01",
+        "mime": "image/png",
+        "bytes": 2436749,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 16,
+        "name": "F00_002_02_Body_00_nml",
+        "mime": "image/png",
+        "bytes": 2155898,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 27,
+        "name": "Thumbnail",
+        "mime": "image/png",
+        "bytes": 2119704,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 15,
+        "name": "F00_002_Body_00",
+        "mime": "image/png",
+        "bytes": 2037566,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "i": 12,
+        "name": "F00_000_00_Face_00_nml",
+        "mime": "image/png",
+        "bytes": 388272,
+        "size": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "i": 11,
+        "name": "F00_000_Face_00",
+        "mime": "image/png",
+        "bytes": 374771,
+        "size": [
+          1024,
+          1024
+        ]
+      }
+    ],
+    "over1024": 4,
+    "bindPoseY": [
+      0,
+      1.7371
+    ],
+    "bindPoseHeightM": 1.7371
+  }
+]

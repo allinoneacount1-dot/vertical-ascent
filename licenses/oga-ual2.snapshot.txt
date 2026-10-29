@@ -1,0 +1,86 @@
+# Snapshot: OpenGameArt: Universal Animation Library 2 (A2)
+# URL: https://opengameart.org/content/universal-animation-library-2
+# HTML fetched: 2026-10-29T23:17:04.245Z (curl, User-Agent VerticalAscent-fetch-assets/1)
+# HTML sha256: 793e5cc2c61030dd6de799bd737ca2d810e79d4536821a399d7d7fcd50677534
+
+Universal Animation Library 2 | OpenGameArt.org
+Skip to main content
+User login
+OpenID
+What is OpenID?
+Username or e-mail *
+Password *
+Log in using OpenID
+Cancel OpenID login
+Create new account
+Request new password
+Register
+Home
+Browse 2D Art
+3D Art
+Concept Art
+Textures
+Music
+Sound Effects
+Documents
+Featured Tutorials
+Submit Art
+Collect My Collections
+Art Collections
+Forums
+FAQ
+Leaderboards All Time Total Points
+Comments
+Favorites (All)
+Favorites (2D)
+Favorites (3D)
+Favorites (Concept Art)
+Favorites (Music)
+Favorites (Sound)
+Favorites (Textures)
+Weekly Total Points
+Comments
+Favorites (All)
+Favorites (2D)
+Favorites (3D)
+Favorites (Concept Art)
+Favorites (Music)
+Favorites (Sound)
+Favorites (Textures)
+❤ Donate
+Search
+Universal Animation Library 2
+Author:
+quaternius
+Friday, January 23, 2026 - 10:43
+Support quaternius on Patreon
+Art Type:
+3D Art
+Tags:
+animation
+library
+humanoid
+combat
+locomotion
+parkour
+farming
+zombie
+License(s):
+CC0
+Collections:
+3D Art
+All CC0 - Uploader: quaternius
+CC0 3d stuff
+fantasy
+Soul Harvesters
+Favorites:
+16
+Preview:
+The Universal Animation Library 2 is a kit of 130+ animations, created using a universal humanoid rig, which is compatible with Unreal Engine, Godot and Unity, ready for retargeting. This kit complements the first library, covering everything from melee and armed combos, parkour movement, farming, fishing, zombie locomotion and a lot more!
+You can preview all of the animations from the first and second library here:
+https://quaternius.com/animviewer.html
+And find all my other asset kits on the website:
+https://quaternius.com/index.html
+File(s):
+universal_animation_library_2standard.zip 10.3 Mb [ 840 download(s)]
+Log in or register to post comments

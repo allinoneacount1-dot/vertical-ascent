@@ -1,0 +1,113 @@
+# Snapshot: OpenGameArt: VRoid Studio CC0 models (A5)
+# URL: https://opengameart.org/content/vroid-studio-cc0-models
+# HTML fetched: 2026-10-29T23:17:05.288Z (curl, User-Agent VerticalAscent-fetch-assets/1)
+# HTML sha256: aaf3b79f5f7716f54efd10169b679d9cfbc93582c6e4373cef7ae964ba1dd937
+
+VRoid Studio CC0 models | OpenGameArt.org
+Skip to main content
+User login
+OpenID
+What is OpenID?
+Username or e-mail *
+Password *
+Log in using OpenID
+Cancel OpenID login
+Create new account
+Request new password
+Register
+Home
+Browse 2D Art
+3D Art
+Concept Art
+Textures
+Music
+Sound Effects
+Documents
+Featured Tutorials
+Submit Art
+Collect My Collections
+Art Collections
+Forums
+FAQ
+Leaderboards All Time Total Points
+Comments
+Favorites (All)
+Favorites (2D)
+Favorites (3D)
+Favorites (Concept Art)
+Favorites (Music)
+Favorites (Sound)
+Favorites (Textures)
+Weekly Total Points
+Comments
+Favorites (All)
+Favorites (2D)
+Favorites (3D)
+Favorites (Concept Art)
+Favorites (Music)
+Favorites (Sound)
+Favorites (Textures)
+❤ Donate
+Search
+VRoid Studio CC0 models
+Author:
+VRoid Project
+(Submitted by hecko )
+Tuesday, December 24, 2024 - 04:20
+Art Type:
+3D Art
+Tags:
+human
+anime
+waifu
+teenager
+teen
+boy
+girl
+elf
+demon
+Goth
+gltf
+glb
+avatar
+vroid
+License(s):
+CC0
+Collections:
+CC0 Portraits
+MetalTek
+Truly Truly Public Domain
+visualnovel/anime/manga CC0
+Favorites:
+9
+Preview:
+These models come from the alpha versions of VRoid Studio and were explicitly released by VRoid under CC0. They were downloaded from here where possible: https://vroid.pixiv.help/hc/en-us/articles/4402614652569-Do-VRoid-Studio-s-sample-models-come-with-conditions-of-use . See that URL for a more detailed preview for now. (AvatarSamples A through C are missing because they were released under different, more restrictive terms. AvatarSamples D through G are unrelated to the samples with the same names in the current version.)
+AvatarSample_D_Darkness, the bases, and the hair samples were exported from VRoid Studio 0.14.0. For consistency and flexibility, I've chosen not to use the optimization settings on export; if you want to use this in a game, you may want to merge the textures with whatever tool your software comes with, or download the beta and re-export them yourself.
+The files are in the VRM 0.x format , which is an avatar-specific format based on glTF 2.0. This means you can use it immediately in some programs, such as virtual avatar software or certain games.
+Look for importers and compatible software here: https://vrm.dev/en/vrm/vrm_applications/ . If you can't find an importer for your software, you can change the file extension to .glb and treat it as a glTF file. However, this will remove the toon material, and the Sakurada Fumiriya model in particular may require fixing.
+Copyright/Attribution Notice:
+https://vroid.pixiv.help/hc/en-us/articles/4402614652569-Do-VRoid-Studio-s-sample-models-come-with-conditions-of-use
+File(s):
+avatarsample_d.zip 13.6 Mb [ 629 download(s)]
+avatarsample_d_darkness.zip 17.2 Mb [ 386 download(s)]
+avatarsample_e.zip 15 Mb [ 297 download(s)]
+avatarsample_f.zip 11.2 Mb [ 308 download(s)]
+avatarsample_g.zip 12.2 Mb [ 292 download(s)]
+base_female.zip 13.1 Mb [ 485 download(s)]
+base_male.zip 14.8 Mb [ 375 download(s)]
+hairsample_female.zip 14.3 Mb [ 322 download(s)]
+hairsample_male.zip 15.5 Mb [ 276 download(s)]
+sakurada_fumiriya.zip 15.9 Mb [ 351 download(s)]
+sendagaya_shino.zip 11.7 Mb [ 316 download(s)]
+Log in or register to post comments
+Comments
+Technopeasant joined 10 years 4 months ago
+01/26/2025 - 14:36
+A shame about the format lock in though. Would appreciate if anyone could upload converted versions of these.
+Log in or register to post comments
+hecko joined 4 years 1 month ago
+01/26/2025 - 15:13
+gltf (which vrm is semi-backwards-compatible with) is just about the least locked-in format out there :p
+and the leading game engines (unity, unreal engine, godot, three.js) all have vrm importers made for them
+but if you have a specific usecase that isn't covered by that then let me know what format you need and i'll see how it goes
+Log in or register to post comments
