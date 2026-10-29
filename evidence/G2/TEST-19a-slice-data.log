@@ -1,0 +1,13 @@
+# run-test TEST-19a slug=slice-data gate=G2 commit=fa34c17 started=2026-10-29T22:51:52.776Z
+# command: pnpm vitest run src/level/slice.test.ts
+
+ RUN  v5.0.5 D:/CLAUDE/vertical-ascent
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  05:51:57
+   Duration  2.05s (transform 47%, worker 27%, import 22%, tests 5%)
+
+# exit=0 flagged=0 seconds=6.4 result=PASS
+# log: evidence/G2/TEST-19a-slice-data.log
