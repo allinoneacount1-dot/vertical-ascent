@@ -77,7 +77,8 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | `PrototypeBox` texture | src/App.tsx | G0, G1 | Level art (ref/05), G2 |
 ## Blocked / needs owner
 - (none for G0)
-- Owner actions due at the end of G0 (OWNER_RUNBOOK "Tindakan owner per gate"): answer Q1–Q11 or accept the defaults; review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
+- Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
+- Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in the G2 kickoff; place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/ before or at the start of G2.
 ## Gate reports
 (append DIRECTIVE §5.7 blocks here)
 
