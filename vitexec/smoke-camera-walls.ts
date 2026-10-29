@@ -60,42 +60,59 @@ const tick = () => {
 }
 requestAnimationFrame(tick)
 
-// ---- movement helpers (real input only) --------------------------------------------------------------------------
+// ---- movement helpers (real input only, closed loop) ----------------------------------------------------------------
+// Relative mouse moves under pointer lock occasionally arrive amplified in this headless setup (diagnostic run
+// 2026-10-30: a 397 px move delivered 9320 px), so every aim and pitch change is verified against the measured value
+// and repeated until it is within tolerance.
+const AIM_TOL = 0.05
+async function aimYaw(target: number): Promise<number> {
+  for (let i = 0; i < 8; i++) {
+    const err = wrap(target - full().camera.yaw)
+    if (Math.abs(err) <= AIM_TOL) return err
+    await turnToYaw(target)
+  }
+  return wrap(target - full().camera.yaw)
+}
+
 async function walkTo(tx: number, tz: number, label: string) {
-  for (let i = 0; i < 14; i++) {
+  let blocked = 0
+  for (let i = 0; i < 24; i++) {
     const p = full().player.pos
     const d = Math.hypot(tx - p[0], tz - p[2])
     if (d < 0.3) break
-    await turnToYaw(Math.atan2(-(tx - p[0]), -(tz - p[2])))
+    const aimErr = await aimYaw(Math.atan2(-(tx - p[0]), -(tz - p[2])))
+    if (Math.abs(aimErr) > AIM_TOL) continue // re-aim before walking
     await rec.hold('KeyW', Math.min(1500, Math.max(120, (d / 3) * 1000)))
     await sleep(80)
     const q = full().player.pos
-    if (Math.hypot(q[0] - p[0], q[2] - p[2]) < 0.03) break // blocked (against the wall)
+    if (Math.hypot(q[0] - p[0], q[2] - p[2]) < 0.03 && ++blocked >= 2) break // aimed correctly and still not moving: at the wall
   }
   const p = full().player.pos
   return { label, target: [tx, tz], reached: [r3(p[0]), r3(p[2])], offM: r3(Math.hypot(tx - p[0], tz - p[2])) }
 }
 
-async function setPitch(target: number) {
-  for (let i = 0; i < 3; i++) {
+async function setPitch(target: number): Promise<number> {
+  for (let i = 0; i < 8; i++) {
     const err = target - full().camera.pitch
+    if (Math.abs(err) <= 0.03) break
     const dy = Math.round((-err * H) / 4)
-    if (Math.abs(dy) < 1) return
-    await mouse.move(0, dy)
+    if (dy === 0) break
+    await mouse.move(0, Math.max(-600, Math.min(600, dy)))
     for (let k = 0; k < 3; k++) await nextFrame()
   }
+  return full().camera.pitch
 }
 
 async function orbit(label: string) {
   const startIdx = camSamples.length
   const yaw0 = full().camera.yaw
   phase = label
-  const totalPx = Math.round((-2 * Math.PI * H) / 4) // yaw +2π
-  const steps = 12
+  const stepPx = Math.round((-(Math.PI / 6) * H) / 4) // nominal yaw +30° per step
   let swept = 0
   let prevYaw = yaw0
-  for (let i = 0; i < steps; i++) {
-    await mouse.move(Math.round(totalPx / steps), 0, { durationMs: 150 })
+  // keep turning until the MEASURED sweep reaches 2π (a step that arrives amplified still counts what it did)
+  for (let i = 0; i < 40 && swept < 2 * Math.PI; i++) {
+    await mouse.move(stepPx, 0, { durationMs: 150 })
     for (let k = 0; k < 2; k++) await nextFrame()
     const y = full().camera.yaw
     swept += wrap(y - prevYaw)
@@ -125,12 +142,15 @@ const spots: Array<[string, number, number]> = [
 const orbits: unknown[] = []
 const walks: unknown[] = []
 for (const [label, x, z] of spots) {
-  walks.push(await walkTo(x, z, label))
+  const w = await walkTo(x, z, label)
+  walks.push(w)
+  if (w.offM > 0.5) failures.push(`setup: ${label} not reached (${w.offM} m off)`)
   await sleep(200)
-  await setPitch(-20 * DEG)
+  const p1 = await setPitch(-20 * DEG)
   const o1 = await orbit(`${label} @ -20°`)
-  await setPitch(35 * DEG)
+  const p2 = await setPitch(35 * DEG)
   const o2 = await orbit(`${label} @ +35°`)
+  if (Math.abs(p1 - -20 * DEG) > 0.03 || Math.abs(p2 - 35 * DEG) > 0.03) failures.push(`setup: ${label} pitch not reached (${p1}, ${p2})`)
   orbits.push(o1, o2)
   for (const o of [o1, o2]) {
     if (o.insideSamples > 0) failures.push(`${o.label}: camera inside ${o.insideOf.join(',')} in ${o.insideSamples} frames`)
@@ -148,9 +168,11 @@ if (wallPulls === 0) failures.push('setup: no orbit sample pulled the camera in 
 
 // ---- pole strafe -------------------------------------------------------------------------------------------------
 walks.push(await walkTo(1, 1, 'pole strafe start'))
-await turnToYaw(0)
-await setPitch(-20 * DEG)
+const strafeAimErr = await aimYaw(0)
+const strafePitch = await setPitch(-20 * DEG)
 await sleep(300)
+out.strafeSetup = { aimErr: r3(strafeAimErr), pitch: strafePitch, yaw: full().camera.yaw }
+if (Math.abs(strafeAimErr) > AIM_TOL || Math.abs(strafePitch - -20 * DEG) > 0.03) failures.push(`setup: strafe aim/pitch not reached (${JSON.stringify(out.strafeSetup)})`)
 const strafeStart = camSamples.length
 phase = 'strafe'
 await rec.hold('KeyD', 1400)
@@ -174,7 +196,11 @@ if (crossings === 0) failures.push('setup: the camera ray never crossed the pole
 sampling = false
 rec.stop()
 const all = camSamples.map((s) => s.cam.distance)
-out.allSamples = { n: all.length, minDist: r3(Math.min(...all)), insideAnyFrame: camSamples.filter((s) => insideAny(s.cam.pos) != null).length }
+const insideFrames = camSamples
+  .map((s) => ({ s, id: insideAny(s.cam.pos) }))
+  .filter((x) => x.id != null)
+  .map(({ s, id }) => ({ phase: s.phase, id, yaw: s.cam.yaw, pitch: s.cam.pitch, dist: s.cam.distance, hit: s.cam.lastHit, cam: s.cam.pos, feet: s.feet }))
+out.allSamples = { n: all.length, minDist: r3(Math.min(...all)), insideAnyFrame: insideFrames.length, insideFrames: insideFrames.slice(0, 12) }
 if (Math.min(...all) < MIN_DIST) failures.push(`distance ${Math.min(...all)} < ${MIN_DIST} somewhere in the run`)
 
 if (failures.length > 0) {
