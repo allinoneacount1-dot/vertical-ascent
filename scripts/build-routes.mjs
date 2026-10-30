@@ -1,14 +1,23 @@
 #!/usr/bin/env node
 // Route generator (DIRECTIVE D-022, ref/03 §Data level, ref/06 §Route bot): builds the bot route from the ordered
 // platforms tagged 'route'. Never edited by hand.
-//   node scripts/build-routes.mjs [level=slice]   → vitexec/routes/<level>.json
-// Waypoint per route pad: takeoff point on the previous pad (0.45 m inside its edge), target point on the pad
-// (0.8 m inside its near edge), whether the jump needs sprint (measured reach, level/movement.json), and phase
-// windows for movers (land during their dwell) and rotating hazards on the jump path (cross while clear).
+//   node scripts/build-routes.mjs [level=slice|main]   → vitexec/routes/<level>.json
+// Waypoint per route pad: takeoff point on the previous pad (0.45 m inside its edge, or the level's takeoff hint for
+// a pad standing above a deck), target point on the pad (0.8 m inside its near edge), whether the jump needs sprint
+// (measured reach, level/movement.json), and phase windows for movers and lifts (land during their dwell) and for
+// rotating hazards on the jump path (cross while clear). 'main' = level/z1..z4.json in order (D-055).
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 const levelId = process.argv[2] ?? 'slice'
-const level = JSON.parse(readFileSync(`level/${levelId}.json`, 'utf8'))
+const ZONES = ['z1', 'z2', 'z3', 'z4']
+const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
+const zoneById = new Map()
+let level
+if (levelId === 'main') {
+  const zones = ZONES.map((z) => readJson(`level/${z}.json`))
+  for (const z of zones) for (const e of z.platforms) zoneById.set(e.id, z.zone)
+  level = { zone: 'main', seed: zones[0].seed, spawn: zones[0].spawn, finish: zones[zones.length - 1].finish, platforms: zones.flatMap((z) => z.platforms) }
+} else level = readJson(`level/${levelId}.json`)
 const prefabs = new Map(JSON.parse(readFileSync('level/prefabs.json', 'utf8')).map((p) => [p.id, p]))
 const movement = JSON.parse(readFileSync('level/movement.json', 'utf8'))
 
@@ -59,7 +68,16 @@ function walkReach(dh) {
   return w.flat + (w.up1m - w.flat) * Math.min(1, dh)
 }
 
-/** Clear-phase windows of a rotating hazard for a body column at (cz) spanning [y0, y1] (blade = 0.5 m bar). */
+/** World (x, z) in a hazard's yawed frame, relative to its hub (its spin axis is local X, the blade plane x = 0). */
+function toLocal(h, x, z) {
+  const dx = x - h.pos[0]
+  const dz = z - h.pos[2]
+  const c = Math.cos(h.rotY ?? 0)
+  const s = Math.sin(h.rotY ?? 0)
+  return [dx * c - dz * s, dx * s + dz * c]
+}
+
+/** Clear-phase windows of a rotating hazard for a body column at local lateral cz spanning [y0, y1] (blade = 0.5 m bar). */
 function hazardClear(entry, cz, y0, y1) {
   const p = prefabs.get(entry.prefab)
   const len = p.collider.size[1] * p.scale
@@ -73,7 +91,7 @@ function hazardClear(entry, cz, y0, y1) {
     let blocked = false
     for (let s = -len / 2; s <= len / 2 + 1e-9; s += 0.05) {
       const y = entry.pos[1] + s * Math.cos(th)
-      const z = entry.pos[2] + s * Math.sin(th)
+      const z = s * Math.sin(th)
       if (Math.abs(z - cz) <= CAPSULE_R + thick + 0.1 && y + thick >= y0 && y - thick <= y1) {
         blocked = true
         break
@@ -119,7 +137,8 @@ for (const entry of route) {
     fromTop = level.spawn[1]
   } else {
     const A = footprint(from, fromOffset)
-    const t = insetClosest(A, B.cx, B.cz, EDGE_IN)
+    // a pad above the deck it starts from: the generator's takeoff hint (the nearest deck point would lie under it)
+    const t = entry.takeoff && !fromMoving ? [entry.takeoff[0], entry.takeoff[2]] : insetClosest(A, B.cx, B.cz, EDGE_IN)
     takeoff = [t[0], A.top, t[1]]
     fromTop = A.top
   }
@@ -142,15 +161,21 @@ for (const entry of route) {
     const travel = P / 2 - fromMoving.dwellS
     waitPhase = { platform: from.id, window: [r3(travel / P), r3(0.5 - 0.02)], repeatEvery: 1 }
   }
-  // rotating hazards whose blade plane x lies between takeoff and target
+  // rotating hazards whose blade plane (local x = 0) lies between takeoff and target, within the blade's reach
   for (const h of hazards) {
-    const hx = h.pos[0]
-    if ((hx - takeoff[0]) * (hx - target[0]) >= 0) continue
-    const f = (hx - takeoff[0]) / (target[0] - takeoff[0])
-    const cz = takeoff[2] + f * (target[2] - takeoff[2])
-    const windows = hazardClear(h, cz, fromTop, Math.max(fromTop, B.top) + BODY_H + movement.apexM)
+    const [tx, tz] = toLocal(h, takeoff[0], takeoff[2])
+    const [gx, gz] = toLocal(h, target[0], target[2])
+    if (tx * gx >= 0) continue
+    const f = (0 - tx) / (gx - tx)
+    const cz = tz + f * (gz - tz)
+    const hp = prefabs.get(h.prefab)
+    const reach = (hp.collider.size[1] * hp.scale) / 2 + 1
+    const y0 = fromTop
+    const y1 = Math.max(fromTop, B.top) + BODY_H + movement.apexM
+    if (Math.abs(cz) > reach || y1 < h.pos[1] - reach || y0 > h.pos[1] + reach) continue
+    const windows = hazardClear(h, cz, y0, y1)
     const speed = 6 // sprint (needsSprint forced below)
-    const delay = Math.abs(hx - takeoff[0]) / speed / h.motion.periodS
+    const delay = Math.abs(tx) / speed / h.motion.periodS
     const crossing = (2 * CAPSULE_R + 0.5) / speed / h.motion.periodS
     const take = windows
       .map(([a, b]) => [a - delay, b - delay - crossing])
@@ -161,7 +186,7 @@ for (const entry of route) {
   const forceSprint = waitPhase != null && hazards.some((h) => h.id === waitPhase.platform)
   waypoints.push({
     id: entry.id,
-    zone: level.zone,
+    zone: zoneById.get(entry.id) ?? level.zone,
     pos: [r3(B.cx), r3(B.top), r3(B.cz)],
     half: [r3(B.hx), r3(B.hz)],
     padRadius: r3(Math.min(B.hx, B.hz)),
@@ -179,8 +204,9 @@ for (const entry of route) {
   from = entry
 }
 
-const out = { level: levelId, generatedFrom: `level/${levelId}.json`, generatedBy: 'scripts/build-routes.mjs', spawn: level.spawn, finish: level.finish, waypoints }
+const generatedFrom = levelId === 'main' ? ZONES.map((z) => `level/${z}.json`).join(' + ') : `level/${levelId}.json`
+const out = { level: levelId, generatedFrom, generatedBy: 'scripts/build-routes.mjs', spawn: level.spawn, finish: level.finish, waypoints }
 mkdirSync('vitexec/routes', { recursive: true })
 writeFileSync(`vitexec/routes/${levelId}.json`, JSON.stringify(out, null, 2) + '\n')
 console.log(`vitexec/routes/${levelId}.json: ${waypoints.length} waypoints`)
-for (const w of waypoints) console.log(`  ${w.id} dist ${w.distM} rise ${w.riseM} sprint ${w.needsSprint} ${w.waitPhase ? 'wait ' + JSON.stringify(w.waitPhase.window ?? w.waitPhase.windows) : ''}`)
+if (process.env.ROUTE_VERBOSE || levelId !== 'main') for (const w of waypoints) console.log(`  ${w.id} dist ${w.distM} rise ${w.riseM} sprint ${w.needsSprint} ${w.waitPhase ? 'wait ' + JSON.stringify(w.waitPhase.window ?? w.waitPhase.windows) : ''}`)

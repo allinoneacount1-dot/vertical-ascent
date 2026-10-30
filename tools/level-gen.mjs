@@ -534,8 +534,9 @@ function planClimb(zone, tierIndex, loop, rect, nextRect, sE, dir, span, y0, y1,
       const dz = st.z - prevFoot.cz
       const len = Math.hypot(dx, dz)
       const rotY = Math.atan2(-dz / len, dx / len)
-      // the sweep must stay ≥2.0 m above the deck below it (ref/03 clearance) and still cross the jump arc
-      const hub = Math.max(prevTop + 2.5, y0 + 2.0 + 2.5)
+      // hub above the jump's body column (takeoff top + 1.7 m body + measured apex + 0.75 m): only the lower blade
+      // tip sweeps through the jump, so clear windows exist each half turn; the deck below stays ≥2.0 m under the tip
+      const hub = Math.max(prevTop + HAZARD_HUB_ABOVE, y0 + 2.0 + 2.75)
       const hz = add(zone, { id: nid(zone, 'h'), prefab: 'blade-5', pos: [mid[0], hub, mid[1]], rotY, tag: 'hazard', motion: { type: 'rotate', points: [[0, 0, 0]], axis: [1, 0, 0], periodS: 6, phaseS: r3(rng() * 6), dwellS: 0 } })
       hazards.push({ id: hz, zone, mid, hub, rotY, below: prevTop })
     }
@@ -566,6 +567,8 @@ function overlaps(a, b, pad = 0) {
   return a.min[0] < b.max[0] + pad && a.max[0] > b.min[0] - pad && a.min[2] < b.max[2] + pad && a.max[2] > b.min[2] - pad
 }
 const hazards = []
+/** Windmill hub height above the takeoff pad top (blade-5: 2.5 m half length, 0.25 m half thickness). */
+const HAZARD_HUB_ABOVE = 4.2
 function insideInner(loop, p) {
   const i = loop.inner
   return p[0] >= i.x0 - 0.01 && p[0] <= i.x1 + 0.01 && p[1] >= i.z0 - 0.01 && p[1] <= i.z1 + 0.01
