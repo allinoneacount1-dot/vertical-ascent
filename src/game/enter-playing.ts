@@ -77,17 +77,21 @@ export function installPlayGuards(canvas: HTMLCanvasElement): void {
     if (useUi.getState().pendingIntent != null) rejectLock(new DOMException('', 'NotAllowedError'))
   })
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') game.dispatch({ type: 'hidden' })
-    else resumeAudio()
+    if (document.visibilityState === 'hidden') {
+      game.dispatch({ type: 'hidden' })
+      game.saveRunIfActive() // D-009: the run is written when the page is hidden
+    } else resumeAudio()
   })
+  window.addEventListener('pagehide', () => game.saveRunIfActive())
   window.addEventListener('blur', () => game.dispatch({ type: 'blur' }))
   window.addEventListener('keydown', (e) => {
     if (e.repeat) return
-    if (e.code === 'KeyP') {
+    const keys = game.settings.bindings
+    if (keys.pause.includes(e.code)) {
       game.dispatch({ type: 'pauseKey' })
       return
     }
-    if (e.code === 'KeyR' && game.snapshot.state === 'PLAYING') {
+    if (keys.recentre.includes(e.code) && game.snapshot.state === 'PLAYING') {
       game.cameraRig?.startRecentre(game.controller?.facingYaw ?? game.spawnYaw, game.reducedMotion)
       return
     }

@@ -18,7 +18,21 @@ export type Hud = {
 export type Toast = { id: number; text: string }
 
 /** Overlay sub-screens of MENU and PAUSED. */
-export type Panel = 'main' | 'settings' | 'controls' | 'credits' | 'confirmRestart'
+export type Panel = 'main' | 'settings' | 'controls' | 'credits' | 'best' | 'confirmRestart' | 'confirmNewClimb'
+
+/** Summary of a saved climb for the MENU Continue button (D-009). */
+export type SavedRunInfo = { heightM: number; timerMs: number }
+
+/** VICTORY summary (D-023); mirrors game.ts VictorySummary. */
+export type VictoryInfo = {
+  timerMs: number
+  newBest: boolean
+  deltaMs: number | null
+  bigFalls: number
+  metersLost: number
+  killPlaneRespawns: number
+  restarts: number
+}
 
 export type UiStore = {
   snapshot: Snapshot
@@ -32,6 +46,15 @@ export type UiStore = {
   /** performance.now() of the last kill-plane respawn (300 ms fade, D-007), or 0 */
   fadeAt: number
   panel: Panel
+  savedRun: SavedRunInfo | null
+  victory: VictoryInfo | null
+  /** performance.now() until which the victory buttons stay disabled (D-023). */
+  victoryLockedUntil: number
+  /** UI scale 1–2 (D-021) and the UI language (overlay re-renders on change). */
+  uiScale: number
+  lang: 'id' | 'en'
+  /** Actions used at least once this page session (the first-run controls strip fades them out, D-021). */
+  usedActions: string[]
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -43,4 +66,10 @@ export const useUi = create<UiStore>(() => ({
   toasts: [],
   fadeAt: 0,
   panel: 'main',
+  savedRun: null,
+  victory: null,
+  victoryLockedUntil: 0,
+  uiScale: 1,
+  lang: 'en',
+  usedActions: [],
 }))

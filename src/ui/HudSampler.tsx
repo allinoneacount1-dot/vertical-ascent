@@ -15,7 +15,11 @@ export class HudSampler {
     const playing = ui.snapshot.state === 'PLAYING'
     game.run.tick(game.frameClock.dt, playing, ui.snapshot.mode === 'freeRoam')
     const port = game.port
-    if (port) game.run.updateHeight(port.position.y, port.isGroundedRaw)
+    if (port) {
+      const before = game.run.highestM
+      game.run.updateHeight(port.position.y, port.isGroundedRaw)
+      if (playing && game.run.highestM > before) game.noteGroundedHeight(game.run.highestM)
+    }
     const slot = Math.floor(now / 100)
     if (slot === this.lastSlot) return
     this.lastSlot = slot

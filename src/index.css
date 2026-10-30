@@ -224,3 +224,104 @@ canvas:focus {
     animation-duration: 1ms;
   }
 }
+
+/* UI scale 100–200 % (D-021): panels, HUD, strip and toasts scale together. */
+.panel,
+.hud,
+.strip,
+.toasts {
+  zoom: var(--ui-scale, 1);
+}
+
+.panel.settings {
+  max-height: 86vh;
+  overflow-y: auto;
+  min-width: 420px;
+}
+
+.panel h3 {
+  margin: 18px 0 8px;
+  font-size: 20px;
+}
+
+.settings-grid .row {
+  text-align: left;
+}
+
+.panel .range {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.panel .range-value {
+  min-width: 52px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel button.key {
+  min-width: 120px;
+  padding: 4px 12px;
+}
+
+.panel .stats {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 18px;
+  text-align: left;
+  margin: 10px auto 6px;
+  width: max-content;
+}
+
+.panel .stats dt {
+  opacity: 0.85;
+}
+
+.panel .stats dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel .delta {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.panel a {
+  color: var(--accent);
+}
+
+/* first-run controls strip (D-021): items fade once used */
+.strip {
+  position: absolute;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.strip-item {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 18px;
+  transition: opacity 600ms ease-out;
+}
+
+.strip-item.used {
+  opacity: 0;
+}
+
+@media (forced-colors: active) {
+  .strip-item,
+  .toast {
+    border: 2px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+}

@@ -27,6 +27,8 @@ export const CAMERA = Object.freeze({
   recentreS: 0.2,
   defaultFov: 75,
   maxFov: 110,
+  /** Sprint FOV kick (D-014). */
+  sprintKick: 10,
 })
 
 const pivotOffset = new Vector3()
@@ -53,6 +55,14 @@ export class CameraRig {
   /** +1 m while bigFall (D-014, G4). */
   bigFallExtra = 0
   fov: number = CAMERA.defaultFov
+  /** Settings (D-021): rotation sensitivity 0.2–3 and invert-Y, applied to the raw yaw/pitch deltas. */
+  sensitivity = 1
+  invertY = false
+  /** Sprint kick (D-014): +10° while sprinting when enabled and motion is not reduced; eased with λ = 10. */
+  sprintKick = true
+  sprinting = false
+  reducedMotion = false
+  private kick = 0
   private readonly zoomAbort = new AbortController()
   private readonly zoomReader = ZoomAction.createReader(this.zoomAbort.signal)
   private smoothed: number | null = null
@@ -134,6 +144,22 @@ export class CameraRig {
     b.pitchReader.update()
   }
 
+  /**
+   * Reads this frame's rotation deltas before the library does (its update() then finds an empty queue) and
+   * applies sensitivity and invert-Y (D-021); the library has one speed for both axes and no invert.
+   */
+  private applyRotationInput(): void {
+    const b = this.behavior as unknown as { yawReader: { update(): void; get(): number }; pitchReader: { update(): void; get(): number } }
+    b.yawReader.update()
+    b.pitchReader.update()
+    const dYaw = b.yawReader.get()
+    const dPitch = b.pitchReader.get()
+    if (dYaw === 0 && dPitch === 0) return
+    this.behavior.rotationYaw += dYaw * this.sensitivity
+    const pitch = this.behavior.rotationPitch + dPitch * this.sensitivity * (this.invertY ? -1 : 1)
+    this.behavior.rotationPitch = MathUtils.clamp(pitch, CAMERA.minPitch, CAMERA.maxPitch)
+  }
+
   /** Priority -1. target = the physics root (feet). */
   update(camera: PerspectiveCamera, target: Object3D, dt: number): void {
     this.camera = camera
@@ -163,9 +189,12 @@ export class CameraRig {
     pivotOffset.set(this.side, CAMERA.pivotHeight, 0)
 
     if (performance.now() < this.suppressUntil) this.dropRotationInput()
+    else this.applyRotationInput()
     this.behavior.update(camera, target, dt, this.camRaycast, this.options)
 
-    const fov = Math.min(this.fov, CAMERA.maxFov)
+    const kickTarget = this.sprintKick && this.sprinting && !this.reducedMotion ? CAMERA.sprintKick : 0
+    this.kick += (kickTarget - this.kick) * (1 - Math.exp(-10 * dt))
+    const fov = Math.min(this.fov + this.kick, CAMERA.maxFov)
     if (camera.fov !== fov) {
       camera.fov = fov
       camera.updateProjectionMatrix()

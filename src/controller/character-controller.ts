@@ -35,7 +35,12 @@ export type ControllerEvents = {
   onBigFall?: (simTime: number) => void
 }
 
+/** Edge guard probe distance ahead of the feet and the drop that counts as an edge (D-021). */
+export const EDGE_PROBE_M = 0.3
+export const EDGE_DROP_M = 0.5
+
 const euler = new Euler(0, 0, 0, 'YXZ')
+const probe = new Vector3()
 const move = new Vector3()
 const vel = new Vector3()
 
@@ -75,6 +80,9 @@ export class CharacterController {
   airJumpCount = 0
   private airborneTopY = 0
   private lastVy = 0
+  /** Edge guard setting (D-021) and its ground probe: downward ray from origin, distance to a surface or null. */
+  edgeGuard = false
+  groundRay: ((origin: Vector3, maxDist: number) => number | null) | null = null
 
   constructor(port: CharacterPhysicsPort, motion: PlatformMotion, events: ControllerEvents = {}) {
     this.port = port
@@ -121,6 +129,7 @@ export class CharacterController {
     if (dt <= 0) return
     const sprinting = this.sprint.update(sprintMode, input.run)
     computeInputVelocity(this.port.inputVelocity, input, cameraYaw, sprinting)
+    if (this.edgeGuard && !sprinting && this.port.isGroundedRaw) this.applyEdgeGuard()
     const slices = this.motion.slices
     const sliceDt = dt / slices
     for (let i = 0; i < slices; i++) {
@@ -150,6 +159,20 @@ export class CharacterController {
       this.events.afterSlice?.(sliceDt)
     }
     this.turn(dt)
+  }
+
+  /**
+   * Edge guard (D-021, default off): while walking on the ground, probe EDGE_PROBE_M ahead along the movement; with no
+   * ground within EDGE_DROP_M below, the movement toward the edge is removed (the player stops at the edge).
+   */
+  private applyEdgeGuard(): void {
+    const v = this.port.inputVelocity
+    const speed = Math.hypot(v.x, v.z)
+    if (speed === 0 || this.groundRay == null) return
+    const feet = this.port.position
+    probe.set(feet.x + (v.x / speed) * EDGE_PROBE_M, feet.y + 0.1, feet.z + (v.z / speed) * EDGE_PROBE_M)
+    const hit = this.groundRay(probe, EDGE_DROP_M + 0.1)
+    if (hit == null) v.set(0, v.y, 0)
   }
 
   /** Probe (prev pose) → Δ = cur · prev⁻¹ → applyCarry; stops immediately when the probe misses (ref/04 §Carry 3–6). */

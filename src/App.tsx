@@ -3,7 +3,8 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, Sky } from '@react-three/drei'
-import { BvhPhysicsWorld, useKeyboardLocomotionActionBindings, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
+import { BvhPhysicsWorld, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
+import { installInputBindings } from './game/input-bindings.ts'
 import { Level } from './level/Level.tsx'
 import { Player } from './controller/Player.tsx'
 import { GameLoop } from './controller/GameLoop.tsx'
@@ -16,9 +17,11 @@ import { attachRenderer } from './game/debug.ts'
 import { CAMERA } from './camera/camera-rig.ts'
 import { assetUrl } from './assets.ts'
 
-/** Bindings mounted once at the Canvas root (D-004). Keyboard listens on the canvas, so it must have focus. */
+/**
+ * Mouse bindings mounted once at the Canvas root (D-004). Keyboard bindings are created imperatively once at
+ * Canvas creation (src/game/input-bindings.ts) so rebinding never remounts them (D-021).
+ */
 function Bindings() {
-  useKeyboardLocomotionActionBindings({ requiresPointerLock: true })
   usePointerLockRotateZoomActionBindings({ lockOnClick: false })
   return null
 }
@@ -55,10 +58,13 @@ export default function App() {
         dpr={[1, 1.5]}
         camera={{ fov: CAMERA.defaultFov, near: 0.1, far: 500, position: [0, 3, 6] }}
         style={{ position: 'absolute', inset: '0', touchAction: 'none' }}
-        onCreated={({ gl }) => {
+        onCreated={({ gl, setDpr }) => {
           game.attachCanvas(gl.domElement)
           attachRenderer(gl)
+          installInputBindings(gl.domElement)
           installPlayGuards(gl.domElement)
+          game.setDpr = setDpr
+          game.applySettings(game.settings)
         }}
       >
         <BvhPhysicsWorld>

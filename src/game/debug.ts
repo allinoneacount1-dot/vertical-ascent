@@ -56,7 +56,8 @@ function snapshotGame() {
       started: game.run.started,
     },
     hud: { targetM: ui.hud.targetM, showTimer: ui.hud.showTimer, tick: ui.hud.tick },
-    inputLocked: document.pointerLockElement != null && document.pointerLockElement === game.canvas,
+    inputLocked: game.inputLocked,
+    pointerLocked: document.pointerLockElement != null && document.pointerLockElement === game.canvas,
     camera: {
       yaw: r3(rig?.yaw ?? 0),
       pitch: r3(rig?.pitch ?? 0),
