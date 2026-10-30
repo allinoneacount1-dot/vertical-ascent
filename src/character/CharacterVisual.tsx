@@ -6,7 +6,8 @@ import type { RootState } from '@react-three/fiber'
 import { Graph, GrapthState, RunTimeline, Switch, SwitchCase, forever } from '@react-three/timeline'
 import type { TimelineClock } from '@react-three/timeline'
 import { CharacterAnimationAction, CharacterModelProvider, useCharacterModelLoader } from '@react-three/viverse'
-import { CLIPS, FADE_S, JUMP_UP_MIN_S, LAND_HOLD_S, MODEL_OPTIONS, RISING_VY } from './rig.ts'
+import { ACTIVE_MODEL_OPTIONS, CLIPS, FADE_S, JUMP_UP_MIN_S, LAND_HOLD_S, RISING_VY } from './rig.ts'
+import { addClimbingPack } from './protagonist-style.ts'
 import { game } from '../game/game.ts'
 import { setClipReporter } from '../game/debug.ts'
 
@@ -58,8 +59,11 @@ const newAirJump = () => airJumpCount() !== seenAirJumps
 setClipReporter(() => activeClip)
 
 export function CharacterVisual() {
-  const model = useCharacterModelLoader(MODEL_OPTIONS)
+  const model = useCharacterModelLoader(ACTIVE_MODEL_OPTIONS)
   useEffect(() => {
+    // D-017 silhouette change for the protagonist (a VRM, the only model with a humanoid); the mannequin stays as it is
+    const humanoid = (model as { humanoid?: Parameters<typeof addClimbingPack>[1] }).humanoid
+    if (humanoid != null) addClimbingPack(model.scene, humanoid)
     game.setModel(model)
     return () => game.setModel(null)
   }, [model])

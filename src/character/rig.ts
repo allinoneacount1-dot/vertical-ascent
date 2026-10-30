@@ -9,6 +9,25 @@ import { assetUrl } from '../assets.ts'
 export const MODEL_OPTIONS = Object.freeze({ useViverseAvatar: false, castShadow: true, receiveShadow: true })
 
 /**
+ * DEV-only local preview of the prepared protagonist (D-054), selected with ?character=preview: the restyled
+ * AvatarSample_F built into .cache by scripts/build-protagonist.sh. Never in public/ or a build — the mannequin
+ * stays the shipped model until the owner confirms pixiv's first-party CC0 text (D-045).
+ */
+const PREVIEW_MODEL_OPTIONS = Object.freeze({
+  url: '/.cache/work/vroid-f/protagonist-f.vrm',
+  type: 'vrm' as const,
+  useViverseAvatar: false,
+  castShadow: true,
+  receiveShadow: true,
+})
+
+/** Model options for this page, chosen once at module load (the loader key must stay identical, D-001). */
+export const ACTIVE_MODEL_OPTIONS =
+  import.meta.env.DEV && typeof location !== 'undefined' && new URLSearchParams(location.search).get('character') === 'preview'
+    ? PREVIEW_MODEL_OPTIONS
+    : MODEL_OPTIONS
+
+/**
  * UAL1 Standard bone names (pre-v2.0 rig, sanitized by three.js) → VRM humanoid names. Derived by pairing the 53
  * skin joints of UAL1 with the library mannequin's VRM-named joints in the same order
  * (evidence/G2/G2-ual1-nodes.json). `root` has no humanoid name; the loader drops its tracks either way.
