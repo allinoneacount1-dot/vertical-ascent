@@ -4,8 +4,28 @@ import type { Motion, Vec3 } from './motion.ts'
 
 export type ColliderSpec = { type: 'box'; size: Vec3; offset: Vec3 }
 
+/** One primitive of a 'composite' visual, relative to the entry origin (cylinder size = [radiusBottom, height, radiusTop?]). */
+export type ProceduralPart = {
+  shape: 'box' | 'cylinder' | 'cone'
+  size: number[]
+  pos: Vec3
+  rot?: Vec3
+  color: string
+  emissive?: string
+  roughness?: number
+  metalness?: number
+  segments?: number
+}
+
 /** Procedural visual for prefabs without a GLB (flat-colour stylized low-poly, D-017). */
-export type ProceduralVisual = { kind: 'box' | 'blade' | 'stairs' | 'pole'; color: string; accent?: string; size?: Vec3 }
+export type ProceduralVisual = {
+  kind: 'box' | 'blade' | 'stairs' | 'pole' | 'composite'
+  color: string
+  accent?: string
+  size?: Vec3
+  /** 'composite' only: landmarks, scale cues (door, railing), signs, beacons, clouds */
+  parts?: ProceduralPart[]
+}
 
 export type Prefab = {
   id: string
