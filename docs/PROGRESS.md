@@ -133,3 +133,4 @@ Expected placeholders still present: mannequin (stub gap slot); procedural slice
 Blocked / needs owner: TEST-03 final character — A5 AvatarSample_G (1.74 m) or _F (1.71 m) needs the owner to paste the CC0 sentence from pixiv's first-party page (agent access refused as bot-check circumvention), or O1/O2 drops; slice art needs O3–O8 drops
 Decisions added: D-045 … D-048
 Budget: compactions 1/2 · TESTs at attempt cap: none new · wall-clock 06:15–06:48
+Owner playtest (Q8, end of G2, 2026-10-30, dev server http://127.0.0.1:5179, slice with mannequin + UAL1 clips + HDRI): verbatim "sudah pas" — feel accepted; owner asks for harder challenges, better-looking challenges and world-building assets (→ G3). Candidate kit downloads verified as official Kenney uploads on OGA: docs/APPROVALS.md A6a–A6i (not approved yet).
