@@ -44,7 +44,10 @@ const posed: Record<string, unknown> = {}
 for (const name of ['Idle_Loop', 'Walk_Loop', 'Sprint_Loop', 'Jump_Start', 'Jump_Loop', 'Jump_Land']) {
   const clip = await loadCharacterAnimation(model as never, assetUrl(`assets/_build-only/animations/ual1/${name}.glb`), 'gltf', true, undefined, undefined, UAL1_BONE_MAP)
   const bones = new Set(clip.tracks.map((t) => t.name.split('.')[0]))
-  clips[name] = { tracks: clip.tracks.length, bones: bones.size, duration: Number(clip.duration.toFixed(3)) }
+  // retargeted = the track name now points at a node of the model (VRM normalized bone); an unmapped track keeps the
+  // clip's name and binds to nothing, so the plain name count alone would not prove the retarget
+  const bound = [...bones].filter((b) => model.scene.getObjectByName(b) != null)
+  clips[name] = { tracks: clip.tracks.length, trackBones: bones.size, boundToModel: bound.length, unbound: [...bones].filter((b) => !bound.includes(b)), duration: Number(clip.duration.toFixed(3)) }
   if (name === 'Idle_Loop' || name === 'Walk_Loop') {
     model.mixer.stopAllAction()
     const action = model.mixer.clipAction(clip)
@@ -61,7 +64,8 @@ for (const name of ['Idle_Loop', 'Walk_Loop', 'Sprint_Loop', 'Jump_Start', 'Jump
   }
 }
 
-// preview: Idle pose, front and back, into an overlay canvas (vitexec --screenshot captures the page)
+// preview: Idle pose — back, front and side views with the ground line (y = 0) in frame, into an overlay canvas
+// (vitexec --screenshot captures the page); a red line marks y = 0 under the model
 const idle = await loadCharacterAnimation(model as never, assetUrl('assets/_build-only/animations/ual1/Idle_Loop.glb'), 'gltf', true, undefined, undefined, UAL1_BONE_MAP)
 model.mixer.clipAction(idle).play()
 model.mixer.update(0.6)
@@ -80,13 +84,23 @@ sun.position.set(2, 4, 3)
 scene.add(sun)
 const grid = new THREE.GridHelper(4, 8, '#556677', '#99aabb')
 scene.add(grid)
-for (const [i, z] of [3, -3].entries()) {
-  const cam = new THREE.PerspectiveCamera(30, innerWidth / 2 / innerHeight, 0.1, 50)
-  cam.position.set(0, 1.0, z)
+const groundLine = new THREE.Line(
+  new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.6, 0, 0), new THREE.Vector3(0.6, 0, 0), new THREE.Vector3(0, 0, -0.6), new THREE.Vector3(0, 0, 0.6)]),
+  new THREE.LineBasicMaterial({ color: '#d02020', depthTest: false }),
+)
+scene.add(groundLine)
+const views: Array<[number, number, number]> = [
+  [0, 0.9, 3.4], // back of the model (it faces -Z in its own space)
+  [0, 0.9, -3.4], // front
+  [3.4, 0.9, 0], // side
+]
+const w3 = innerWidth / 3
+for (const [i, [px, py, pz]] of views.entries()) {
+  const cam = new THREE.PerspectiveCamera(34, w3 / innerHeight, 0.1, 50)
+  cam.position.set(px, py, pz)
   cam.lookAt(0, 0.85, 0)
-  const x = (i * innerWidth) / 2
-  renderer.setViewport(x, 0, innerWidth / 2, innerHeight)
-  renderer.setScissor(x, 0, innerWidth / 2, innerHeight)
+  renderer.setViewport(i * w3, 0, w3, innerHeight)
+  renderer.setScissor(i * w3, 0, w3, innerHeight)
   renderer.render(scene, cam)
 }
 console.log('vroid ' + JSON.stringify({ which, url, metaVersion: model.meta.metaVersion, bind, textures: textures.size, texturesWithWidth: texSizes.filter((w) => w > 0).length, maxTextureWidth: Math.max(...texSizes), clips, posed }))
