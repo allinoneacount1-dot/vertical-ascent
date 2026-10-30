@@ -56,6 +56,7 @@ function snapshotGame() {
       started: game.run.started,
     },
     hud: { targetM: ui.hud.targetM, showTimer: ui.hud.showTimer, tick: ui.hud.tick },
+    summit: { summitM: game.level.summitM, fakeSummitM: game.level.fakeSummitM, summitRevealed: ui.summitRevealed, fakeSummitAtMs: game.fakeSummitAtMs },
     inputLocked: game.inputLocked,
     /** Settings in effect and the options of the last pointer-lock request (TEST-39 observes them). */
     settings: JSON.parse(JSON.stringify(game.settings)) as unknown,

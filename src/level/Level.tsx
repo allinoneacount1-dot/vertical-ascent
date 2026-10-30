@@ -13,6 +13,7 @@ import type { Vec3 } from './motion.ts'
 import { game } from '../game/game.ts'
 import { CameraRig } from '../camera/camera-rig.ts'
 import { buildMergedStatics, colliderSize, localPieces, materialFor } from './procedural.ts'
+import { SummitFeatures } from './Summit.tsx'
 
 const ROTATION_ORDER = 'YXZ'
 
@@ -210,6 +211,7 @@ export function Level({ level }: { level: LoadedLevel }) {
           <Mover key={e.id} entry={e} prefab={prefabOf(e)} />
         ))}
       <FinishSensor level={level} />
+      <SummitFeatures level={level} />
       <CameraWorld level={level} />
       <WorldReady />
     </>

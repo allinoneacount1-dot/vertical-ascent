@@ -42,6 +42,8 @@ const RESTORE_LIFT_M = 0.05
 const RESTORE_RAY_M = 0.3
 /** First fall of at least this much shows the one-time reassurance toast (D-021). */
 const FIRST_FALL_M = 2
+/** Run time between grounding on the fake summit and the real summit's beacon lighting up (ref/03 §Puncak palsu). */
+export const SUMMIT_REVEAL_MS = 3000
 
 const ray = new Ray()
 const tmp = new Vector3()
@@ -79,6 +81,9 @@ class Game {
   frame = 0
   /** Finish sensor state (set only by the sensor callback, ref/04 §Collider, sensor, finish). */
   inFinish = false
+  /** Fake-summit sensor state, and the run timer when this run first stood on the fake summit (ref/03). */
+  inFakeSummit = false
+  fakeSummitAtMs: number | null = null
   /** Records (D-008), persisted in va.records.v1 (TEST-16). */
   records: Records
   /** Last grounded position on static geometry (D-009); written to va.run.v1 by saveRunIfActive(). */
@@ -98,7 +103,7 @@ class Game {
 
   constructor() {
     this.level = loadLevel(currentLevelId())
-    this.records = loadRecords(this.level.targetM)
+    this.records = loadRecords(this.level.summitM)
     this.setLevel(this.level)
     this.refreshSavedRun()
   }
@@ -109,7 +114,16 @@ class Game {
     this.spawnYaw = level.spawnYaw
     this.lastGroundedY = this.spawn.y
     this.lastSafe.copy(this.spawn)
-    useUi.setState((s) => ({ hud: { ...s.hud, targetM: level.targetM } }))
+    this.resetSummit()
+  }
+
+  /** HUD target: the fake summit until it has ever been reached, then the real summit (D-008). */
+  private resetSummit(): void {
+    this.inFakeSummit = false
+    this.fakeSummitAtMs = null
+    const revealed = this.level.fakeSummitM == null || this.records.reachedFakeSummit
+    const targetM = revealed ? this.level.summitM : this.level.fakeSummitM!
+    useUi.setState((s) => ({ summitRevealed: revealed, hud: { ...s.hud, targetM } }))
   }
 
   /** Applies stored settings (read at startup, at every run start and on every Settings change; D-021, D-034). */
@@ -188,6 +202,7 @@ class Game {
         // free roam from where the climb ended: no timer, no records, no save, no finish (D-023, ref/02)
         this.run.newRun(this.spawn.y)
         this.inFinish = false
+        this.resetSummit()
         this.afterEnterPlaying()
         break
       case 'continueRun':
@@ -256,6 +271,7 @@ class Game {
     const save = loadRunSave()
     this.motion.reset()
     this.inFinish = false
+    this.resetSummit()
     if (save == null) {
       this.startRun()
       return
@@ -373,6 +389,11 @@ class Game {
     this.log('finishSensor', { inside })
   }
 
+  setInFakeSummit(inside: boolean): void {
+    this.inFakeSummit = inside
+    this.log('fakeSummitSensor', { inside })
+  }
+
   get isWorldReady(): boolean {
     return this.worldReady
   }
@@ -389,12 +410,32 @@ class Game {
     const port = this.port
     if (port == null) return
     if (s.state === 'PLAYING' && s.mode === 'run' && this.inFinish && port.isGroundedRaw) this.dispatch({ type: 'finish' })
+    if (s.state === 'PLAYING' && s.mode === 'run') this.checkFakeSummit(port.isGroundedRaw)
     // lastSafe (D-009): grounded, the carry probe found no kinematic platform, and static geometry within 0.1 m below
     if (port.isGroundedRaw && this.controller?.groundBody == null) {
       tmp.copy(port.position).setY(port.position.y + 0.05)
       const d = this.rayDown(tmp, SAFE_RAY_M + 0.05)
       if (d != null) this.lastSafe.copy(port.position)
     }
+  }
+
+  /**
+   * Fake summit (ref/03): grounded in its sensor → split logged, no state change, timer keeps running; 3 s of run time
+   * later the real summit's beacon lights, the HUD target becomes the real summit and records.reachedFakeSummit is set.
+   */
+  private checkFakeSummit(grounded: boolean): void {
+    if (this.fakeSummitAtMs == null) {
+      if (!this.inFakeSummit || !grounded) return
+      this.fakeSummitAtMs = this.run.timerMs
+      this.log('split', { name: 'fakeSummit', timerMs: Math.round(this.run.timerMs) })
+      return
+    }
+    if (useUi.getState().summitRevealed || this.run.timerMs < this.fakeSummitAtMs + SUMMIT_REVEAL_MS) return
+    this.records = { ...this.records, reachedFakeSummit: true }
+    saveRecords(this.records)
+    useUi.setState((s) => ({ summitRevealed: true, hud: { ...s.hud, targetM: this.level.summitM } }))
+    this.toast(t('summitReveal'))
+    this.log('summitReveal', { timerMs: Math.round(this.run.timerMs) })
   }
 
   /** New grounded maximum: bestHeightM in mode run (records written at once, ref/02 §Storage). */
@@ -434,6 +475,7 @@ class Game {
     this.cameraRig?.setView(this.spawnYaw)
     this.lastGroundedY = this.spawn.y
     this.inFinish = false
+    this.resetSummit()
   }
 
   /** Every transition into PLAYING (D-004, D-011). */

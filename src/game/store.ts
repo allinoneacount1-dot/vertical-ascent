@@ -55,6 +55,8 @@ export type UiStore = {
   lang: 'id' | 'en'
   /** Actions used at least once this page session (the first-run controls strip fades them out, D-021). */
   usedActions: string[]
+  /** Real summit revealed: its beacon is lit and the fake one is out (ref/03 §Puncak palsu). */
+  summitRevealed: boolean
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -72,4 +74,5 @@ export const useUi = create<UiStore>(() => ({
   uiScale: 1,
   lang: 'en',
   usedActions: [],
+  summitRevealed: false,
 }))

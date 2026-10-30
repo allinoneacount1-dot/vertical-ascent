@@ -106,7 +106,8 @@ export function buildMergedStatics(entries: readonly PlatformEntry[], prefabs: R
   const buckets = new Map<string, { sample: Piece; geos: BufferGeometry[] }>()
   for (const e of entries) {
     const prefab = prefabs.get(e.prefab)
-    if (prefab == null || e.motion != null) continue
+    // movers move and beacons switch on and off: both keep their own meshes (Level.tsx, Summit.tsx)
+    if (prefab == null || e.motion != null || e.beacon != null) continue
     const m = visualMatrix(e, prefab)
     for (const p of localPieces(prefab)) {
       const g = p.geometry.applyMatrix4(m)
