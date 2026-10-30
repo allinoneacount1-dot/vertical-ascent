@@ -48,6 +48,9 @@ function linearOffset(m, u) {
   return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]
 }
 
+/** Phase in the middle of a linear motion's end dwell (the pose route data uses for leaving a mover or a lift). */
+const endDwellU = (m) => (m.periodS / 2 - m.dwellS / 2) / m.periodS
+
 /** Top-face footprint of a platform at a pose offset: centre xz, half extents, top y. */
 function footprint(entry, offset = [0, 0, 0]) {
   const p = prefabs.get(entry.prefab)
@@ -122,7 +125,7 @@ for (const entry of route) {
   const fromMoving = from?.motion?.type === 'linear' ? from.motion : null
   // poses: onto a mover = at its start dwell; off a mover = at its end dwell
   const B = footprint(entry, moving ? linearOffset(moving, 0.99) : [0, 0, 0])
-  const fromOffset = fromMoving ? linearOffset(fromMoving, 0.45) : [0, 0, 0]
+  const fromOffset = fromMoving ? linearOffset(fromMoving, endDwellU(fromMoving)) : [0, 0, 0]
   let takeoff
   let fromTop
   if (from == null) {

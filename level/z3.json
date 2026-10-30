@@ -21,32 +21,32 @@
   "z3-r311",
   "z3-r312",
   "z3-r313",
-  "z3-lift315",
-  "z3-r317",
+  "z3-r315",
+  "z3-lift317",
   "z3-r319",
-  "z3-r320",
   "z3-r321",
   "z3-r322",
   "z3-r323",
   "z3-r324",
-  "z3-deckW325",
-  "z3-r331",
-  "z3-r332",
+  "z3-r325",
+  "z3-r326",
+  "z3-deckW327",
   "z3-r333",
-  "z3-m334",
+  "z3-r334",
   "z3-r335",
-  "z3-rest336",
+  "z3-m336",
   "z3-r337",
-  "z3-rest339",
-  "z3-lift341",
-  "z3-r343",
-  "z3-r345",
+  "z3-rest338",
+  "z3-r339",
+  "z3-rest341",
+  "z3-r342",
+  "z3-lift344",
   "z3-r346",
-  "z3-r347",
   "z3-r348",
   "z3-r349",
   "z3-r350",
   "z3-r351",
+  "z3-r352",
   "z3-r353",
   "z3-r354",
   "z3-lift356",
@@ -58,18 +58,18 @@
   "z3-r364",
   "z3-r365",
   "z3-r366",
-  "z3-deckN367",
-  "z3-r373",
+  "z3-r367",
+  "z3-deckN368",
   "z3-r374",
-  "z3-rest375",
-  "z3-r376",
-  "z3-m378",
-  "z3-r379",
-  "z3-rest380",
-  "z3-lift382",
-  "z3-r384",
+  "z3-r375",
+  "z3-rest376",
+  "z3-r377",
+  "z3-m379",
+  "z3-r380",
+  "z3-rest381",
+  "z3-r382",
+  "z3-lift384",
   "z3-r386",
-  "z3-r387",
   "z3-r388",
   "z3-r389",
   "z3-r390",
@@ -77,9 +77,9 @@
   "z3-r392",
   "z3-r393",
   "z3-r394",
-  "z3-lift396",
-  "z3-r398",
-  "z3-r400",
+  "z3-r395",
+  "z3-lift397",
+  "z3-r399",
   "z3-r401",
   "z3-r402",
   "z3-r403",
@@ -96,9 +96,9 @@
   "z3-m420",
   "z3-r421",
   "z3-r422",
-  "z3-lift424",
-  "z3-r426",
-  "z3-r428",
+  "z3-r423",
+  "z3-lift425",
+  "z3-r427",
   "z3-r429",
   "z3-r430",
   "z3-r431",
@@ -108,9 +108,9 @@
   "z3-r435",
   "z3-r436",
   "z3-r437",
-  "z3-lift439",
-  "z3-r441",
-  "z3-r443",
+  "z3-r438",
+  "z3-lift440",
+  "z3-r442",
   "z3-r444",
   "z3-r445",
   "z3-r446",
@@ -323,7 +323,7 @@
    "id": "z3-rest297",
    "prefab": "pad-rest",
    "pos": [
-    27.9,
+    28.6,
     199.3,
     28.5
    ],
@@ -339,7 +339,7 @@
    "id": "z3-r298",
    "prefab": "pad-m",
    "pos": [
-    20.5,
+    21.9,
     201,
     28.5
    ],
@@ -356,7 +356,7 @@
    "id": "z3-m299",
    "prefab": "mover-m",
    "pos": [
-    16.5,
+    17.9,
     201.3,
     28.5
    ],
@@ -389,7 +389,7 @@
    "id": "z3-r300",
    "prefab": "pad-m",
    "pos": [
-    6.3,
+    7.7,
     201.7,
     28.5
    ],
@@ -405,7 +405,7 @@
    "id": "z3-rest301",
    "prefab": "pad-rest",
    "pos": [
-    1.5,
+    3.6,
     202.5,
     28.5
    ],
@@ -421,9 +421,9 @@
    "id": "z3-lamp302",
    "prefab": "lamp",
    "pos": [
-    -0.75,
+    2.05,
     202.5,
-    26.25
+    26.95
    ],
    "rotY": 0,
    "tag": "decor",
@@ -437,9 +437,9 @@
    "id": "z3-lift303",
    "prefab": "lift-l",
    "pos": [
-    1.5,
+    3.6,
     202.8,
-    34
+    33.3
    ],
    "rotY": 0,
    "tag": "route",
@@ -470,9 +470,9 @@
    "id": "z3-rails304",
    "prefab": "lift-rails-100",
    "pos": [
-    1.5,
+    3.6,
     202.8,
-    34
+    33.3
    ],
    "rotY": 0,
    "tag": "decor",
@@ -486,7 +486,7 @@
    "id": "z3-r305",
    "prefab": "pad-m",
    "pos": [
-    1.4,
+    3.5,
     213.3,
     28.5
    ],
@@ -502,7 +502,7 @@
    "id": "z3-lamp306",
    "prefab": "lamp",
    "pos": [
-    0.15,
+    2.25,
     213.3,
     27.25
    ],
@@ -518,8 +518,8 @@
    "id": "z3-r307",
    "prefab": "pad-m",
    "pos": [
-    -2.8,
-    214.246,
+    -0.7,
+    214.179,
     28.5
    ],
    "rotY": 0,
@@ -534,8 +534,8 @@
    "id": "z3-r308",
    "prefab": "pad-m",
    "pos": [
-    -7,
-    215.192,
+    -4.9,
+    215.057,
     28.5
    ],
    "rotY": 0,
@@ -550,8 +550,8 @@
    "id": "z3-r309",
    "prefab": "pad-m",
    "pos": [
-    -11.2,
-    216.138,
+    -9.1,
+    215.936,
     28.5
    ],
    "rotY": 0,
@@ -566,8 +566,8 @@
    "id": "z3-r310",
    "prefab": "pad-m",
    "pos": [
-    -15.4,
-    217.085,
+    -13.3,
+    216.814,
     28.5
    ],
    "rotY": 0,
@@ -582,8 +582,8 @@
    "id": "z3-r311",
    "prefab": "pad-m",
    "pos": [
-    -19.6,
-    218.031,
+    -17.5,
+    217.693,
     28.5
    ],
    "rotY": 0,
@@ -598,8 +598,8 @@
    "id": "z3-r312",
    "prefab": "pad-m",
    "pos": [
-    -23.8,
-    218.977,
+    -21.7,
+    218.571,
     28.5
    ],
    "rotY": 0,
@@ -614,8 +614,8 @@
    "id": "z3-r313",
    "prefab": "pad-m",
    "pos": [
-    -28,
-    219.923,
+    -25.9,
+    219.45,
     28.5
    ],
    "rotY": 0,
@@ -630,8 +630,8 @@
    "id": "z3-lamp314",
    "prefab": "lamp",
    "pos": [
-    -29.25,
-    219.923,
+    -27.15,
+    219.45,
     27.25
    ],
    "rotY": 0,
@@ -643,11 +643,43 @@
    "motion": null
   },
   {
-   "id": "z3-lift315",
+   "id": "z3-r315",
+   "prefab": "pad-m",
+   "pos": [
+    -30.1,
+    220.329,
+    28.5
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp316",
+   "prefab": "lamp",
+   "pos": [
+    -31.35,
+    220.329,
+    27.25
+   ],
+   "rotY": 0,
+   "tag": "decor",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lift317",
    "prefab": "lift-l",
    "pos": [
-    -28,
-    220.223,
+    -30.1,
+    220.629,
     33
    ],
    "rotY": 0,
@@ -676,44 +708,12 @@
    }
   },
   {
-   "id": "z3-rails316",
+   "id": "z3-rails318",
    "prefab": "lift-rails-100",
    "pos": [
-    -28,
-    220.223,
+    -30.1,
+    220.629,
     33
-   ],
-   "rotY": 0,
-   "tag": "decor",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-r317",
-   "prefab": "pad-m",
-   "pos": [
-    -31.3,
-    230.723,
-    28.5
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-lamp318",
-   "prefab": "lamp",
-   "pos": [
-    -32.55,
-    230.723,
-    27.25
    ],
    "rotY": 0,
    "tag": "decor",
@@ -727,8 +727,8 @@
    "id": "z3-r319",
    "prefab": "pad-m",
    "pos": [
-    -35.5,
-    231.669,
+    -33.4,
+    231.129,
     28.5
    ],
    "rotY": 0,
@@ -740,15 +740,15 @@
    "motion": null
   },
   {
-   "id": "z3-r320",
-   "prefab": "pad-m",
+   "id": "z3-lamp320",
+   "prefab": "lamp",
    "pos": [
-    -39.7,
-    232.615,
-    28.5
+    -34.65,
+    231.129,
+    27.25
    ],
    "rotY": 0,
-   "tag": "route",
+   "tag": "decor",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -759,8 +759,8 @@
    "id": "z3-r321",
    "prefab": "pad-m",
    "pos": [
-    -43.9,
-    233.562,
+    -37.6,
+    232.007,
     28.5
    ],
    "rotY": 0,
@@ -775,8 +775,8 @@
    "id": "z3-r322",
    "prefab": "pad-m",
    "pos": [
-    -48.1,
-    234.508,
+    -41.8,
+    232.886,
     28.5
    ],
    "rotY": 0,
@@ -791,8 +791,8 @@
    "id": "z3-r323",
    "prefab": "pad-m",
    "pos": [
-    -52.3,
-    235.454,
+    -46,
+    233.764,
     28.5
    ],
    "rotY": 0,
@@ -807,7 +807,39 @@
    "id": "z3-r324",
    "prefab": "pad-m",
    "pos": [
-    -56.5,
+    -50.2,
+    234.643,
+    28.5
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-r325",
+   "prefab": "pad-m",
+   "pos": [
+    -54.4,
+    235.521,
+    28.5
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-r326",
+   "prefab": "pad-m",
+   "pos": [
+    -58.6,
     236.4,
     28.5
    ],
@@ -820,7 +852,7 @@
    "motion": null
   },
   {
-   "id": "z3-deckW325",
+   "id": "z3-deckW327",
    "prefab": "deck-z3-24x120",
    "pos": [
     -60,
@@ -836,7 +868,7 @@
    "motion": null
   },
   {
-   "id": "z3-sup326",
+   "id": "z3-sup328",
    "prefab": "support-z3-24x120",
    "pos": [
     -60,
@@ -852,7 +884,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail327",
+   "id": "z3-rail329",
    "prefab": "rail-x-24",
    "pos": [
     -60,
@@ -868,7 +900,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail328",
+   "id": "z3-rail330",
    "prefab": "rail-z-120",
    "pos": [
     -71.75,
@@ -884,7 +916,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail329",
+   "id": "z3-rail331",
    "prefab": "rail-z-120",
    "pos": [
     -48.25,
@@ -900,7 +932,7 @@
    "motion": null
   },
   {
-   "id": "z3-lamp330",
+   "id": "z3-lamp332",
    "prefab": "lamp",
    "pos": [
     -70.4,
@@ -916,7 +948,7 @@
    "motion": null
   },
   {
-   "id": "z3-r331",
+   "id": "z3-r333",
    "prefab": "pad-l",
    "pos": [
     -60,
@@ -937,7 +969,7 @@
    ]
   },
   {
-   "id": "z3-r332",
+   "id": "z3-r334",
    "prefab": "pad-m",
    "pos": [
     -55.3,
@@ -953,7 +985,7 @@
    "motion": null
   },
   {
-   "id": "z3-r333",
+   "id": "z3-r335",
    "prefab": "pad-m",
    "pos": [
     -51.1,
@@ -969,7 +1001,7 @@
    "motion": null
   },
   {
-   "id": "z3-m334",
+   "id": "z3-m336",
    "prefab": "mover-m",
    "pos": [
     -50.5,
@@ -1002,7 +1034,7 @@
    }
   },
   {
-   "id": "z3-r335",
+   "id": "z3-r337",
    "prefab": "pad-m",
    "pos": [
     -50.5,
@@ -1018,12 +1050,12 @@
    "motion": null
   },
   {
-   "id": "z3-rest336",
+   "id": "z3-rest338",
    "prefab": "pad-rest",
    "pos": [
     -50.5,
     241.447,
-    4.5
+    5.2
    ],
    "rotY": 0,
    "tag": "route",
@@ -1034,12 +1066,12 @@
    "motion": null
   },
   {
-   "id": "z3-r337",
+   "id": "z3-r339",
    "prefab": "pad-m",
    "pos": [
     -50.5,
     241.447,
-    -2.3
+    -0.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -1050,12 +1082,12 @@
    "motion": null
   },
   {
-   "id": "z3-h338",
+   "id": "z3-h340",
    "prefab": "blade-5",
    "pos": [
     -50.5,
     245.647,
-    1.1
+    2.15
    ],
    "rotY": 1.571,
    "tag": "hazard",
@@ -1083,12 +1115,12 @@
    }
   },
   {
-   "id": "z3-rest339",
+   "id": "z3-rest341",
    "prefab": "pad-rest",
    "pos": [
     -50.5,
     242.247,
-    -7.1
+    -5
    ],
    "rotY": 0,
    "tag": "route",
@@ -1099,12 +1131,29 @@
    "motion": null
   },
   {
-   "id": "z3-lamp340",
+   "id": "z3-r342",
+   "prefab": "pad-m",
+   "pos": [
+    -50.5,
+    243.947,
+    -11.7
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null,
+   "needsDoubleJump": true
+  },
+  {
+   "id": "z3-lamp343",
    "prefab": "lamp",
    "pos": [
-    -52.75,
-    242.247,
-    -9.35
+    -51.75,
+    243.947,
+    -12.95
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1115,12 +1164,12 @@
    "motion": null
   },
   {
-   "id": "z3-lift341",
+   "id": "z3-lift344",
    "prefab": "lift-l",
    "pos": [
-    -56,
-    242.547,
-    -7.1
+    -55,
+    244.247,
+    -11.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -1148,12 +1197,12 @@
    }
   },
   {
-   "id": "z3-rails342",
+   "id": "z3-rails345",
    "prefab": "lift-rails-100",
    "pos": [
-    -56,
-    242.547,
-    -7.1
+    -55,
+    244.247,
+    -11.7
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1162,63 +1211,14 @@
    "fakeSummit": false,
    "trap": null,
    "motion": null
-  },
-  {
-   "id": "z3-r343",
-   "prefab": "pad-m",
-   "pos": [
-    -50.5,
-    253.047,
-    -7.2
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-lamp344",
-   "prefab": "lamp",
-   "pos": [
-    -51.75,
-    253.047,
-    -8.45
-   ],
-   "rotY": 0,
-   "tag": "decor",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-r345",
-   "prefab": "pad-m",
-   "pos": [
-    -50.5,
-    254.747,
-    -13.6
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null,
-   "needsDoubleJump": true
   },
   {
    "id": "z3-r346",
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    255.471,
-    -17.8
+    254.747,
+    -15
    ],
    "rotY": 0,
    "tag": "route",
@@ -1229,15 +1229,15 @@
    "motion": null
   },
   {
-   "id": "z3-r347",
-   "prefab": "pad-m",
+   "id": "z3-lamp347",
+   "prefab": "lamp",
    "pos": [
-    -50.5,
-    256.194,
-    -22
+    -51.75,
+    254.747,
+    -16.25
    ],
    "rotY": 0,
-   "tag": "route",
+   "tag": "decor",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -1249,8 +1249,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    256.918,
-    -26.2
+    255.471,
+    -19.2
    ],
    "rotY": 0,
    "tag": "route",
@@ -1265,8 +1265,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    257.641,
-    -30.4
+    256.194,
+    -23.4
    ],
    "rotY": 0,
    "tag": "route",
@@ -1281,8 +1281,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    258.365,
-    -34.6
+    256.918,
+    -27.6
    ],
    "rotY": 0,
    "tag": "route",
@@ -1297,8 +1297,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    259.088,
-    -38.8
+    257.641,
+    -31.8
    ],
    "rotY": 0,
    "tag": "route",
@@ -1309,15 +1309,15 @@
    "motion": null
   },
   {
-   "id": "z3-lamp352",
-   "prefab": "lamp",
+   "id": "z3-r352",
+   "prefab": "pad-m",
    "pos": [
-    -51.75,
-    259.088,
-    -40.05
+    -50.5,
+    258.365,
+    -36
    ],
    "rotY": 0,
-   "tag": "decor",
+   "tag": "route",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -1329,8 +1329,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    259.812,
-    -43
+    259.088,
+    -40.2
    ],
    "rotY": 0,
    "tag": "route",
@@ -1345,8 +1345,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    260.535,
-    -47.2
+    259.812,
+    -44.4
    ],
    "rotY": 0,
    "tag": "route",
@@ -1361,8 +1361,8 @@
    "prefab": "lamp",
    "pos": [
     -51.75,
-    260.535,
-    -48.45
+    259.812,
+    -45.65
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1377,8 +1377,8 @@
    "prefab": "lift-l",
    "pos": [
     -55,
-    260.835,
-    -47.2
+    260.112,
+    -44.4
    ],
    "rotY": 0,
    "tag": "route",
@@ -1410,8 +1410,8 @@
    "prefab": "lift-rails-100",
    "pos": [
     -55,
-    260.835,
-    -47.2
+    260.112,
+    -44.4
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1426,8 +1426,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    271.335,
-    -50.5
+    270.612,
+    -47.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -1442,8 +1442,8 @@
    "prefab": "lamp",
    "pos": [
     -51.75,
-    271.335,
-    -51.75
+    270.612,
+    -48.95
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1458,8 +1458,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    272.059,
-    -54.7
+    271.335,
+    -51.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -1474,8 +1474,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    272.782,
-    -58.9
+    272.059,
+    -56.1
    ],
    "rotY": 0,
    "tag": "route",
@@ -1490,8 +1490,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    273.506,
-    -63.1
+    272.782,
+    -60.3
    ],
    "rotY": 0,
    "tag": "route",
@@ -1506,8 +1506,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    274.229,
-    -67.3
+    273.506,
+    -64.5
    ],
    "rotY": 0,
    "tag": "route",
@@ -1522,8 +1522,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    274.953,
-    -71.5
+    274.229,
+    -68.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -1538,8 +1538,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    275.676,
-    -75.7
+    274.953,
+    -72.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -1554,8 +1554,8 @@
    "prefab": "pad-m",
    "pos": [
     -50.5,
-    276.4,
-    -79.9
+    275.676,
+    -77.1
    ],
    "rotY": 0,
    "tag": "route",
@@ -1566,7 +1566,23 @@
    "motion": null
   },
   {
-   "id": "z3-deckN367",
+   "id": "z3-r367",
+   "prefab": "pad-m",
+   "pos": [
+    -50.5,
+    276.4,
+    -81.3
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-deckN368",
    "prefab": "deck-z3-120x24",
    "pos": [
     12,
@@ -1582,7 +1598,7 @@
    "motion": null
   },
   {
-   "id": "z3-sup368",
+   "id": "z3-sup369",
    "prefab": "support-z3-120x24",
    "pos": [
     12,
@@ -1598,7 +1614,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail369",
+   "id": "z3-rail370",
    "prefab": "rail-x-120",
    "pos": [
     12,
@@ -1614,7 +1630,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail370",
+   "id": "z3-rail371",
    "prefab": "rail-x-120",
    "pos": [
     12,
@@ -1630,7 +1646,7 @@
    "motion": null
   },
   {
-   "id": "z3-rail371",
+   "id": "z3-rail372",
    "prefab": "rail-z-24",
    "pos": [
     71.75,
@@ -1646,7 +1662,7 @@
    "motion": null
   },
   {
-   "id": "z3-lamp372",
+   "id": "z3-lamp373",
    "prefab": "lamp",
    "pos": [
     -46.4,
@@ -1662,7 +1678,7 @@
    "motion": null
   },
   {
-   "id": "z3-r373",
+   "id": "z3-r374",
    "prefab": "pad-l",
    "pos": [
     -45.5,
@@ -1683,7 +1699,7 @@
    ]
   },
   {
-   "id": "z3-r374",
+   "id": "z3-r375",
    "prefab": "pad-m",
    "pos": [
     -45.5,
@@ -1700,10 +1716,10 @@
    "needsDoubleJump": true
   },
   {
-   "id": "z3-rest375",
+   "id": "z3-rest376",
    "prefab": "pad-rest",
    "pos": [
-    -40.7,
+    -41.4,
     281,
     -72.5
    ],
@@ -1716,10 +1732,10 @@
    "motion": null
   },
   {
-   "id": "z3-r376",
+   "id": "z3-r377",
    "prefab": "pad-m",
    "pos": [
-    -33.9,
+    -35.3,
     281,
     -72.5
    ],
@@ -1732,10 +1748,10 @@
    "motion": null
   },
   {
-   "id": "z3-h377",
+   "id": "z3-h378",
    "prefab": "blade-5",
    "pos": [
-    -37.3,
+    -38.35,
     285.2,
     -72.5
    ],
@@ -1765,10 +1781,10 @@
    }
   },
   {
-   "id": "z3-m378",
+   "id": "z3-m379",
    "prefab": "mover-m",
    "pos": [
-    -29.9,
+    -31.3,
     281.3,
     -72.5
    ],
@@ -1798,10 +1814,10 @@
    }
   },
   {
-   "id": "z3-r379",
+   "id": "z3-r380",
    "prefab": "pad-m",
    "pos": [
-    -19.7,
+    -21.1,
     281.7,
     -72.5
    ],
@@ -1814,10 +1830,10 @@
    "motion": null
   },
   {
-   "id": "z3-rest380",
+   "id": "z3-rest381",
    "prefab": "pad-rest",
    "pos": [
-    -14.9,
+    -17,
     282.5,
     -72.5
    ],
@@ -1830,12 +1846,28 @@
    "motion": null
   },
   {
-   "id": "z3-lamp381",
+   "id": "z3-r382",
+   "prefab": "pad-m",
+   "pos": [
+    -12.5,
+    283.269,
+    -72.5
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp383",
    "prefab": "lamp",
    "pos": [
-    -17.15,
-    282.5,
-    -74.75
+    -13.75,
+    283.269,
+    -73.75
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1846,12 +1878,12 @@
    "motion": null
   },
   {
-   "id": "z3-lift382",
+   "id": "z3-lift384",
    "prefab": "lift-l",
    "pos": [
-    -14.9,
-    282.8,
-    -78
+    -12.5,
+    283.569,
+    -77
    ],
    "rotY": 0,
    "tag": "route",
@@ -1879,44 +1911,12 @@
    }
   },
   {
-   "id": "z3-rails383",
+   "id": "z3-rails385",
    "prefab": "lift-rails-100",
    "pos": [
-    -14.9,
-    282.8,
-    -78
-   ],
-   "rotY": 0,
-   "tag": "decor",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-r384",
-   "prefab": "pad-m",
-   "pos": [
-    -14.8,
-    293.3,
-    -72.5
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-lamp385",
-   "prefab": "lamp",
-   "pos": [
-    -16.05,
-    293.3,
-    -73.75
+    -12.5,
+    283.569,
+    -77
    ],
    "rotY": 0,
    "tag": "decor",
@@ -1930,8 +1930,8 @@
    "id": "z3-r386",
    "prefab": "pad-m",
    "pos": [
-    -10.6,
-    294.024,
+    -9.2,
+    294.069,
     -72.5
    ],
    "rotY": 0,
@@ -1943,15 +1943,15 @@
    "motion": null
   },
   {
-   "id": "z3-r387",
-   "prefab": "pad-m",
+   "id": "z3-lamp387",
+   "prefab": "lamp",
    "pos": [
-    -6.4,
-    294.747,
-    -72.5
+    -10.45,
+    294.069,
+    -73.75
    ],
    "rotY": 0,
-   "tag": "route",
+   "tag": "decor",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -1962,8 +1962,8 @@
    "id": "z3-r388",
    "prefab": "pad-m",
    "pos": [
-    -2.2,
-    295.471,
+    -5,
+    294.838,
     -72.5
    ],
    "rotY": 0,
@@ -1978,8 +1978,8 @@
    "id": "z3-r389",
    "prefab": "pad-m",
    "pos": [
-    2,
-    296.194,
+    -0.8,
+    295.606,
     -72.5
    ],
    "rotY": 0,
@@ -1994,8 +1994,8 @@
    "id": "z3-r390",
    "prefab": "pad-m",
    "pos": [
-    6.2,
-    296.918,
+    3.4,
+    296.375,
     -72.5
    ],
    "rotY": 0,
@@ -2010,8 +2010,8 @@
    "id": "z3-r391",
    "prefab": "pad-m",
    "pos": [
-    10.4,
-    297.641,
+    7.6,
+    297.144,
     -72.5
    ],
    "rotY": 0,
@@ -2026,8 +2026,8 @@
    "id": "z3-r392",
    "prefab": "pad-m",
    "pos": [
-    14.6,
-    298.365,
+    11.8,
+    297.913,
     -72.5
    ],
    "rotY": 0,
@@ -2042,8 +2042,8 @@
    "id": "z3-r393",
    "prefab": "pad-m",
    "pos": [
-    18.8,
-    299.088,
+    16,
+    298.681,
     -72.5
    ],
    "rotY": 0,
@@ -2058,8 +2058,8 @@
    "id": "z3-r394",
    "prefab": "pad-m",
    "pos": [
-    23,
-    299.812,
+    20.2,
+    299.45,
     -72.5
    ],
    "rotY": 0,
@@ -2071,11 +2071,27 @@
    "motion": null
   },
   {
-   "id": "z3-lamp395",
+   "id": "z3-r395",
+   "prefab": "pad-m",
+   "pos": [
+    24.4,
+    300.219,
+    -72.5
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp396",
    "prefab": "lamp",
    "pos": [
-    21.75,
-    299.812,
+    23.15,
+    300.219,
     -73.75
    ],
    "rotY": 0,
@@ -2087,11 +2103,11 @@
    "motion": null
   },
   {
-   "id": "z3-lift396",
+   "id": "z3-lift397",
    "prefab": "lift-l",
    "pos": [
-    23,
-    300.112,
+    24.4,
+    300.519,
     -77
    ],
    "rotY": 0,
@@ -2120,11 +2136,11 @@
    }
   },
   {
-   "id": "z3-rails397",
+   "id": "z3-rails398",
    "prefab": "lift-rails-100",
    "pos": [
-    23,
-    300.112,
+    24.4,
+    300.519,
     -77
    ],
    "rotY": 0,
@@ -2136,11 +2152,11 @@
    "motion": null
   },
   {
-   "id": "z3-r398",
+   "id": "z3-r399",
    "prefab": "pad-m",
    "pos": [
-    26.3,
-    310.612,
+    27.7,
+    311.019,
     -72.5
    ],
    "rotY": 0,
@@ -2152,11 +2168,11 @@
    "motion": null
   },
   {
-   "id": "z3-lamp399",
+   "id": "z3-lamp400",
    "prefab": "lamp",
    "pos": [
-    25.05,
-    310.612,
+    26.45,
+    311.019,
     -73.75
    ],
    "rotY": 0,
@@ -2168,27 +2184,11 @@
    "motion": null
   },
   {
-   "id": "z3-r400",
-   "prefab": "pad-m",
-   "pos": [
-    30.5,
-    311.335,
-    -72.5
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
    "id": "z3-r401",
    "prefab": "pad-m",
    "pos": [
-    34.7,
-    312.059,
+    31.9,
+    311.788,
     -72.5
    ],
    "rotY": 0,
@@ -2203,8 +2203,8 @@
    "id": "z3-r402",
    "prefab": "pad-m",
    "pos": [
-    38.9,
-    312.782,
+    36.1,
+    312.556,
     -72.5
    ],
    "rotY": 0,
@@ -2219,8 +2219,8 @@
    "id": "z3-r403",
    "prefab": "pad-m",
    "pos": [
-    43.1,
-    313.506,
+    40.3,
+    313.325,
     -72.5
    ],
    "rotY": 0,
@@ -2235,8 +2235,8 @@
    "id": "z3-r404",
    "prefab": "pad-m",
    "pos": [
-    47.3,
-    314.229,
+    44.5,
+    314.094,
     -72.5
    ],
    "rotY": 0,
@@ -2251,8 +2251,8 @@
    "id": "z3-r405",
    "prefab": "pad-m",
    "pos": [
-    51.5,
-    314.953,
+    48.7,
+    314.863,
     -72.5
    ],
    "rotY": 0,
@@ -2267,8 +2267,8 @@
    "id": "z3-r406",
    "prefab": "pad-m",
    "pos": [
-    55.7,
-    315.676,
+    52.9,
+    315.631,
     -72.5
    ],
    "rotY": 0,
@@ -2283,7 +2283,7 @@
    "id": "z3-r407",
    "prefab": "pad-m",
    "pos": [
-    59.9,
+    57.1,
     316.4,
     -72.5
    ],
@@ -2467,7 +2467,7 @@
    "pos": [
     69.5,
     319.3,
-    -62.7
+    -63.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -2483,7 +2483,7 @@
    "pos": [
     69.5,
     321,
-    -55.3
+    -57
    ],
    "rotY": 0,
    "tag": "route",
@@ -2500,7 +2500,7 @@
    "pos": [
     69.5,
     321.8,
-    -50.5
+    -52.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -2516,7 +2516,7 @@
    "pos": [
     69.5,
     322.1,
-    -45.5
+    -48.6
    ],
    "rotY": 0,
    "tag": "route",
@@ -2549,7 +2549,7 @@
    "pos": [
     69.5,
     322.5,
-    -35.3
+    -38.4
    ],
    "rotY": 0,
    "tag": "route",
@@ -2565,7 +2565,7 @@
    "pos": [
     69.5,
     323.115,
-    -31.1
+    -34.2
    ],
    "rotY": 0,
    "tag": "route",
@@ -2576,12 +2576,28 @@
    "motion": null
   },
   {
-   "id": "z3-lamp423",
+   "id": "z3-r423",
+   "prefab": "pad-m",
+   "pos": [
+    69.5,
+    323.73,
+    -30
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp424",
    "prefab": "lamp",
    "pos": [
     68.25,
-    323.115,
-    -32.35
+    323.73,
+    -31.25
    ],
    "rotY": 0,
    "tag": "decor",
@@ -2592,12 +2608,12 @@
    "motion": null
   },
   {
-   "id": "z3-lift424",
+   "id": "z3-lift425",
    "prefab": "lift-l",
    "pos": [
     65,
-    323.415,
-    -31.1
+    324.03,
+    -30
    ],
    "rotY": 0,
    "tag": "route",
@@ -2625,12 +2641,12 @@
    }
   },
   {
-   "id": "z3-rails425",
+   "id": "z3-rails426",
    "prefab": "lift-rails-100",
    "pos": [
     65,
-    323.415,
-    -31.1
+    324.03,
+    -30
    ],
    "rotY": 0,
    "tag": "decor",
@@ -2641,47 +2657,31 @@
    "motion": null
   },
   {
-   "id": "z3-r426",
-   "prefab": "pad-m",
-   "pos": [
-    69.5,
-    333.915,
-    -27.8
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-lamp427",
-   "prefab": "lamp",
-   "pos": [
-    68.25,
-    333.915,
-    -29.05
-   ],
-   "rotY": 0,
-   "tag": "decor",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-r428",
+   "id": "z3-r427",
    "prefab": "pad-m",
    "pos": [
     69.5,
     334.53,
-    -23.6
+    -26.7
    ],
    "rotY": 0,
    "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp428",
+   "prefab": "lamp",
+   "pos": [
+    68.25,
+    334.53,
+    -27.95
+   ],
+   "rotY": 0,
+   "tag": "decor",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -2694,7 +2694,7 @@
    "pos": [
     69.5,
     335.145,
-    -19.4
+    -22.5
    ],
    "rotY": 0,
    "tag": "route",
@@ -2710,7 +2710,7 @@
    "pos": [
     69.5,
     335.76,
-    -15.2
+    -18.3
    ],
    "rotY": 0,
    "tag": "route",
@@ -2726,7 +2726,7 @@
    "pos": [
     69.5,
     336.375,
-    -11
+    -14.1
    ],
    "rotY": 0,
    "tag": "route",
@@ -2742,7 +2742,7 @@
    "pos": [
     69.5,
     336.99,
-    -6.8
+    -9.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -2758,7 +2758,7 @@
    "pos": [
     69.5,
     337.605,
-    -2.6
+    -5.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -2774,7 +2774,7 @@
    "pos": [
     69.5,
     338.22,
-    1.6
+    -1.5
    ],
    "rotY": 0,
    "tag": "route",
@@ -2790,7 +2790,7 @@
    "pos": [
     69.5,
     338.835,
-    5.8
+    2.7
    ],
    "rotY": 0,
    "tag": "route",
@@ -2806,7 +2806,7 @@
    "pos": [
     69.5,
     339.45,
-    10
+    6.9
    ],
    "rotY": 0,
    "tag": "route",
@@ -2822,7 +2822,7 @@
    "pos": [
     69.5,
     340.065,
-    14.2
+    11.1
    ],
    "rotY": 0,
    "tag": "route",
@@ -2833,12 +2833,28 @@
    "motion": null
   },
   {
-   "id": "z3-lamp438",
+   "id": "z3-r438",
+   "prefab": "pad-m",
+   "pos": [
+    69.5,
+    340.68,
+    15.3
+   ],
+   "rotY": 0,
+   "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp439",
    "prefab": "lamp",
    "pos": [
     68.25,
-    340.065,
-    12.95
+    340.68,
+    14.05
    ],
    "rotY": 0,
    "tag": "decor",
@@ -2849,12 +2865,12 @@
    "motion": null
   },
   {
-   "id": "z3-lift439",
+   "id": "z3-lift440",
    "prefab": "lift-l",
    "pos": [
     65,
-    340.365,
-    14.2
+    340.98,
+    15.3
    ],
    "rotY": 0,
    "tag": "route",
@@ -2882,12 +2898,12 @@
    }
   },
   {
-   "id": "z3-rails440",
+   "id": "z3-rails441",
    "prefab": "lift-rails-100",
    "pos": [
     65,
-    340.365,
-    14.2
+    340.98,
+    15.3
    ],
    "rotY": 0,
    "tag": "decor",
@@ -2898,47 +2914,31 @@
    "motion": null
   },
   {
-   "id": "z3-r441",
-   "prefab": "pad-m",
-   "pos": [
-    69.5,
-    350.865,
-    17.5
-   ],
-   "rotY": 0,
-   "tag": "route",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-lamp442",
-   "prefab": "lamp",
-   "pos": [
-    68.25,
-    350.865,
-    16.25
-   ],
-   "rotY": 0,
-   "tag": "decor",
-   "precision": false,
-   "landmark": false,
-   "fakeSummit": false,
-   "trap": null,
-   "motion": null
-  },
-  {
-   "id": "z3-r443",
+   "id": "z3-r442",
    "prefab": "pad-m",
    "pos": [
     69.5,
     351.48,
-    21.7
+    18.6
    ],
    "rotY": 0,
    "tag": "route",
+   "precision": false,
+   "landmark": false,
+   "fakeSummit": false,
+   "trap": null,
+   "motion": null
+  },
+  {
+   "id": "z3-lamp443",
+   "prefab": "lamp",
+   "pos": [
+    68.25,
+    351.48,
+    17.35
+   ],
+   "rotY": 0,
+   "tag": "decor",
    "precision": false,
    "landmark": false,
    "fakeSummit": false,
@@ -2951,7 +2951,7 @@
    "pos": [
     69.5,
     352.095,
-    25.9
+    22.8
    ],
    "rotY": 0,
    "tag": "route",
@@ -2967,7 +2967,7 @@
    "pos": [
     69.5,
     352.71,
-    30.1
+    27
    ],
    "rotY": 0,
    "tag": "route",
@@ -2983,7 +2983,7 @@
    "pos": [
     69.5,
     353.325,
-    34.3
+    31.2
    ],
    "rotY": 0,
    "tag": "route",
@@ -2999,7 +2999,7 @@
    "pos": [
     69.5,
     353.94,
-    38.5
+    35.4
    ],
    "rotY": 0,
    "tag": "route",
@@ -3015,7 +3015,7 @@
    "pos": [
     69.5,
     354.555,
-    42.7
+    39.6
    ],
    "rotY": 0,
    "tag": "route",
@@ -3031,7 +3031,7 @@
    "pos": [
     69.5,
     355.17,
-    46.9
+    43.8
    ],
    "rotY": 0,
    "tag": "route",
@@ -3045,7 +3045,7 @@
    "id": "z3-r450",
    "prefab": "pad-m",
    "pos": [
-    65.3,
+    66.2,
     355.785,
     47.5
    ],
@@ -3061,7 +3061,7 @@
    "id": "z3-r451",
    "prefab": "pad-m",
    "pos": [
-    61.1,
+    62,
     356.4,
     47.5
    ],

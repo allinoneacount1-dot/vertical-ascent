@@ -86,11 +86,11 @@ const visualOnly = (id, parts, extra = {}) => {
 
 // route pads (the G2 slice prefabs pad-m, pad-l, mover-m, blade-5, finish-pad are reused unchanged)
 box('pad-prec', [1.2, 1, 1.2], { kind: 'box', color: '#e6c98a', accent: TRIM })
-box('pad-rest', [5, 1, 5], { kind: 'box', color: SAND, accent: TRIM })
+box('pad-rest', [3.6, 1, 3.6], { kind: 'box', color: SAND, accent: TRIM })
 box('pad-run', [3, 1, 6], { kind: 'box', color: SAND, accent: TRIM })
 box('lift-l', [4, 0.5, 4], { kind: 'box', color: '#4f8fb8', accent: '#f2f4f8' }, { surface: 'metal' })
 const SLICE_IDS = ['floor-60', 'pad-l', 'pad-m', 'pad-s', 'mover-m', 'blade-5', 'finish-pad']
-const HALF = { 'pad-m': [1.5, 1.5], 'pad-l': [2, 2], 'pad-prec': [0.6, 0.6], 'pad-rest': [2.5, 2.5], 'pad-run': [1.5, 3], 'mover-m': [1.5, 1.5], 'lift-l': [2, 2], 'finish-pad': [2, 2] }
+const HALF = { 'pad-m': [1.5, 1.5], 'pad-l': [2, 2], 'pad-prec': [0.6, 0.6], 'pad-rest': [1.8, 1.8], 'pad-run': [1.5, 3], 'mover-m': [1.5, 1.5], 'lift-l': [2, 2], 'finish-pad': [2, 2] }
 
 // scale cues (ref/03 §Isyarat ketinggian): a rooftop door hut (door 2.1 m) and railings (1.1 m)
 prefabs.set('hut', {
@@ -869,16 +869,25 @@ const lastDeckId = routeOrder[routeOrder.length - 1]
     return id
   }
   for (let j = 0; j < 4; j++) step(1.1)
-  // lift to the summit ridge
-  const liftBottom = prev.pos[1] + 0.3
-  const L = SUMMIT_Y - 1.0 - 5 * 1.0 - liftBottom
-  zc += HALF[prev.prefab][1] + 1.0 + 2
-  const liftId = add(zone, { id: nid(zone, 'lift'), prefab: 'lift-l', pos: [xc, liftBottom, zc], tag: 'route', motion: { type: 'linear', points: [[0, 0, 0], [0, r3(L), 0]], periodS: r3(2 * (L + 1.5)), phaseS: 0, dwellS: 1.5 } })
-  checkJump(`${liftId} (summit lift)`, footprintOf(prev.pos, prev.prefab), footprintOf([xc, liftBottom, zc], 'lift-l'))
-  railsFor(zone, [xc, zc], liftBottom, L)
-  route.push(liftId)
-  prev = { pos: [xc, liftBottom + L, zc], prefab: 'lift-l' }
+  // two lifts to the summit ridge with a pad between them (each lift period ≤ 30 s, a lamp on every pad stop)
+  const summitLift = (L) => {
+    const liftBottom = prev.pos[1] + 0.3
+    zc += HALF[prev.prefab][1] + 1.0 + 2
+    const liftId = add(zone, { id: nid(zone, 'lift'), prefab: 'lift-l', pos: [xc, liftBottom, zc], tag: 'route', motion: { type: 'linear', points: [[0, 0, 0], [0, r3(L), 0]], periodS: r3(2 * (L + 1.5)), phaseS: 0, dwellS: 1.5 } })
+    checkJump(`${liftId} (summit lift)`, footprintOf(prev.pos, prev.prefab), footprintOf([xc, liftBottom, zc], 'lift-l'))
+    railsFor(zone, [xc, zc], liftBottom, L)
+    route.push(liftId)
+    prev = { pos: [xc, liftBottom + L, zc], prefab: 'lift-l' }
+  }
+  const lampOn = (pos) => add(zone, { id: nid(zone, 'lamp'), prefab: 'lamp', pos: [pos[0] - 1.25, pos[1], pos[2] - 1.25], tag: 'decor' })
+  lampOn(prev.pos)
+  const liftsRise = SUMMIT_Y - 1.0 - 5 * 1.0 - (prev.pos[1] + 0.3) - (0.5 + 0.3)
+  summitLift(r3(liftsRise / 2))
+  step(0.5)
+  lampOn(prev.pos)
+  summitLift(r3(SUMMIT_Y - 1.0 - 5 * 1.0 - (prev.pos[1] + 0.3)))
   for (let j = 0; j < 5; j++) step(1.0)
+  lampOn(prev.pos)
   const finishTop = SUMMIT_Y
   zc += HALF[prev.prefab][1] + 1.2 + 2
   const finishId = add(zone, { id: 'z4-summit', prefab: 'finish-pad', pos: [xc, finishTop, zc], tag: 'route', landmark: true })
@@ -896,8 +905,23 @@ const lastDeckId = routeOrder[routeOrder.length - 1]
 }
 
 // ---- ground, floor and the gapped cloud layer --------------------------------------------------------------------------
-box('ground-floor', [440, 1, 440], { kind: 'box', color: '#5b6876' }, { surface: 'concrete' })
-add('z1', { id: 'z1-floor', prefab: 'ground-floor', pos: [C[0], -0.02, C[2]], tag: 'floor', cameraBlocker: true })
+{
+  // the real floor spans floorAABB exactly (D-007): route and rest footprints ± 120 m
+  const lo = [Infinity, Infinity]
+  const hi = [-Infinity, -Infinity]
+  for (const z of zones.keys()) for (const e of zones.get(z)) {
+    if (e.tag !== 'route' && e.tag !== 'rest') continue
+    const a = aabbOf(e.pos, e.prefab, e.rotY)
+    if (a == null) continue
+    lo[0] = Math.min(lo[0], a.min[0])
+    lo[1] = Math.min(lo[1], a.min[2])
+    hi[0] = Math.max(hi[0], a.max[0])
+    hi[1] = Math.max(hi[1], a.max[2])
+  }
+  const size = [r3(hi[0] - lo[0] + 240), 1, r3(hi[1] - lo[1] + 240)]
+  box('ground-floor', size, { kind: 'box', color: '#5b6876' }, { surface: 'concrete' })
+  add('z1', { id: 'z1-floor', prefab: 'ground-floor', pos: [r3((lo[0] + hi[0]) / 2), -0.02, r3((lo[1] + hi[1]) / 2)], tag: 'floor', cameraBlocker: true })
+}
 visualOnly('ground-far', [{ shape: 'box', size: [4000, 0.1, 4000], pos: [0, -0.6, 0], color: '#6f7d6a' }])
 add('z1', { id: 'z1-ground-far', prefab: 'ground-far', pos: [C[0], 0, C[2]], tag: 'decor' })
 {
@@ -973,7 +997,8 @@ if (errors.length) {
 }
 
 // ---- write -------------------------------------------------------------------------------------------------------------
-const bands = { z1: [0, 64], z2: [64, 208], z3: [208, 368], z4: [368, SUMMIT_Y] }
+const zoneBase = (z) => deckRects.find((d) => d.ring.zone === z).y
+const bands = { z1: [0, zoneBase('z2')], z2: [zoneBase('z2'), zoneBase('z3')], z3: [zoneBase('z3'), zoneBase('z4')], z4: [zoneBase('z4'), SUMMIT_Y] }
 for (const ring of RINGS) {
   const routeZ = routeEntries.filter((e) => e.id.startsWith(ring.zone))
   beats.push({
