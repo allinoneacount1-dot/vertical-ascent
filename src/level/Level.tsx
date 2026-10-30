@@ -12,6 +12,7 @@ import type { PlatformEntry, Prefab } from './schema.ts'
 import type { Vec3 } from './motion.ts'
 import { game } from '../game/game.ts'
 import { CameraRig } from '../camera/camera-rig.ts'
+import { buildMergedStatics, colliderSize, localPieces, materialFor } from './procedural.ts'
 
 const ROTATION_ORDER = 'YXZ'
 
@@ -52,11 +53,6 @@ function colliderCentre(e: PlatformEntry, p: Prefab): Vec3 {
   return [e.pos[0] + v.x, e.pos[1] + v.y, e.pos[2] + v.z]
 }
 
-const colliderSize = (p: Prefab): Vec3 => {
-  const s = p.collider!.size
-  return [s[0] * p.scale, s[1] * p.scale, s[2] * p.scale]
-}
-
 function ColliderBox({ size, position, rotation }: { size: Vec3; position: Vec3; rotation: [number, number, number, 'YXZ'] }) {
   return (
     <mesh position={position} rotation={rotation}>
@@ -66,93 +62,31 @@ function ColliderBox({ size, position, rotation }: { size: Vec3; position: Vec3;
   )
 }
 
-/** Procedural visual in the collider's local frame (centre at origin). */
-function ProceduralVisual({ prefab }: { prefab: Prefab }) {
-  const v = prefab.visual
-  const size: Vec3 = prefab.collider ? colliderSize(prefab) : (v?.size ?? [1, 1, 1])
-  if (v == null) return null
-  const [w, h, d] = size
-  if (v.kind === 'stairs') {
-    const steps = 8
-    const rise = h / steps
-    const depth = d / steps
-    return (
-      <group position={[0, -h / 2, d / 2]}>
-        {Array.from({ length: steps }, (_, i) => (
-          <mesh key={i} position={[0, ((i + 1) * rise) / 2, -(i + 0.5) * depth]} castShadow receiveShadow>
-            <boxGeometry args={[w, (i + 1) * rise, depth]} />
-            <meshStandardMaterial color={v.color} roughness={0.9} />
-          </mesh>
-        ))}
-      </group>
-    )
-  }
-  if (v.kind === 'pole') {
-    return (
-      <mesh castShadow>
-        <cylinderGeometry args={[w / 2, w / 2, h, 12]} />
-        <meshStandardMaterial color={v.color} />
-      </mesh>
-    )
-  }
-  if (v.kind === 'blade') {
-    const bands = 6
-    return (
-      <group>
-        <mesh castShadow>
-          <boxGeometry args={size} />
-          <meshStandardMaterial color={v.color} roughness={0.5} metalness={0.3} />
-        </mesh>
-        {Array.from({ length: bands }, (_, i) => (
-          <mesh key={i} position={[0, -h / 2 + (h / bands) * (i + 0.5), 0]}>
-            <boxGeometry args={[w * 1.04, (h / bands) * 0.45, d * 1.04]} />
-            <meshStandardMaterial color={v.accent ?? '#f2c94c'} roughness={0.6} />
-          </mesh>
-        ))}
-      </group>
-    )
-  }
-  // box with an optional trim around the top edge (shape/pattern cue, not colour only — D-021)
-  const trim = 0.12
-  return (
-    <group>
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={size} />
-        <meshStandardMaterial color={v.color} roughness={0.85} />
-      </mesh>
-      {v.accent != null && (
-        <group position={[0, h / 2 + 0.02, 0]}>
-          <mesh position={[0, 0, d / 2 - trim / 2]}>
-            <boxGeometry args={[w, 0.04, trim]} />
-            <meshStandardMaterial color={v.accent} />
-          </mesh>
-          <mesh position={[0, 0, -d / 2 + trim / 2]}>
-            <boxGeometry args={[w, 0.04, trim]} />
-            <meshStandardMaterial color={v.accent} />
-          </mesh>
-          <mesh position={[w / 2 - trim / 2, 0, 0]}>
-            <boxGeometry args={[trim, 0.04, d - 2 * trim]} />
-            <meshStandardMaterial color={v.accent} />
-          </mesh>
-          <mesh position={[-w / 2 + trim / 2, 0, 0]}>
-            <boxGeometry args={[trim, 0.04, d - 2 * trim]} />
-            <meshStandardMaterial color={v.accent} />
-          </mesh>
-        </group>
-      )}
-    </group>
-  )
+/** A mover's visual (not merged: it moves), built from the same pieces as the static visuals. */
+function MoverVisual({ prefab }: { prefab: Prefab }) {
+  const group = useMemo(() => {
+    const g = new Group()
+    for (const p of localPieces(prefab)) {
+      const m = new Mesh(p.geometry, materialFor(p))
+      m.castShadow = p.emissive == null
+      m.receiveShadow = true
+      g.add(m)
+    }
+    return g
+  }, [prefab])
+  return <primitive object={group} />
 }
 
-/** Static entry visual placed at its collider centre (stairs/poles are visual-only blocks of the G1 blockout). */
-function StaticVisual({ entry, prefab }: { entry: PlatformEntry; prefab: Prefab }) {
-  // visual-only blocks (no collider) are centred on their pos
-  const centre = prefab.collider ? colliderCentre(entry, prefab) : entry.pos
-  return (
-    <group position={centre} rotation={[entry.rotX ?? 0, entry.rotY, 0, ROTATION_ORDER]}>
-      <ProceduralVisual prefab={prefab} />
-    </group>
-  )
+/** All static visuals of the level merged into one mesh per material (procedural.ts). */
+function MergedStatics({ level }: { level: LoadedLevel }) {
+  const root = useMemo(() => {
+    const g = new Group()
+    g.name = `${level.id}-visuals`
+    const meshes = buildMergedStatics(level.data.platforms, level.prefabs, g)
+    game.log('mergedStatics', { meshes, entries: level.data.platforms.length })
+    return g
+  }, [level])
+  return <primitive object={root} />
 }
 
 /** Moving entry: <group mover> <Visual/> <BvhPhysicsBody kinematic> <collider/> </BvhPhysicsBody> </group>. */
@@ -177,7 +111,7 @@ function Mover({ entry, prefab }: { entry: PlatformEntry; prefab: Prefab }) {
   return (
     <group ref={mover}>
       <group position={[offset[0] * prefab.scale, offset[1] * prefab.scale, offset[2] * prefab.scale]}>
-        <ProceduralVisual prefab={prefab} />
+        <MoverVisual prefab={prefab} />
       </group>
       <BvhPhysicsBody
         kinematic
@@ -269,11 +203,7 @@ export function Level({ level }: { level: LoadedLevel }) {
           <ColliderBox key={e.id} size={colliderSize(prefabOf(e))} position={colliderCentre(e, prefabOf(e))} rotation={[e.rotX ?? 0, e.rotY, 0, ROTATION_ORDER]} />
         ))}
       </BvhPhysicsBody>
-      {entries
-        .filter((e) => e.motion == null)
-        .map((e) => (
-          <StaticVisual key={e.id} entry={e} prefab={prefabOf(e)} />
-        ))}
+      <MergedStatics level={level} />
       {entries
         .filter((e) => e.motion != null)
         .map((e) => (
