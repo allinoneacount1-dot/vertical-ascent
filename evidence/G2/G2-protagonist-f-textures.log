@@ -1,0 +1,106 @@
+{
+  "input": ".cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm",
+  "output": ".cache/work/vroid-f/protagonist-f.vrm",
+  "max": 1024,
+  "bytesBefore": 14198800,
+  "bytesAfter": 8496720,
+  "viewsTotal": 210,
+  "viewsCopiedIdentical": 201,
+  "imagesResized": [
+    {
+      "image": 15,
+      "name": "F00_002_Body_00",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "filters": [
+        "huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20"
+      ],
+      "bytesBefore": 2159641,
+      "bytesAfter": 592093
+    },
+    {
+      "image": 16,
+      "name": "F00_002_02_Body_00_nml",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "filters": [],
+      "bytesBefore": 2155898,
+      "bytesAfter": 537234
+    },
+    {
+      "image": 17,
+      "name": "F00_002_Onepiece_01",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "filters": [
+        "huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20"
+      ],
+      "bytesBefore": 1167396,
+      "bytesAfter": 383105
+    },
+    {
+      "image": 18,
+      "name": "F00_002_Shoes_01",
+      "from": "512x512",
+      "to": "512x512",
+      "filters": [
+        "huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20"
+      ],
+      "bytesBefore": 154104,
+      "bytesAfter": 125370
+    },
+    {
+      "image": 19,
+      "name": "F00_000_HairBack_00",
+      "from": "1024x1024",
+      "to": "1024x1024",
+      "filters": [
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+      ],
+      "bytesBefore": 287349,
+      "bytesAfter": 228335
+    },
+    {
+      "image": 22,
+      "name": "F00_000_Hair_00_01",
+      "from": "512x1024",
+      "to": "512x1024",
+      "filters": [
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+      ],
+      "bytesBefore": 127218,
+      "bytesAfter": 32040
+    },
+    {
+      "image": 25,
+      "name": "F00_000_Hair_00_02",
+      "from": "512x1024",
+      "to": "512x1024",
+      "filters": [
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+      ],
+      "bytesBefore": 127218,
+      "bytesAfter": 32040
+    },
+    {
+      "image": 26,
+      "name": "F00_000_Hair_00_03",
+      "from": "512x1024",
+      "to": "512x1024",
+      "filters": [
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+      ],
+      "bytesBefore": 138291,
+      "bytesAfter": 54316
+    },
+    {
+      "image": 27,
+      "name": "Thumbnail",
+      "from": "2048x2048",
+      "to": "1024x1024",
+      "filters": [],
+      "bytesBefore": 2039785,
+      "bytesAfter": 670508
+    }
+  ]
+}

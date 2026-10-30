@@ -30,6 +30,18 @@ Design margins (ref/03): a jump uses at most 80 % of the matching reach in the f
 
 Walkable surfaces always have the trim; decoration never does. Hazards are told apart by bands and motion, never by a red/green pair.
 
+## Protagonist
+
+Base: VRoid Studio alpha AvatarSample_F (CC0, A5; owner's pick, D-051). Made the game's own (D-017) with warm colours that read against sand pads, slate ground and steel-blue movers, and a climber's silhouette:
+
+| Part | Change | How |
+|---|---|---|
+| Outfit, legwear, shoes | navy → dark olive, cyan → rust/coral | baked: `huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20` on the cloth/body textures (skin untouched) |
+| Hair | white → chestnut | baked: `colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7` |
+| Silhouette | climbing pack: body `#4b3a2c`, flap and bedroll in sand `#d8b56a` | runtime primitive on the upper-chest bone (`src/character/protagonist-style.ts`) |
+
+Textures ≤1024² (D-017), file under 10 MB. Not in the game until the owner pastes pixiv's first-party CC0 sentence (D-045).
+
 ## Vertical slice (`level/slice.json`)
 
 14 route pads from the ground to 8.8 m, one moving platform (8 m ride, 1.5 s dwell at each end), one windmill bar across a 3 m sprint jump (clear about half of each 6 s turn), finish pad with a sensor. The route bot climbs it in about 36 s.

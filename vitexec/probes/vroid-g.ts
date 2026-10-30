@@ -7,10 +7,12 @@ import { loadCharacterAnimation, loadCharacterModel } from '@pmndrs/viverse'
 import type { VRM } from '@pixiv/three-vrm'
 import { UAL1_BONE_MAP } from '/src/character/rig.ts'
 import { assetUrl } from '/src/assets.ts'
+import { addClimbingPack } from '/src/character/protagonist-style.ts'
 
-// ?vrm=f selects AvatarSample_F (vitexec --path "?vrm=f"); default G
-const which = new URLSearchParams(location.search).get('vrm') === 'f' ? 'F' : 'G'
-const URL_CANDIDATES = [`/.cache/work/vroid-${which.toLowerCase()}/AvatarSample_${which}-1024.vrm`]
+// ?vrm=f → AvatarSample_F, ?vrm=fs → F restyled for the game (D-051: baked colours + climbing pack); default G
+const param = new URLSearchParams(location.search).get('vrm')
+const which = param === 'fs' ? 'F-styled' : param === 'f' ? 'F' : 'G'
+const URL_CANDIDATES = [which === 'F-styled' ? '/.cache/work/vroid-f/protagonist-f.vrm' : `/.cache/work/vroid-${which.toLowerCase()}/AvatarSample_${which}-1024.vrm`]
 let url = ''
 for (const u of URL_CANDIDATES) {
   const r = await fetch(u, { method: 'HEAD' })
@@ -23,6 +25,7 @@ for (const u of URL_CANDIDATES) {
 if (!url) throw new Error('probe: the processed VRM is not served')
 
 const model = (await loadCharacterModel(url, 'vrm', undefined, true, true)) as unknown as VRM & { height: number; mixer: THREE.AnimationMixer }
+const pack = which === 'F-styled' ? addClimbingPack(model.scene, model.humanoid as never) : null
 const textures = new Set<THREE.Texture>()
 model.scene.traverse((o) => {
   const m = (o as THREE.Mesh).material
@@ -103,4 +106,5 @@ for (const [i, [px, py, pz]] of views.entries()) {
   renderer.setScissor(i * w3, 0, w3, innerHeight)
   renderer.render(scene, cam)
 }
-console.log('vroid ' + JSON.stringify({ which, url, metaVersion: model.meta.metaVersion, bind, textures: textures.size, texturesWithWidth: texSizes.filter((w) => w > 0).length, maxTextureWidth: Math.max(...texSizes), clips, posed }))
+const packBox = pack ? new THREE.Box3().setFromObject(pack) : null
+console.log('vroid ' + JSON.stringify({ which, url, pack: packBox ? { min: packBox.min.toArray().map((v) => Number(v.toFixed(3))), max: packBox.max.toArray().map((v) => Number(v.toFixed(3))) } : null, metaVersion: model.meta.metaVersion, bind, textures: textures.size, texturesWithWidth: texSizes.filter((w) => w > 0).length, maxTextureWidth: Math.max(...texSizes), clips, posed }))

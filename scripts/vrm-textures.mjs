@@ -4,7 +4,9 @@
 // larger side exceeds --max with ffmpeg (lanczos, aspect kept), rebuilds the BIN chunk with each bufferView 4-byte
 // aligned, fixes byteOffsets, the buffer length and both chunk lengths. Every other bufferView is copied byte for
 // byte; the script re-reads its output and fails if any non-image view differs or an image is still too large.
-//   node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>]
+// --filter '<image-name regex>::<ffmpeg filter>' (repeatable) bakes a colour change into the matching images after
+// the resize (D-017 recolour), e.g. --filter '^F00_002_01_Shoes_01$::hue=h=185'.
+//   node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>] [--filter '<re>::<filter>' ...]
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -13,8 +15,16 @@ const [input, output] = process.argv.slice(2)
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d)
 const max = Number(arg('--max', '1024'))
 const workdir = arg('--workdir', join('.tmp', 'vrm-textures'))
+const filters = process.argv
+  .map((a, i) => (a === '--filter' ? process.argv[i + 1] : null))
+  .filter((f) => f != null)
+  .map((f) => {
+    const [re, chain] = f.split('::')
+    if (!re || !chain) throw new Error(`--filter needs '<regex>::<ffmpeg filter>', got ${f}`)
+    return { re: new RegExp(re), chain, matched: 0 }
+  })
 if (!input || !output || !(max > 0)) {
-  console.error('usage: node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>]')
+  console.error("usage: node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>] [--filter '<re>::<filter>' ...]")
   process.exit(2)
 }
 
@@ -61,15 +71,16 @@ for (const [i, img] of (json.images ?? []).entries()) {
   if (img.bufferView == null) throw new Error(`image ${i} is external (uri); not supported`)
   const bytes = viewBytes(json, bin, img.bufferView)
   const [w, h] = imageSize(bytes, img.mimeType)
-  if (Math.max(w, h) <= max) continue
-  const k = max / Math.max(w, h)
+  const colour = filters.filter((f) => f.re.test(img.name ?? '')).map((f) => (f.matched++, f.chain))
+  if (Math.max(w, h) <= max && colour.length === 0) continue
+  const k = Math.min(1, max / Math.max(w, h))
   const nw = Math.max(1, Math.round(w * k))
   const nh = Math.max(1, Math.round(h * k))
   const ext = img.mimeType === 'image/png' ? 'png' : 'jpg'
   const inFile = join(workdir, `image-${i}-in.${ext}`)
   const outFile = join(workdir, `image-${i}-out.${ext}`)
   writeFileSync(inFile, bytes)
-  const ff = ['-v', 'error', '-y', '-i', inFile, '-vf', `scale=${nw}:${nh}:flags=lanczos`]
+  const ff = ['-v', 'error', '-y', '-i', inFile, '-vf', [`scale=${nw}:${nh}:flags=lanczos`, ...colour].join(',')]
   if (ext === 'png') ff.push('-pix_fmt', 'rgba', '-compression_level', '9')
   else ff.push('-q:v', '2')
   ff.push(outFile)
@@ -79,8 +90,9 @@ for (const [i, img] of (json.images ?? []).entries()) {
   const [ow, oh] = imageSize(out, img.mimeType)
   if (ow !== nw || oh !== nh) throw new Error(`image ${i}: ffmpeg wrote ${ow}x${oh}, expected ${nw}x${nh}`)
   replaced.set(img.bufferView, out)
-  report.push({ image: i, name: img.name ?? null, from: `${w}x${h}`, to: `${nw}x${nh}`, bytesBefore: bytes.length, bytesAfter: out.length })
+  report.push({ image: i, name: img.name ?? null, from: `${w}x${h}`, to: `${nw}x${nh}`, filters: colour, bytesBefore: bytes.length, bytesAfter: out.length })
 }
+for (const f of filters) if (f.matched === 0) throw new Error(`--filter ${f.re} matched no image`)
 
 // rebuild BIN: views in their original order, each start aligned to 4 bytes (glTF accessor alignment ≤4)
 const parts = []
