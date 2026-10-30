@@ -1,4 +1,4 @@
-RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 06:12, addendum 06:48; D-045..D-050), next action: owner pastes the first-party pixiv CC0 sentence and picks AvatarSample_F (recommended) or _G — both already processed to ≤1024² in .cache/work/vroid-{f,g}/ (D-049) → vrm-meta.mjs, D-017 recolour + accessory, public/assets/characters/, rig.ts, empty stub keep list, TEST-03; or O1/O2 drops; then G3 in a new session
+RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 06:12, addendum 06:48; D-045..D-051), next action: owner pastes the first-party pixiv CC0 sentence → AvatarSample_F (owner pick, D-051) is ready as .cache/work/vroid-f/protagonist-f.vrm (recoloured, ≤1024², 8.50 MB) → vrm-meta.mjs, copy to public/assets/characters/, rig.ts MODEL_OPTIONS + addClimbingPack in CharacterVisual, empty the stub keep list, TEST-03 (facing, feet ~2 cm), rerun TEST-20a/18a; then G3 in a new session
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -77,7 +77,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | Flat-colour blockout boxes (G1 level) | src/level/blockout.ts, DEV-only `?level=g1-blockout` (D-042) | G1; kept as a DEV test level | none needed (not shipped as a level) |
 ## Blocked / needs owner
 - (none for G0, none for G1)
-- G2 gap TEST-03 BLOCKED(owner-asset-approval): no final character. A1–A5 approved and downloaded (D-045); clips and IBL integrated (D-047); AvatarSample_F (1.71 m) and _G (1.74 m) prepared in .cache with textures ≤1024² and under 10 MB (D-049, D-050). Still needed from the owner: (a) paste the CC0 sentence from https://vroid.pixiv.help/hc/en-us/articles/4402614652569 (first-party page; agent access is refused as bot-check circumvention) and pick F or G, or (b) drop O1 UBC + O2 Outfits into `.cache/inbox/<slot>/`. First action of the next step.
+- G2 gap TEST-03 BLOCKED(owner-asset-approval): no final character. A1–A5 approved and downloaded (D-045); clips and IBL integrated (D-047); owner picked AvatarSample_F (D-051); the restyled protagonist is ready in .cache (D-049..D-051). Still needed from the owner: (a) paste the CC0 sentence from https://vroid.pixiv.help/hc/en-us/articles/4402614652569 (first-party page; agent access is refused as bot-check circumvention), or (b) drop O1 UBC + O2 Outfits into `.cache/inbox/<slot>/`. First action of the next step.
 - G2 gap: slice prefab art is procedural until a kit is delivered (O3–O8 are OWNER-ONLY drops; A6 OGA mirrors not approved).
 - Q1–Q11: done 2026-10-30, owner accepted all defaults (D-029).
 - Owner actions still open (OWNER_RUNBOOK "Tindakan owner per gate"): review docs/APPROVALS.md and name approved ids in chat (this session, or the kickoff of the session that closes the G2 gap); place OWNER-ONLY files (O1–O13) in .cache/inbox/<slot>/.
