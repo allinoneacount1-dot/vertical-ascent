@@ -1,12 +1,290 @@
+.cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm: OK
 {
+  "argv": [
+    ".cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm",
+    ".cache/work/vroid-f/protagonist-f.vrm",
+    "--max",
+    "1024",
+    "--workdir",
+    ".tmp/vrm-protagonist-f",
+    "--filter",
+    "^F00_002_(Body_00|Onepiece_01|Shoes_01)$::huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20",
+    "--filter",
+    "^F00_000_(HairBack_00|Hair_00_0[123])$::colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7",
+    "--filter",
+    "^F00_000_Hair_00_0[12]$::eq=gamma=0.65",
+    "--material",
+    "_CLOTH$::_ShadeColor=0.62,0.5,0.46,1",
+    "--material",
+    "_HAIR(_0[123])?$::_Color=1,1,1,1",
+    "--material",
+    "_HAIR(_0[123])?$::_ShadeColor=0.7,0.56,0.48,1",
+    "--material",
+    "_HAIR(_0[123])?$::_EmissionColor=0.1,0.07,0.05,1"
+  ],
   "input": ".cache/extract/vroid-alpha-cc0/avatarsample_f/AvatarSample_F.vrm",
   "output": ".cache/work/vroid-f/protagonist-f.vrm",
   "max": 1024,
   "bytesBefore": 14198800,
-  "bytesAfter": 8496720,
+  "bytesAfter": 8497504,
   "viewsTotal": 210,
   "viewsCopiedIdentical": 201,
-  "imagesResized": [
+  "filters": [
+    {
+      "re": "/^F00_002_(Body_00|Onepiece_01|Shoes_01)$/",
+      "chain": "huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20",
+      "images": [
+        "F00_002_Body_00",
+        "F00_002_Onepiece_01",
+        "F00_002_Shoes_01"
+      ]
+    },
+    {
+      "re": "/^F00_000_(HairBack_00|Hair_00_0[123])$/",
+      "chain": "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7",
+      "images": [
+        "F00_000_HairBack_00",
+        "F00_000_Hair_00_01",
+        "F00_000_Hair_00_02",
+        "F00_000_Hair_00_03"
+      ]
+    },
+    {
+      "re": "/^F00_000_Hair_00_0[12]$/",
+      "chain": "eq=gamma=0.65",
+      "images": [
+        "F00_000_Hair_00_01",
+        "F00_000_Hair_00_02"
+      ]
+    }
+  ],
+  "materialEdits": [
+    {
+      "material": "F00_002_01_Onepice_01_CLOTH",
+      "prop": "_ShadeColor",
+      "before": [
+        0.509804,
+        0.4705882,
+        1,
+        1
+      ],
+      "after": [
+        0.62,
+        0.5,
+        0.46,
+        1
+      ]
+    },
+    {
+      "material": "F00_002_01_Shoes_01_CLOTH",
+      "prop": "_ShadeColor",
+      "before": [
+        0.509804,
+        0.4705882,
+        1,
+        1
+      ],
+      "after": [
+        0.62,
+        0.5,
+        0.46,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_HairBack_00_HAIR",
+      "prop": "_Color",
+      "before": [
+        0.976636052,
+        0.984926462,
+        1,
+        1
+      ],
+      "after": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_01",
+      "prop": "_Color",
+      "before": [
+        0.976636052,
+        0.984926462,
+        1,
+        1
+      ],
+      "after": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_02",
+      "prop": "_Color",
+      "before": [
+        0.751882434,
+        0.8483635,
+        0.9299429,
+        1
+      ],
+      "after": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_03",
+      "prop": "_Color",
+      "before": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "after": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_HairBack_00_HAIR",
+      "prop": "_ShadeColor",
+      "before": [
+        0.9151164,
+        0.9151164,
+        0.963187,
+        1
+      ],
+      "after": [
+        0.7,
+        0.56,
+        0.48,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_01",
+      "prop": "_ShadeColor",
+      "before": [
+        0.9151164,
+        0.9151164,
+        0.963187,
+        1
+      ],
+      "after": [
+        0.7,
+        0.56,
+        0.48,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_02",
+      "prop": "_ShadeColor",
+      "before": [
+        0.598172247,
+        0.710891545,
+        0.873684764,
+        1
+      ],
+      "after": [
+        0.7,
+        0.56,
+        0.48,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_03",
+      "prop": "_ShadeColor",
+      "before": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "after": [
+        0.7,
+        0.56,
+        0.48,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_HairBack_00_HAIR",
+      "prop": "_EmissionColor",
+      "before": [
+        0.231991544,
+        0.235904589,
+        0.26251328,
+        1
+      ],
+      "after": [
+        0.1,
+        0.07,
+        0.05,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_01",
+      "prop": "_EmissionColor",
+      "before": [
+        0.231991544,
+        0.235904589,
+        0.26251328,
+        1
+      ],
+      "after": [
+        0.1,
+        0.07,
+        0.05,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_02",
+      "prop": "_EmissionColor",
+      "before": [
+        0.11548169,
+        0.1273567,
+        0.300870866,
+        1
+      ],
+      "after": [
+        0.1,
+        0.07,
+        0.05,
+        1
+      ]
+    },
+    {
+      "material": "F00_000_Hair_00_HAIR_03",
+      "prop": "_EmissionColor",
+      "before": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "after": [
+        0.1,
+        0.07,
+        0.05,
+        1
+      ]
+    }
+  ],
+  "imagesChanged": [
     {
       "image": 15,
       "name": "F00_002_Body_00",
@@ -66,10 +344,11 @@
       "from": "512x1024",
       "to": "512x1024",
       "filters": [
-        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7",
+        "eq=gamma=0.65"
       ],
       "bytesBefore": 127218,
-      "bytesAfter": 32040
+      "bytesAfter": 32520
     },
     {
       "image": 25,
@@ -77,10 +356,11 @@
       "from": "512x1024",
       "to": "512x1024",
       "filters": [
-        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7"
+        "colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7",
+        "eq=gamma=0.65"
       ],
       "bytesBefore": 127218,
-      "bytesAfter": 32040
+      "bytesAfter": 32520
     },
     {
       "image": 26,
@@ -104,3 +384,4 @@
     }
   ]
 }
+80f3f12e8d2272ce80c9d99a38cac9ab59e011c13012ce5910b9fae3a72f96b3 *.cache/work/vroid-f/protagonist-f.vrm

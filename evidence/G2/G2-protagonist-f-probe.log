@@ -1,9 +1,9 @@
 logs:
 [info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[log] probe url {"u":"/.cache/work/vroid-f/protagonist-f.vrm","status":200,"type":""}
-[request failed] http://127.0.0.1:12044/.cache/work/vroid-f/protagonist-f.vrm net::ERR_ABORTED
 [warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] probe url {"u":"/.cache/work/vroid-f/protagonist-f.vrm","status":200,"type":""}
+[request failed] http://127.0.0.1:52633/.cache/work/vroid-f/protagonist-f.vrm net::ERR_ABORTED
 [warning] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
 (209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
 (210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision

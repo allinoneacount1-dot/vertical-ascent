@@ -5,8 +5,12 @@
 // aligned, fixes byteOffsets, the buffer length and both chunk lengths. Every other bufferView is copied byte for
 // byte; the script re-reads its output and fails if any non-image view differs or an image is still too large.
 // --filter '<image-name regex>::<ffmpeg filter>' (repeatable) bakes a colour change into the matching images after
-// the resize (D-017 recolour), e.g. --filter '^F00_002_01_Shoes_01$::hue=h=185'.
+// the resize (D-017 recolour), e.g. --filter '^F00_002_Shoes_01$::hue=h=185'. A filter that matches a normal map
+// is refused. --material '<material-name regex>::<_Prop>=r,g,b,a' (repeatable, VRM 0.x) sets an existing MToon
+// colour of extensions.VRM.materialProperties, so shade/emission colours follow the recoloured textures; the
+// self-check then allows exactly these extension changes.
 //   node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>] [--filter '<re>::<filter>' ...]
+//     [--material '<re>::<_Prop>=r,g,b,a' ...]
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -15,17 +19,37 @@ const [input, output] = process.argv.slice(2)
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d)
 const max = Number(arg('--max', '1024'))
 const workdir = arg('--workdir', join('.tmp', 'vrm-textures'))
-const filters = process.argv
-  .map((a, i) => (a === '--filter' ? process.argv[i + 1] : null))
-  .filter((f) => f != null)
-  .map((f) => {
-    const [re, chain] = f.split('::')
-    if (!re || !chain) throw new Error(`--filter needs '<regex>::<ffmpeg filter>', got ${f}`)
-    return { re: new RegExp(re), chain, matched: 0 }
-  })
+const repeated = (flag) => process.argv.map((a, i) => (a === flag ? process.argv[i + 1] : null)).filter((f) => f != null)
+const filters = repeated('--filter').map((f) => {
+  const [re, chain] = f.split('::')
+  if (!re || !chain) throw new Error(`--filter needs '<regex>::<ffmpeg filter>', got ${f}`)
+  return { re: new RegExp(re), chain, matched: [] }
+})
+const materials = repeated('--material').map((m) => {
+  const match = /^(.+)::(_\w+)=([\d.]+),([\d.]+),([\d.]+),([\d.]+)$/.exec(m)
+  if (!match) throw new Error(`--material needs '<regex>::<_Prop>=r,g,b,a', got ${m}`)
+  return { re: new RegExp(match[1]), prop: match[2], value: match.slice(3, 7).map(Number), matched: [] }
+})
 if (!input || !output || !(max > 0)) {
-  console.error("usage: node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>] [--filter '<re>::<filter>' ...]")
+  console.error("usage: node scripts/vrm-textures.mjs <in.vrm> <out.vrm> [--max 1024] [--workdir <dir>] [--filter '<re>::<filter>' ...] [--material '<re>::<_Prop>=r,g,b,a' ...]")
   process.exit(2)
+}
+
+/** Applies the --material edits to a VRM 0.x extensions object; returns [{material, prop, before, after}]. */
+function applyMaterials(extensions, record) {
+  const props = extensions?.VRM?.materialProperties
+  if (materials.length && !props) throw new Error('--material needs a VRM 0.x file (extensions.VRM.materialProperties)')
+  const edits = []
+  for (const m of materials)
+    for (const p of props ?? []) {
+      if (!m.re.test(p.name ?? '')) continue
+      const before = p.vectorProperties?.[m.prop]
+      if (!Array.isArray(before)) throw new Error(`material ${p.name} has no vector property ${m.prop}`)
+      p.vectorProperties[m.prop] = [...m.value]
+      if (record) m.matched.push(p.name)
+      edits.push({ material: p.name, prop: m.prop, before, after: [...m.value] })
+    }
+  return edits
 }
 
 function parseGlb(buf) {
@@ -65,13 +89,24 @@ const { json, bin } = parseGlb(src)
 if ((json.buffers ?? []).length !== 1 || json.buffers[0].uri != null) throw new Error('expected exactly one embedded buffer')
 mkdirSync(workdir, { recursive: true })
 
+// images used as normal maps (glTF normalTexture or MToon _BumpMap) are never recoloured
+const normalImages = new Set()
+const sourceOf = (texture) => json.textures?.[texture]?.source
+for (const m of json.materials ?? []) if (m.normalTexture) normalImages.add(sourceOf(m.normalTexture.index))
+for (const p of json.extensions?.VRM?.materialProperties ?? []) if (p.textureProperties?._BumpMap != null) normalImages.add(sourceOf(p.textureProperties._BumpMap))
+
+const materialEdits = applyMaterials(json.extensions, true)
+for (const m of materials) if (m.matched.length === 0) throw new Error(`--material ${m.re} matched no material`)
+
 const replaced = new Map() // bufferView index → new bytes
 const report = []
 for (const [i, img] of (json.images ?? []).entries()) {
   if (img.bufferView == null) throw new Error(`image ${i} is external (uri); not supported`)
   const bytes = viewBytes(json, bin, img.bufferView)
   const [w, h] = imageSize(bytes, img.mimeType)
-  const colour = filters.filter((f) => f.re.test(img.name ?? '')).map((f) => (f.matched++, f.chain))
+  const hits = filters.filter((f) => f.re.test(img.name ?? ''))
+  if (hits.length && normalImages.has(i)) throw new Error(`--filter ${hits[0].re} matches normal map image ${i} (${img.name})`)
+  const colour = hits.map((f) => (f.matched.push(img.name), f.chain))
   if (Math.max(w, h) <= max && colour.length === 0) continue
   const k = Math.min(1, max / Math.max(w, h))
   const nw = Math.max(1, Math.round(w * k))
@@ -92,7 +127,7 @@ for (const [i, img] of (json.images ?? []).entries()) {
   replaced.set(img.bufferView, out)
   report.push({ image: i, name: img.name ?? null, from: `${w}x${h}`, to: `${nw}x${nh}`, filters: colour, bytesBefore: bytes.length, bytesAfter: out.length })
 }
-for (const f of filters) if (f.matched === 0) throw new Error(`--filter ${f.re} matched no image`)
+for (const f of filters) if (f.matched.length === 0) throw new Error(`--filter ${f.re} matched no image`)
 
 // rebuild BIN: views in their original order, each start aligned to 4 bytes (glTF accessor alignment ≤4)
 const parts = []
@@ -146,11 +181,25 @@ for (const [i, img] of check.json.images.entries()) {
   if (Math.max(w, h) > max) throw new Error(`self-check: image ${i} is still ${w}x${h}`)
 }
 const keys = (o) => JSON.stringify(Object.keys(o).sort())
-if (keys(check.json) !== keys(orig.json) || JSON.stringify(check.json.extensions) !== JSON.stringify(orig.json.extensions))
-  throw new Error('self-check: top-level JSON keys or extensions changed')
+const expectedExtensions = structuredClone(orig.json.extensions)
+applyMaterials(expectedExtensions, false)
+if (keys(check.json) !== keys(orig.json) || JSON.stringify(check.json.extensions) !== JSON.stringify(expectedExtensions))
+  throw new Error('self-check: top-level JSON keys changed, or extensions differ beyond the --material edits')
 console.log(
   JSON.stringify(
-    { input, output, max, bytesBefore: src.length, bytesAfter: result.length, viewsTotal: check.json.bufferViews.length, viewsCopiedIdentical: identical, imagesResized: report },
+    {
+      argv: process.argv.slice(2),
+      input,
+      output,
+      max,
+      bytesBefore: src.length,
+      bytesAfter: result.length,
+      viewsTotal: check.json.bufferViews.length,
+      viewsCopiedIdentical: identical,
+      filters: filters.map((f) => ({ re: String(f.re), chain: f.chain, images: f.matched })),
+      materialEdits,
+      imagesChanged: report,
+    },
     null,
     2,
   ),

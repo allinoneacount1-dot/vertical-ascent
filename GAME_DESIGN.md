@@ -36,11 +36,11 @@ Base: VRoid Studio alpha AvatarSample_F (CC0, A5; owner's pick, D-051). Made the
 
 | Part | Change | How |
 |---|---|---|
-| Outfit, legwear, shoes | navy → dark olive, cyan → rust/coral | baked: `huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20` on the cloth/body textures (skin untouched) |
-| Hair | white → chestnut | baked: `colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7` |
+| Outfit, legwear, shoes | navy → dark olive, cyan → rust/salmon | baked: `huesaturation=hue=-175:saturation=-0.25:colors=c+b+m:strength=20` on the cloth/body textures (skin untouched); cloth MToon `_ShadeColor` 0.62, 0.5, 0.46 (was a blue 0.51, 0.47, 1 that shaded the new colours violet) |
+| Hair | white → chestnut | baked: `colorize=hue=22:saturation=0.6:lightness=0.3:mix=0.8,eq=gamma=0.7`, front hair also `eq=gamma=0.65`; hair MToon `_Color` 1, 1, 1, `_ShadeColor` 0.7, 0.56, 0.48, `_EmissionColor` 0.1, 0.07, 0.05 (was a grey-blue glow) |
 | Silhouette | climbing pack: body `#4b3a2c`, flap and bedroll in sand `#d8b56a` | runtime primitive on the upper-chest bone (`src/character/protagonist-style.ts`) |
 
-Textures ≤1024² (D-017), file under 10 MB. Not in the game until the owner pastes pixiv's first-party CC0 sentence (D-045).
+Textures ≤1024² (D-017), file under 10 MB. Rebuilt by `bash scripts/build-protagonist.sh`. Not in the game until the owner pastes pixiv's first-party CC0 sentence (D-045).
 
 ## Vertical slice (`level/slice.json`)
 
