@@ -1,4 +1,4 @@
-RESUME HERE: G2 PASS-WITH-GAPS: TEST-03 (report 06:12, addendum 06:48; D-045..D-051), next action: owner pastes the first-party pixiv CC0 sentence → AvatarSample_F (owner pick, D-051) is ready as .cache/work/vroid-f/protagonist-f.vrm (recoloured, ≤1024², 8.50 MB) → vrm-meta.mjs, copy to public/assets/characters/, rig.ts MODEL_OPTIONS + addClimbingPack in CharacterVisual, empty the stub keep list, TEST-03 (facing, feet ~2 cm), rerun TEST-20a/18a; then G3 in a new session
+RESUME HERE: G3 IN-PROGRESS (D-053, started 2026-10-30 08:15), next action: beats.json + offline generator for z1–z4 on procedural prefabs, then lint (TEST-36); owner items open: pixiv CC0 text (TEST-03, G2 gap), approval "Setujui A6a–A6f" for Kenney kits
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -11,7 +11,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | G0 Setup | PASS | 2026-10-30 01:11 | 2026-10-30 01:26 | d779fba | 1 | evidence/G0 |
 | G1 Foundation | PASS | 2026-10-30 01:33 | 2026-10-30 05:34 | 390d1ea | 0 | evidence/G1 |
 | G2 Vertical slice | PASS-WITH-GAPS: TEST-03 | 2026-10-30 05:36 | 2026-10-30 06:12 (addendum 06:48) | f88d246 | 1 | evidence/G2 |
-| G3 Full world | NOT-STARTED | | | | | evidence/G3 |
+| G3 Full world | IN-PROGRESS | 2026-10-30 08:15 | | | 0 | evidence/G3 |
 | G4 Production quality | NOT-STARTED | | | | | evidence/G4 |
 | G5 Delivery | NOT-STARTED | | | | | evidence/G5 |
 ## TESTs (one row per ID in DIRECTIVE §7, incl. 07b 11a 11b 12a 12b 14a 14b 18a 18b 19a 19b 20a 20b 23b 28a 28b 34b 35a 35b)
