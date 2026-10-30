@@ -1,0 +1,72 @@
+{
+  "seed": 20261030,
+  "generatedBy": "tools/level-gen.mjs",
+  "beats": [
+    {
+      "zone": "z1",
+      "bandM": [
+        0,
+        64
+      ],
+      "jumps": [
+        60,
+        68
+      ],
+      "restEveryJumps": 9,
+      "maxChain": 9,
+      "deckSpacingM": 10
+    },
+    {
+      "zone": "z2",
+      "bandM": [
+        64,
+        208
+      ],
+      "jumps": [
+        105,
+        113
+      ],
+      "restEveryJumps": 12,
+      "maxChain": 12,
+      "deckSpacingM": 18
+    },
+    {
+      "zone": "z3",
+      "bandM": [
+        208,
+        368
+      ],
+      "jumps": [
+        111,
+        115
+      ],
+      "restEveryJumps": 12,
+      "maxChain": 14,
+      "deckSpacingM": 40,
+      "cloudLayerM": [
+        200,
+        275
+      ]
+    },
+    {
+      "zone": "z4",
+      "bandM": [
+        368,
+        500
+      ],
+      "jumps": [
+        121,
+        125
+      ],
+      "restEveryJumps": 12,
+      "maxChain": 14,
+      "deckSpacingM": 33,
+      "fakeSummitAtM": 467,
+      "trapBetweenM": [
+        467,
+        471
+      ],
+      "summitY": 500
+    }
+  ]
+}

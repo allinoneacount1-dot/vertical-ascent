@@ -6,7 +6,7 @@ export type ColliderSpec = { type: 'box'; size: Vec3; offset: Vec3 }
 
 /** One primitive of a 'composite' visual, relative to the entry origin (cylinder size = [radiusBottom, height, radiusTop?]). */
 export type ProceduralPart = {
-  shape: 'box' | 'cylinder' | 'cone'
+  shape: 'box' | 'cylinder' | 'cone' | 'sphere'
   size: number[]
   pos: Vec3
   rot?: Vec3
@@ -63,6 +63,10 @@ export type PlatformEntry = {
   rotX?: number
   /** override for the camera-blocker world (default: static walkable colliders that are not hazards) */
   cameraBlocker?: boolean
+  /** generator hint: takeoff point on the previous route surface (pads above a deck, lifts), used by build-routes */
+  takeoff?: Vec3
+  /** fake-summit beacon ('fake', lit until the reveal) or the real summit beacon ('true', lit after it) */
+  beacon?: 'fake' | 'true'
 }
 
 export type LevelData = {

@@ -2,7 +2,7 @@
 // turned into world-space geometry pieces keyed by material, and the static ones are merged into one mesh per
 // material so a world of hundreds of platforms stays at a few dozen draw calls (shadows on, ref/06 §Performa).
 // Pure three.js (no React): used by Level.tsx and by tests.
-import { BoxGeometry, BufferGeometry, ConeGeometry, CylinderGeometry, Euler, Matrix4, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
+import { BoxGeometry, BufferGeometry, ConeGeometry, CylinderGeometry, Euler, Matrix4, Mesh, MeshStandardMaterial, Quaternion, SphereGeometry, Vector3 } from 'three'
 import type { Group } from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { PlatformEntry, Prefab, ProceduralPart } from './schema.ts'
@@ -69,6 +69,7 @@ function partPiece(p: ProceduralPart): Piece {
   let g: BufferGeometry
   if (p.shape === 'cylinder') g = new CylinderGeometry(p.size[2] ?? p.size[0], p.size[0], p.size[1], p.segments ?? 16)
   else if (p.shape === 'cone') g = new ConeGeometry(p.size[0], p.size[1], p.segments ?? 16)
+  else if (p.shape === 'sphere') g = new SphereGeometry(1, p.segments ?? 7, Math.max(3, Math.round((p.segments ?? 7) * 0.6))).scale(p.size[0], p.size[1] ?? p.size[0], p.size[2] ?? p.size[0])
   else g = new BoxGeometry(p.size[0], p.size[1], p.size[2])
   if (p.rot) g.applyMatrix4(new Matrix4().makeRotationFromEuler(new Euler(p.rot[0], p.rot[1], p.rot[2], ROTATION_ORDER)))
   g.translate(p.pos[0], p.pos[1], p.pos[2])
