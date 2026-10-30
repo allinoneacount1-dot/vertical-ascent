@@ -1,0 +1,13 @@
+# run-test TEST-23b slug=credits-static gate=G3 commit=ffbaa12+dirty started=2026-10-30T01:38:14.089Z
+# command: pnpm vitest run src/ui/credits.test.ts
+
+ RUN  v5.0.5 D:/CLAUDE/vertical-ascent
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  08:38:15
+   Duration  220ms (import 40%, transform 33%, tests 17%, worker 10%, environment 1%)
+
+# exit=0 flagged=0 seconds=1.4 result=PASS
+# log: evidence/G3/TEST-23b-credits-static.log

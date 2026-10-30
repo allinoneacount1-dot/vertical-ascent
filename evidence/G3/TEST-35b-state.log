@@ -1,0 +1,14 @@
+# run-test TEST-35b slug=state gate=G3 commit=ffbaa12+dirty started=2026-10-30T01:38:12.315Z
+# command: pnpm vitest run src/game/state.test.ts
+
+ RUN  v5.0.5 D:/CLAUDE/vertical-ascent
+
+TEST-35b full table: 98 (state, event) pairs checked = 6 states + PAUSED + overlay × 14 event types; 252 (snapshot, event) cases = 12 snapshots × 21 events (7 enter intents, loaded with worldReady true and false); throws 0; mismatches 0
+
+ Test Files  1 passed (1)
+      Tests  114 passed (114)
+   Start at  08:38:13
+   Duration  249ms (tests 39%, import 32%, transform 17%, worker 11%, environment 1%)
+
+# exit=0 flagged=0 seconds=1.5 result=PASS
+# log: evidence/G3/TEST-35b-state.log

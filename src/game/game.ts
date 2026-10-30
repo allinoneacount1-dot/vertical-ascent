@@ -294,7 +294,10 @@ class Game {
 
   private onVictory(): void {
     this.run.freeze()
-    const { records, newBest, deltaMs } = recordsAfterVictory(this.records, this.run.timerMs, this.snapshot.mode)
+    // the landing on the finish ends the climb in the same slice, before the HUD sampler sees that height
+    const summitHeight = Math.max(this.run.highestM, Math.floor((this.port?.position.y ?? this.spawn.y) - this.spawn.y))
+    const withHeight = recordsAfterHeight(this.records, summitHeight, this.snapshot.mode)
+    const { records, newBest, deltaMs } = recordsAfterVictory(withHeight, this.run.timerMs, this.snapshot.mode, this.run.focusUsed)
     this.records = records
     saveRecords(records)
     clearRunSave()

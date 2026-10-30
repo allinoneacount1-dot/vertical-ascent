@@ -1,0 +1,74 @@
+[
+  {
+    "id": "favicon",
+    "title": "Vertical Ascent mark",
+    "author": "project",
+    "license": "OWN-ARR",
+    "attribution": null,
+    "source": null,
+    "modified": false
+  },
+  {
+    "id": "ual1-idle-loop",
+    "title": "Universal Animation Library (Standard): Idle_Loop",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "ual1-walk-loop",
+    "title": "Universal Animation Library (Standard): Walk_Loop",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "ual1-sprint-loop",
+    "title": "Universal Animation Library (Standard): Sprint_Loop",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "ual1-jump-start",
+    "title": "Universal Animation Library (Standard): Jump_Start",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "ual1-jump-loop",
+    "title": "Universal Animation Library (Standard): Jump_Loop",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "ual1-jump-land",
+    "title": "Universal Animation Library (Standard): Jump_Land",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "attribution": "Animations by Quaternius (quaternius.com)",
+    "source": "https://opengameart.org/content/universal-animation-library (file universal_animation_librarystandard.zip)",
+    "modified": true
+  },
+  {
+    "id": "hdri-industrial-sunset-1k",
+    "title": "Industrial Sunset (Pure Sky) 1k",
+    "author": "Sergej Majboroda (original), Jarod Guest (sky edits) / Poly Haven",
+    "license": "CC0-1.0",
+    "attribution": "HDRI: Industrial Sunset (Pure Sky) by Sergej Majboroda and Jarod Guest, Poly Haven (CC0)",
+    "source": "https://polyhaven.com/a/industrial_sunset_puresky",
+    "modified": false
+  }
+]

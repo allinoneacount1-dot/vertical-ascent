@@ -36,7 +36,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |
 | TEST-14b | G3 | BLOCKED(owner-manual) | 1 | evidence/G3/TEST-14b-lock-reject.log, evidence/G3/TEST-14b-lock-reject.png, smoke part PASS; manual Esc + 1.25 s cooldown waits for the owner playtest | `node scripts/run-test.mjs 14b --slug lock-reject -- --timeout 150 --screenshot ./evidence/G3/TEST-14b-lock-reject.png ./vitexec/smoke-lock-reject.ts` | 1578cd2+dirty | 2026-10-30 |
 | TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
-| TEST-16 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-16 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-16-persist.log | `node scripts/run-test.mjs 16 --slug persist --cmd "pnpm vitest run src/game/persist.test.ts"` | ffbaa12+dirty | 2026-10-30 |
 | TEST-17 | G4 | NOT-STARTED | 0 | | | | |
 | TEST-18a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-18a-har-run-d047.log, evidence/G2/TEST-18a-har-check-d047.log, evidence/G2/TEST-18a-d047-asset-responses.log, evidence/G2/TEST-18a-slice-d047.har (gitignored), first run: evidence/G2/TEST-18a-har-run.log | `node scripts/run-test.mjs 18a --slug har-run-d047 -- --timeout 150 --network-trace ./evidence/G2/TEST-18a-slice-d047.har ./vitexec/smoke-network.ts` then `node scripts/run-test.mjs 18a --slug har-check-d047 --cmd "node scripts/har-check.mjs evidence/G2/TEST-18a-slice-d047.har --host 127.0.0.1 --any-port"` (rerun after D-047) | 7e6088d | 2026-10-30 |
 | TEST-18b | G5 | NOT-STARTED | 0 | | | | |
@@ -58,16 +58,16 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-30 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-31 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 120 ./vitexec/physics-framerate.ts` | ec416ee | 2026-10-30 |
 | TEST-32 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | ec416ee | 2026-10-30 |
-| TEST-33 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-33 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-33-stairs.log | `node scripts/run-test.mjs 33 --slug stairs -- --timeout 180 ./vitexec/physics-stairs.ts` | ffbaa12+dirty | 2026-10-30 |
 | TEST-34 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-34-terminal.log | `node scripts/run-test.mjs 34 --slug terminal -- --timeout 170 ./vitexec/physics-terminal.ts` | ec416ee | 2026-10-30 |
 | TEST-34b | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-34b-bar-tunnel.log | `node scripts/run-test.mjs 34b --slug bar-tunnel -- --timeout 240 ./vitexec/physics-bar-tunnel.ts` | 27ef10e | 2026-10-30 |
 | TEST-35a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-35a-state.log | `node scripts/run-test.mjs 35a --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ec416ee | 2026-10-30 |
-| TEST-35b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-35b | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-35b-state.log | `node scripts/run-test.mjs 35b --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ffbaa12+dirty | 2026-10-30 |
 | TEST-36 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-37 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-38 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-39 | G3 | VERIFIED-PASS | 3 | evidence/G3/TEST-39-settings.log, evidence/G3/TEST-39-settings.png, evidence/G3/TEST-39-settings-attempt1-FAIL.log (attempt 2: threshold; attempt 1 log overwritten: settings panel taller than the viewport at 150 % UI scale, fixed in src/index.css) | `node scripts/run-test.mjs 39 --slug settings -- --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-39-settings.png ./vitexec/smoke-settings.ts` | 1578cd2+dirty | 2026-10-30 |
-| TEST-40 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-40 | G3 | VERIFIED-PASS | 2 | evidence/G3/TEST-40-victory.log, evidence/G3/TEST-40-victory.png, evidence/G3/TEST-40-victory-attempt1-FAIL.log (summit height missing from records at victory: fixed in game.ts; test run was shorter than the 1 s best-time floor) | `node scripts/run-test.mjs 40 --slug victory -- --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-40-victory.png ./vitexec/smoke-victory.ts` | ffbaa12+dirty | 2026-10-30 |
 ## Placeholders still present
 | What | Where referenced | Expected in gate | Replacement |
 |---|---|---|---|

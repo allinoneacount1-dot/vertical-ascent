@@ -1,0 +1,24 @@
+# run-test TEST-40 slug=victory gate=G3 commit=ffbaa12+dirty started=2026-10-30T01:36:40.274Z
+# command: pnpm exec vitexec --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-40-victory.png ./vitexec/smoke-victory.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[warning] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+[log] menu after ms 1321
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] debug-setup: teleport onto the finish pad [3,8.850000000000001,-7.5]
+[log] debug-setup: teleport onto the finish pad [3,8.850000000000001,-7.5]
+[log] debug-setup: teleport onto the finish pad in free roam [3,8.850000000000001,-7.5]
+[log] debug-setup: teleport onto the finish pad [3,8.850000000000001,-7.5]
+[log] TEST-40 numbers {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","level":{"id":"slice","finish":"s-r14","top":8.8},"victory1":{"lockedAtStart":true,"disabledAtStart":true,"lockMs":1996,"buttonsMs":2036,"summary":{"time":"00:00.5","delta":null,"bigFalls":"0","meters":"0 m","respawns":"0","restarts":"0"},"records":{"v":1,"bestTimeMs":null,"bestHeightM":0,"completions":1,"restartCount":0,"lifetimeBigFalls":0,"reachedFakeSummit":false},"pointerLocked":false},"replay":{"state":"PLAYING","mode":"run","timerMs":0,"pos":[0,0,0]},"freeRoam":{"delta2":null,"timerMs":0,"stateOnFinish":"PLAYING","records":{"v":1,"bestTimeMs":null,"bestHeightM":0,"completions":2,"restartCount":0,"lifetimeBigFalls":0,"reachedFakeSummit":false},"recordsBefore":{"v":1,"bestTimeMs":null,"bestHeightM":0,"completions":2,"restartCount":0,"lifetimeBigFalls":0,"reachedFakeSummit":false},"saveQuitShown":false,"runSave":null},"menu":{"state":"MENU","playButton":true}}
+vitexec failed: page.evaluate: Error: TEST-40 FAIL summary field delta missing; first completion should say New best (got null); second completion shows no delta (got null)
+    at http://127.0.0.1:63229/__vitexec/code/474e680a-6f6f-4508-9083-5fa00f7f2428:145:8
+# exit=1 flagged=0 seconds=20.5 result=FAIL
+# log: evidence/G3/TEST-40-victory.log

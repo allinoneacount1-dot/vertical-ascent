@@ -1,0 +1,13 @@
+# run-test TEST-16 slug=persist gate=G3 commit=ffbaa12+dirty started=2026-10-30T01:38:10.524Z
+# command: pnpm vitest run src/game/persist.test.ts
+
+ RUN  v5.0.5 D:/CLAUDE/vertical-ascent
+
+
+ Test Files  1 passed (1)
+      Tests  105 passed (105)
+   Start at  08:38:11
+   Duration  285ms (transform 39%, tests 31%, import 23%, worker 6%)
+
+# exit=0 flagged=0 seconds=1.5 result=PASS
+# log: evidence/G3/TEST-16-persist.log
