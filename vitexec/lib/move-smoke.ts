@@ -242,6 +242,9 @@ export async function turnToYaw(targetYaw: number): Promise<{ from: number; to: 
  * (≤ ~500 px per 400 ms lease), stop, then a settled moveTo and click.
  */
 export async function clickElement(el: Element): Promise<void> {
+  // a control in a scrolled panel (Settings at 200 % UI scale) may sit outside the viewport
+  el.scrollIntoView({ block: 'center', inline: 'center' })
+  await new Promise((r) => requestAnimationFrame(() => r(null)))
   const r = el.getBoundingClientRect()
   const x = r.x + r.width / 2
   const y = r.y + r.height / 2

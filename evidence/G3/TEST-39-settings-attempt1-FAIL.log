@@ -1,0 +1,18 @@
+# run-test TEST-39 slug=settings gate=G3 commit=1578cd2+dirty started=2026-10-30T01:34:15.672Z
+# command: pnpm exec vitexec --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-39-settings.png ./vitexec/smoke-settings.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[warning] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+[log] TEST-39 numbers {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","storedAfterMenu":{"showTimer":false,"fov":85,"sensitivity":2,"invertY":true,"uiScale":1.5,"uiZoom":1.5,"sprintMode":"hold","edgeGuard":true,"jump":["KeyJ"],"recentre":["KeyT"]},"fov":{"setting":85,"effective":85},"timerShown":false,"sensitivity":{"dYaw":-2.222,"expected":-2.222},"sprintHold":{"held":true,"released":false},"rebinding":{"afterSpace":0,"afterJ":1},"recentre":{"yaw":-8.505,"facing":-2.222},"edgeGuardOn":{"pos":[0.024,0.6,-6.734]},"storedAfterPause":{"forward":["ArrowUp"],"invertY":false,"edgeGuard":false,"rawInput":true},"lockOptions":{"unadjustedMovement":true},"invert":{"inverted":0.444,"normal":-0.445},"arrowsAndEdgeOff":{"from":[0.024,0.6,-6.734],"to":[0.024,0,-7.6]}}
+vitexec failed: page.evaluate: Error: TEST-39 FAIL ArrowUp did not move with the Arrows preset
+    at http://127.0.0.1:54403/__vitexec/code/618f098b-99ee-4722-822b-4734238e8920:247:8
+# exit=1 flagged=0 seconds=35.6 result=FAIL
+# log: evidence/G3/TEST-39-settings.log

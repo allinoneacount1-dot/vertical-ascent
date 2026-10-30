@@ -34,7 +34,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-12b | G4 | NOT-STARTED | 0 | | | | |
 | TEST-13 | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-13-hud-timer.log, evidence/G2/TEST-13-hud-timer.png, evidence/G2/TEST-13-hud-timer-attempt1-FAIL.log | `node scripts/run-test.mjs 13 --slug hud-timer -- --timeout 360 --screenshot ./evidence/G2/TEST-13-hud-timer.png ./vitexec/smoke-hud-timer.ts` | 3391ca4 | 2026-10-30 |
 | TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |
-| TEST-14b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-14b | G3 | BLOCKED(owner-manual) | 1 | evidence/G3/TEST-14b-lock-reject.log, evidence/G3/TEST-14b-lock-reject.png, smoke part PASS; manual Esc + 1.25 s cooldown waits for the owner playtest | `node scripts/run-test.mjs 14b --slug lock-reject -- --timeout 150 --screenshot ./evidence/G3/TEST-14b-lock-reject.png ./vitexec/smoke-lock-reject.ts` | 1578cd2+dirty | 2026-10-30 |
 | TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
 | TEST-16 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-17 | G4 | NOT-STARTED | 0 | | | | |
@@ -66,7 +66,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-36 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-37 | G3 | NOT-STARTED | 0 | | | | |
 | TEST-38 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-39 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-39 | G3 | VERIFIED-PASS | 3 | evidence/G3/TEST-39-settings.log, evidence/G3/TEST-39-settings.png, evidence/G3/TEST-39-settings-attempt1-FAIL.log (attempt 2: threshold; attempt 1 log overwritten: settings panel taller than the viewport at 150 % UI scale, fixed in src/index.css) | `node scripts/run-test.mjs 39 --slug settings -- --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-39-settings.png ./vitexec/smoke-settings.ts` | 1578cd2+dirty | 2026-10-30 |
 | TEST-40 | G3 | NOT-STARTED | 0 | | | | |
 ## Placeholders still present
 | What | Where referenced | Expected in gate | Replacement |

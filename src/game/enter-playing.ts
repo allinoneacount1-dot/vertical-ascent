@@ -30,6 +30,7 @@ export async function enterPlaying(intent: EnterIntent): Promise<void> {
     return
   }
   try {
+    game.lastLockOptions = { unadjustedMovement: game.rawInput }
     await canvas.requestPointerLock({ unadjustedMovement: game.rawInput })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'NotSupportedError') {

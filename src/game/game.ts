@@ -135,6 +135,9 @@ class Game {
     rig.reducedMotion = this.reducedMotion
   }
 
+  /** Options of the last requestPointerLock call (raw input, D-021; observed by TEST-39). */
+  lastLockOptions: { unadjustedMovement: boolean } | null = null
+
   /** R3F's dpr setter, attached at Canvas creation (render scale, D-021). */
   setDpr: ((dpr: number) => void) | null = null
 

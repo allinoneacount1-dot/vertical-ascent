@@ -57,6 +57,9 @@ function snapshotGame() {
     },
     hud: { targetM: ui.hud.targetM, showTimer: ui.hud.showTimer, tick: ui.hud.tick },
     inputLocked: game.inputLocked,
+    /** Settings in effect and the options of the last pointer-lock request (TEST-39 observes them). */
+    settings: JSON.parse(JSON.stringify(game.settings)) as unknown,
+    lockOptions: game.lastLockOptions,
     pointerLocked: document.pointerLockElement != null && document.pointerLockElement === game.canvas,
     camera: {
       yaw: r3(rig?.yaw ?? 0),
@@ -64,6 +67,7 @@ function snapshotGame() {
       distance: r3(rig?.distance ?? 0),
       zoom: r3(rig?.behavior.zoomDistance ?? 0),
       fov: rig?.fov ?? 0,
+      effectiveFov: r3(rig?.camera?.fov ?? 0),
       lastHit: rig?.lastHit == null ? null : r3(rig.lastHit),
       pos: rig?.camera ? arr(rig.camera.position) : ([0, 0, 0] as Vec3),
     },

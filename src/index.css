@@ -234,7 +234,8 @@ canvas:focus {
 }
 
 .panel.settings {
-  max-height: 86vh;
+  /* zoom multiplies lengths, so divide to keep the scaled panel inside the viewport */
+  max-height: calc(86vh / var(--ui-scale, 1));
   overflow-y: auto;
   min-width: 420px;
 }

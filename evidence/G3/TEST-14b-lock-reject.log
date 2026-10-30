@@ -1,0 +1,21 @@
+# run-test TEST-14b slug=lock-reject gate=G3 commit=1578cd2+dirty started=2026-10-30T01:31:23.977Z
+# command: pnpm exec vitexec --timeout 150 --screenshot ./evidence/G3/TEST-14b-lock-reject.png ./vitexec/smoke-lock-reject.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[warning] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+[log] menu after ms 1486
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] synthetic: lock-reject-stub
+[log] synthetic: lock-reject-stub restored
+[log] TEST-14b PASS {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","rejected":{"state":"PAUSED","hint":"Click again","locked":false,"rejectedEvents":1},"restored":{"state":"PLAYING","locked":true,"lockAt":6529,"firstPlayingAt":6543,"stateWhenLockEventFired":"PAUSED"},"manual":"Esc + 1.25 s re-lock cooldown: manual part (owner playtest in a headed browser), not covered here"}
+[screenshot] ./evidence/G3/TEST-14b-lock-reject.png
+# exit=0 flagged=0 seconds=13.6 result=PASS
+# log: evidence/G3/TEST-14b-lock-reject.log
