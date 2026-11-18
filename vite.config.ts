@@ -3,10 +3,8 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { DEFAULT_SLOTS, stubViverseDefaults } from './scripts/stub-viverse-defaults.ts'
 
-// Slots still waiting for a licensed replacement (gaps, ref/05 §Stub). The six clips are replaced by the UAL1 clips
-// (D-047) and jump-forward is only used by SimpleCharacter, which the game does not render (D-001, D-044); the
-// mannequin stays until the final character (TEST-03). Remove a slot once its replacement is integrated.
-const GAP_SLOTS = DEFAULT_SLOTS.filter((slot) => slot === 'mannequin')
+// All default slots (mannequin + 6 clips + jump-forward) are replaced by project assets (D-044, D-047, protagonist-f).
+const GAP_SLOTS = DEFAULT_SLOTS.filter(() => false)
 
 // Spec: docs/directive/ref/01-templates.md §vite.config.ts. G5 adds the license plugin.
 export default defineConfig({

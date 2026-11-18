@@ -5,16 +5,9 @@
 import type { VRMHumanBoneName } from '@react-three/viverse'
 import { assetUrl } from '../assets.ts'
 
-/** No url = the bundled mannequin; useViverseAvatar false (D-003). */
-export const MODEL_OPTIONS = Object.freeze({ useViverseAvatar: false, castShadow: true, receiveShadow: true })
-
-/**
- * DEV-only local preview of the prepared protagonist (D-054), selected with ?character=preview: the restyled
- * AvatarSample_F built into .cache by scripts/build-protagonist.sh. Never in public/ or a build — the mannequin
- * stays the shipped model until the owner confirms pixiv's first-party CC0 text (D-045).
- */
-const PREVIEW_MODEL_OPTIONS = Object.freeze({
-  url: '/.cache/work/vroid-f/protagonist-f.vrm',
+/** Final protagonist VRM (restyled AvatarSample_F, D-051, textures <= 1024^2); useViverseAvatar false (D-003). */
+export const MODEL_OPTIONS = Object.freeze({
+  url: assetUrl('assets/characters/protagonist-f.vrm'),
   type: 'vrm' as const,
   useViverseAvatar: false,
   castShadow: true,
@@ -22,10 +15,7 @@ const PREVIEW_MODEL_OPTIONS = Object.freeze({
 })
 
 /** Model options for this page, chosen once at module load (the loader key must stay identical, D-001). */
-export const ACTIVE_MODEL_OPTIONS =
-  import.meta.env.DEV && typeof location !== 'undefined' && new URLSearchParams(location.search).get('character') === 'preview'
-    ? PREVIEW_MODEL_OPTIONS
-    : MODEL_OPTIONS
+export const ACTIVE_MODEL_OPTIONS = MODEL_OPTIONS
 
 /**
  * UAL1 Standard bone names (pre-v2.0 rig, sanitized by three.js) → VRM humanoid names. Derived by pairing the 53
