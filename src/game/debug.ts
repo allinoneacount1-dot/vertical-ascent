@@ -6,6 +6,7 @@ import type { WebGLRenderer } from 'three'
 import { game } from './game.ts'
 import { useUi } from './store.ts'
 import { audioState } from '../audio/context.ts'
+import { audioSnapshot } from '../audio/engine.ts'
 
 type Vec3 = [number, number, number]
 
@@ -78,7 +79,7 @@ function snapshotGame() {
     worldClock: r3(game.motion.worldClock),
     frame: game.frame,
     platforms,
-    audio: { master: 0, sfx: 0, ambience: 0, wind: 0, contextState: audioState() },
+    audio: { ...audioSnapshot(), contextState: audioState() },
     render: {
       calls: info?.render.calls ?? 0,
       triangles: info?.render.triangles ?? 0,

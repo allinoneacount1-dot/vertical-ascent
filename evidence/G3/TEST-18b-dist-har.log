@@ -1,0 +1,40 @@
+# run-test TEST-18b slug=dist-har gate=G3 commit=ea77dad+dirty started=2026-11-18T22:22:46.662Z
+# command: node scripts/smoke-dist.mjs --test 18b --dist dist --base sub/ --har evidence/G4/TEST-18b-dist.har
+# smoke-dist {"test":"18b","what":"HAR: load + Play + 10 confirmed restarts; foreign hosts, 4xx/5xx, text/html assets","url":"http://127.0.0.1:5180/sub/","dist":"D:\\CLAUDE\\vertical-ascent\\dist","playwright":"1.63.0-beta-1788477194000","headless":true,"args":[],"viewport":{"width":1280,"height":720}}
+browser {"version":"153.0.8010.12"}
+[warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warn] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[warn] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision | (209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision | (210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision | (209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision | (210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+load {"tCanvasMs":296,"tWorldReadyMs":566,"tFramesMs":2583,"frame":60,"state":"MENU","canvases":1,"gamePresent":true,"alert":null}
+menu {"ok":true,"ms":0,"state":"MENU","alert":null}
+env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+check canvas PASS {"tCanvasMs":296,"canvases":1,"deadlineMs":15000}
+check frames PASS {"frame":60,"min":60,"tFramesMs":2583,"deadlineMs":15000}
+check world-ready PASS {"tWorldReadyMs":566,"deadlineMs":15000}
+check menu PASS {"ms":0,"state":"MENU","alert":null}
+synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+check play PASS {"retries":0,"attempts":[{"ok":true,"ms":16,"state":"PLAYING","locked":true,"hint":null}]}
+restart {"i":1,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":2,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":3,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":4,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":1,"timerMs":0,"pos":[0,0,0]}
+restart {"i":5,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":6,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":7,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":8,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+restart {"i":9,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":1,"timerMs":0,"pos":[0,0,0]}
+restart {"i":10,"paused":true,"dialog":true,"pausedAtDialog":true,"entered":true,"retries":0,"timerMs":0,"pos":[0,0,0]}
+check restarts PASS {"n":10,"done":10,"restartCountDelta":10,"retries":2}
+first-load {"requests":13,"bytes":4251509,"mb":4.25}
+har-check: har {"file":"D:\\CLAUDE\\vertical-ascent\\evidence\\G4\\TEST-18b-dist.har","requests":14,"hosts":{"127.0.0.1:5180":14},"pageHost":"127.0.0.1:5180","foreign":0,"errors":0,"htmlAssets":0}
+har-check: HAR PASS
+check har PASS {"exit":0,"har":"D:\\CLAUDE\\vertical-ascent\\evidence\\G4\\TEST-18b-dist.har","file":"D:\\CLAUDE\\vertical-ascent\\evidence\\G4\\TEST-18b-dist.har","requests":14,"hosts":{"127.0.0.1:5180":14},"pageHost":"127.0.0.1:5180","foreign":0,"errors":0,"htmlAssets":0}
+check foreign-requests-live PASS {"foreign":0}
+check page-errors PASS {"pageErrors":0}
+check console-errors PASS {"consoleErrors":0}
+check requests-failed PASS {"failed":0,"abortedByReload":0}
+check http-errors PASS {"responses4xx5xx":0}
+summary {"checks":12,"failed":[],"served":14,"pageErrors":0,"consoleErrors":0,"requestFailed":0,"abortedByReload":0,"httpErrors":0,"foreign":0}
+# smoke-dist 18b PASS
+# exit=0 flagged=0 seconds=27.3 result=PASS
+# log: evidence/G3/TEST-18b-dist-har.log

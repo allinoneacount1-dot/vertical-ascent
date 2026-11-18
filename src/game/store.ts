@@ -11,6 +11,8 @@ export type Hud = {
   showTimer: boolean
   /** Sprint glyph shown while sprint is active in Toggle/Always mode (D-010). */
   sprintGlyph: boolean
+  /** Lost meters shown briefly on HUD after a big fall (TEST-12b). */
+  lostM: number | null
   /** Increments on every HUD sample (TEST-01 observes store changes while the model stays mounted). */
   tick: number
 }
@@ -64,7 +66,7 @@ export const useUi = create<UiStore>(() => ({
   worldReady: false,
   pendingIntent: null,
   hint: null,
-  hud: { heightM: 0, targetM: 0, timerMs: 0, showTimer: true, sprintGlyph: false, tick: 0 },
+  hud: { heightM: 0, targetM: 0, timerMs: 0, showTimer: true, sprintGlyph: false, lostM: null, tick: 0 },
   toasts: [],
   fadeAt: 0,
   panel: 'main',

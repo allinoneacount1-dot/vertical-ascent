@@ -1,0 +1,491 @@
+{
+  "diagnostic": true,
+  "zone": "z1",
+  "withNoise": false,
+  "seeds": [
+    1
+  ],
+  "medianZoneTimeS": 160.094,
+  "runs": [
+    {
+      "seed": 1,
+      "outcome": "completed",
+      "timeS": 160.094,
+      "fails": 0,
+      "lostM": 0,
+      "reached": "z1-r104"
+    }
+  ],
+  "worst": [
+    {
+      "id": "z1-deckS001",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r007",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r008",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r009",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r010",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r011",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r012",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r013",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r014",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r015",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    }
+  ],
+  "jumps": [
+    {
+      "id": "z1-deckS001",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r007",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r008",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r009",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r010",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r011",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r012",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r013",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r014",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r015",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r016",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckSW017",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r022",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r023",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r024",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r025",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r026",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r027",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r028",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r029",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckW030",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r035",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r036",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r037",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r038",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r039",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r040",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r042",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r043",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckNW044",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r049",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r050",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-m051",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r052",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r053",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r054",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckN055",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r060",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r061",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r062",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r063",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r064",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r065",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r067",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r068",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckNE069",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r074",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r075",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r076",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r077",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r078",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r079",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r080",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckE081",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r086",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-rest087",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r088",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r089",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r090",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r091",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r093",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r094",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-deckSE095",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r100",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r101",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r102",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r103",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    },
+    {
+      "id": "z1-r104",
+      "attempts": 1,
+      "fails": 0,
+      "failRate": 0
+    }
+  ]
+}

@@ -257,6 +257,57 @@ export function createBot(route: Route, levelEntries: LevelEntry[], canvas: HTML
         return [x + ((tx - x) / len) * shift, z + ((tz - z) / len) * shift]
       }
     }
+    if (prev != null && !prev.moving && !wp.moving && (prev.half[0] > 4 || prev.half[1] > 4)) {
+      const p0 = snap().player.pos
+      const [tx, tz] = walkPoint()
+      const padX = wp.half[0] + 0.55
+      const padZ = wp.half[1] + 0.55
+      const inBox = (x: number, z: number) =>
+        x >= wp.pos[0] - padX && x <= wp.pos[0] + padX && z >= wp.pos[2] - padZ && z <= wp.pos[2] + padZ
+      const segHitsWp = (ax: number, az: number, bx: number, bz: number, skipStart = false): boolean => {
+        for (let s = skipStart ? 4 : 0; s <= 20; s++) {
+          const u = s / 20
+          if (inBox(ax + (bx - ax) * u, az + (bz - az) * u)) return true
+        }
+        return false
+      }
+      const inDeck = (x: number, z: number) =>
+        Math.abs(x - prev.pos[0]) <= prev.half[0] - 0.5 && Math.abs(z - prev.pos[2]) <= prev.half[1] - 0.5
+      if (segHitsWp(p0[0], p0[2], tx, tz)) {
+        const safeZ = clamp(p0[2], prev.pos[2] - prev.half[1] + 0.8, prev.pos[2] + prev.half[1] - 0.8)
+        const safeX = clamp(p0[0], prev.pos[0] - prev.half[0] + 0.8, prev.pos[0] + prev.half[0] - 0.8)
+        const sideZ = wp.pos[2] + (prev.pos[2] >= wp.pos[2] ? padZ + 1.2 : -(padZ + 1.2))
+        const sideX = wp.pos[0] + (prev.pos[0] >= wp.pos[0] ? padX + 1.2 : -(padX + 1.2))
+        const clearX = p0[0] <= wp.pos[0] ? Math.min(safeX, wp.pos[0] - padX - 0.6) : Math.max(safeX, wp.pos[0] + padX + 0.6)
+        const clearZ = p0[2] <= wp.pos[2] ? Math.min(safeZ, wp.pos[2] - padZ - 0.6) : Math.max(safeZ, wp.pos[2] + padZ + 0.6)
+        const candidates: Array<Array<[number, number]>> = [
+          [[tx, safeZ]],
+          [[safeX, tz]],
+          [
+            [clearX, safeZ],
+            [clearX, sideZ],
+            [tx, sideZ],
+          ],
+          [
+            [safeX, clearZ],
+            [sideX, clearZ],
+            [sideX, tz],
+          ],
+        ]
+        for (const path of candidates) {
+          if (!path.every(([x, z]) => inDeck(x, z))) continue
+          const pts: Array<[number, number]> = [[p0[0], p0[2]], ...path, [tx, tz]]
+          let clear = true
+          for (let k = 0; k < pts.length - 1; k++) {
+            if (segHitsWp(pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1], k === 0)) clear = false
+          }
+          if (clear) {
+            for (const [cx, cz] of path) await walkTo(() => [cx, cz], 0.35)
+            break
+          }
+        }
+      }
+    }
     if (!(await walkTo(walkPoint, 0.15))) throw new Error(`${wp.id}: could not reach the takeoff point`)
     await jumpTo(targetAt, wp)
     return onPad(wp)

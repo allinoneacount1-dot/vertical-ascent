@@ -1,4 +1,4 @@
-RESUME HERE: G3 IN-PROGRESS (D-053, started 2026-10-30 08:15), next action: beats.json + offline generator for z1–z4 on procedural prefabs, then lint (TEST-36); owner items open: pixiv CC0 text (TEST-03, G2 gap), approval "Setujui A6a–A6f" for Kenney kits
+RESUME HERE: G3 IN-PROGRESS (continued 2026-11-19 02:30): TEST-02, TEST-19b, TEST-30, TEST-36, TEST-37 VERIFIED-PASS; TEST-38 IMPLEMENTED; remaining for G3: TEST-20b (full 500 m route bot x2 + HAR, ~10 min background run); owner items open: pixiv CC0 text (TEST-03, G2 gap), approval "Setujui A6a–A6f" for Kenney kits
 
 # PROGRESS — Vertical Ascent
 ## Environment
@@ -18,7 +18,7 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | ID | Gate | Status | Attempts | Artifact | Command | Commit | Date |
 |---|---|---|---|---|---|---|---|
 | TEST-01 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-01-load.log, evidence/G1/TEST-01-load.png | `node scripts/run-test.mjs 01 --slug load -- --timeout 150 --screenshot ./evidence/G1/TEST-01-load.png ./vitexec/smoke-load.ts` | ec416ee | 2026-10-30 |
-| TEST-02 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-02 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-02-ui.log, evidence/G3/TEST-02-ui.png | `node scripts/run-test.mjs 02 --slug ui -- --timeout 240 --screenshot ./evidence/G3/TEST-02-ui.png ./vitexec/smoke-ui.ts` | ea77dad+dirty | 2026-11-19 |
 | TEST-03 | G2 | BLOCKED(owner-asset-approval) | 0 | none: no final character yet. A1–A5 approved and downloaded (D-045); clips and IBL integrated (D-047); check-assets part: evidence/G2/TEST-03-check-assets.log. Waits for the owner: first-party pixiv CC0 text for A5, or O1/O2 drops | — | ee1b8e7 | 2026-10-30 |
 | TEST-04 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-04-move.log, evidence/G1/TEST-04-move.png | `node scripts/run-test.mjs 04 --slug move -- --timeout 150 --screenshot ./evidence/G1/TEST-04-move.png ./vitexec/smoke-move.ts` | ec416ee | 2026-10-30 |
 | TEST-05 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-05-sprint-toggle.log, evidence/G1/TEST-05-sprint-hold.log, evidence/G1/TEST-05-sprint-always.log | `node scripts/run-test.mjs 05 --slug sprint-<mode> -- --timeout 150 --screenshot ./evidence/G1/TEST-05-sprint-<mode>.png ./vitexec/smoke-sprint-<mode>.ts` (mode = toggle, hold, always) | ec416ee | 2026-10-30 |
@@ -31,31 +31,31 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-11a | G1 | VERIFIED-PASS | 4 | evidence/G1/TEST-11a-platforms.log, evidence/G1/TEST-11a-platforms-attempt1-FAIL.log | `node scripts/run-test.mjs 11a --slug platforms -- --timeout 150 ./vitexec/physics-platforms.ts` | ec416ee | 2026-10-30 |
 | TEST-11b | G2 | N/A(D-012) | 1 | evidence/G2/TEST-11b-na-check.log | `node scripts/run-test.mjs 11b --slug na-check --cmd "node scripts/stood-on-rotating.mjs level/slice.json level/prefabs.json"` | ee1b8e7+dirty | 2026-10-30 |
 | TEST-12a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-12a-smoke.log, evidence/G2/TEST-12a-physics.log, evidence/G2/TEST-12a-smoke.png, evidence/G2/TEST-12a-physics-attempt1-FAIL.log | `node scripts/run-test.mjs 12a --slug physics -- --timeout 150 ./vitexec/physics-fall.ts` ; `node scripts/run-test.mjs 12a --slug smoke -- --timeout 150 --screenshot ./evidence/G2/TEST-12a-smoke.png ./vitexec/smoke-bigfall.ts` | 0460656 | 2026-10-30 |
-| TEST-12b | G4 | NOT-STARTED | 0 | | | | |
+| TEST-12b | G4 | VERIFIED-PASS | 2 | evidence/G3/TEST-12b-bigfall-fx.log | `node scripts/run-test.mjs 12b --slug bigfall-fx -- --timeout 180 ./vitexec/smoke-bigfall-fx.ts` | ea77dad+dirty | 2026-11-19 |
 | TEST-13 | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-13-hud-timer.log, evidence/G2/TEST-13-hud-timer.png, evidence/G2/TEST-13-hud-timer-attempt1-FAIL.log | `node scripts/run-test.mjs 13 --slug hud-timer -- --timeout 360 --screenshot ./evidence/G2/TEST-13-hud-timer.png ./vitexec/smoke-hud-timer.ts` | 3391ca4 | 2026-10-30 |
 | TEST-14a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-14a-pause.log, evidence/G1/TEST-14a-pause.png | `node scripts/run-test.mjs 14a --slug pause -- --timeout 150 --screenshot ./evidence/G1/TEST-14a-pause.png ./vitexec/smoke-pause.ts` | ec416ee | 2026-10-30 |
 | TEST-14b | G3 | BLOCKED(owner-manual) | 1 | evidence/G3/TEST-14b-lock-reject.log, evidence/G3/TEST-14b-lock-reject.png, smoke part PASS; manual Esc + 1.25 s cooldown waits for the owner playtest | `node scripts/run-test.mjs 14b --slug lock-reject -- --timeout 150 --screenshot ./evidence/G3/TEST-14b-lock-reject.png ./vitexec/smoke-lock-reject.ts` | 1578cd2+dirty | 2026-10-30 |
 | TEST-15 | G2 | VERIFIED-PASS | 3 | evidence/G2/TEST-15-restart.log, evidence/G2/TEST-15-restart.png, evidence/G2/TEST-15-restart-attempt1-FAIL.log, evidence/G2/TEST-15-restart-attempt2-FAIL.log | `node scripts/run-test.mjs 15 --slug restart -- --timeout 300 --screenshot ./evidence/G2/TEST-15-restart.png ./vitexec/smoke-restart.ts` | cfdbb21 | 2026-10-30 |
 | TEST-16 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-16-persist.log | `node scripts/run-test.mjs 16 --slug persist --cmd "pnpm vitest run src/game/persist.test.ts"` | ffbaa12+dirty | 2026-10-30 |
-| TEST-17 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-17 | G4 | VERIFIED-PASS | 2 | evidence/G3/TEST-17-audio.log | `node scripts/run-test.mjs 17 --slug audio -- --timeout 180 ./vitexec/smoke-audio.ts` | ea77dad+dirty | 2026-11-19 |
 | TEST-18a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-18a-har-run-d047.log, evidence/G2/TEST-18a-har-check-d047.log, evidence/G2/TEST-18a-d047-asset-responses.log, evidence/G2/TEST-18a-slice-d047.har (gitignored), first run: evidence/G2/TEST-18a-har-run.log | `node scripts/run-test.mjs 18a --slug har-run-d047 -- --timeout 150 --network-trace ./evidence/G2/TEST-18a-slice-d047.har ./vitexec/smoke-network.ts` then `node scripts/run-test.mjs 18a --slug har-check-d047 --cmd "node scripts/har-check.mjs evidence/G2/TEST-18a-slice-d047.har --host 127.0.0.1 --any-port"` (rerun after D-047) | 7e6088d | 2026-10-30 |
-| TEST-18b | G5 | NOT-STARTED | 0 | | | | |
+| TEST-18b | G5 | VERIFIED-PASS | 1 | evidence/G3/TEST-18b-dist-har.log, evidence/G4/TEST-18b-dist.har | `node scripts/run-test.mjs 18b --slug dist-har --cmd "node scripts/smoke-dist.mjs --test 18b --dist dist --base sub/ --har evidence/G4/TEST-18b-dist.har"` | ea77dad+dirty | 2026-11-19 |
 | TEST-19a | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-19a-slice-data.log | `node scripts/run-test.mjs 19a --slug slice-data --cmd "pnpm vitest run src/level/slice.test.ts"` | fa34c17 | 2026-10-30 |
-| TEST-19b | G3 | NOT-STARTED | 0 | | | | |
+| TEST-19b | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-19b-zones.log | `node scripts/run-test.mjs 19b --slug zones --cmd "pnpm vitest run src/level/zones.test.ts"` | ea77dad+dirty | 2026-11-19 |
 | TEST-20a | G2 | VERIFIED-PASS | 2 | evidence/G2/TEST-20a-play-run2-d047.log, evidence/G2/TEST-20a-play-run1-d047.log, evidence/G2/TEST-20a-play-run1-d047-milestones.json, evidence/G2/TEST-20a-play-run2-d047-milestones.json, evidence/G2/TEST-20a-play-run2-d047-final.json, evidence/G2/TEST-20a-play-run2-d047.png, evidence/G2/TEST-20a-play-run{1,2}-d047.mp4 (gitignored), diagnostic 3rd run without parallel load: evidence/G2/TEST-20a-play-diag-d047.log, first pair: evidence/G2/TEST-20a-play-run{1,2}.log | `node scripts/run-test.mjs 20a --slug play-run<n>-d047 -- --timeout 300 --record ./evidence/G2/TEST-20a-play-run<n>-d047.mp4 --screenshot ./evidence/G2/TEST-20a-play-run<n>-d047.png ./vitexec/play.ts` (n = 1, 2, consecutive; rerun after D-047) | 7e6088d | 2026-10-30 |
 | TEST-20b | G3 | NOT-STARTED | 0 | | | | |
-| TEST-21 | G5 | NOT-STARTED | 0 | | | | |
-| TEST-22 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-23 | G5 | NOT-STARTED | 0 | | | | |
-| TEST-23b | G5 | NOT-STARTED | 0 | | | | |
+| TEST-21 | G5 | VERIFIED-PASS | 1 | evidence/G3/TEST-21-dist.log | `node scripts/run-test.mjs 21 --slug dist --cmd "node scripts/smoke-dist.mjs --test 21 --dist dist --base sub/"` | ea77dad+dirty | 2026-11-19 |
+| TEST-22 | G4 | VERIFIED-PASS | 2 | evidence/G3/TEST-22-perf.log, evidence/G3/TEST-22-perf-intel.log | `node scripts/run-test.mjs 22 --slug perf --cmd "node scripts/smoke-dist.mjs --test 22 --dist dist --base sub/"` ; `--browser-arg=--force_low_power_gpu` | ea77dad+dirty | 2026-11-19 |
+| TEST-23 | G5 | VERIFIED-PASS | 1 | evidence/G3/TEST-23-check-assets.log | `node scripts/run-test.mjs 23 --slug check-assets --cmd "node scripts/check-assets.mjs"` | ea77dad+dirty | 2026-11-19 |
+| TEST-23b | G5 | VERIFIED-PASS | 1 | evidence/G3/TEST-23b-credits.log | `node scripts/run-test.mjs 23b --slug credits --cmd "pnpm vitest run src/ui/credits.test.ts"` | ea77dad+dirty | 2026-11-19 |
 | TEST-24 | G4, G5 | NOT-STARTED | 0 | | | | |
-| TEST-25 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-26 | G4 | NOT-STARTED | 0 | | | | |
-| TEST-27 | G4 | NOT-STARTED | 0 | | | | |
+| TEST-25 | G4 | VERIFIED-PASS | 2 | evidence/G3/TEST-25-resize.log, evidence/G4/TEST-25-resize.png | `node scripts/run-test.mjs 25 --slug resize -- --timeout 180 --viewport 1280x720 --path ?level=slice --screenshot ./evidence/G4/TEST-25-resize.png ./vitexec/smoke-resize.ts` | ea77dad+dirty | 2026-11-19 |
+| TEST-26 | G4 | VERIFIED-PASS | 2 | evidence/G3/TEST-26-context-loss.log, evidence/G4/TEST-26-restore.png | `node scripts/run-test.mjs 26 --slug context-loss -- --timeout 180 --path ?level=slice --screenshot ./evidence/G4/TEST-26-restore.png ./vitexec/smoke-context-loss.ts` | ea77dad+dirty | 2026-11-19 |
+| TEST-27 | G4 | VERIFIED-PASS | 1 | evidence/G3/TEST-27-memory-10restarts.log | `node scripts/run-test.mjs 27 --slug memory-10restarts --cmd "node scripts/smoke-dist.mjs --test 27 --dist dist --base sub/"` | ea77dad+dirty | 2026-11-19 |
 | TEST-28a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-28a-visibility.log, evidence/G1/TEST-28a-visibility.png | `node scripts/run-test.mjs 28a --slug visibility -- --timeout 150 --screenshot ./evidence/G1/TEST-28a-visibility.png ./vitexec/smoke-visibility.ts` | ec416ee | 2026-10-30 |
 | TEST-28b | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-28b-dt-clamp.log | `node scripts/run-test.mjs 28b --slug dt-clamp -- --timeout 120 ./vitexec/physics-dt-clamp.ts` | ec416ee | 2026-10-30 |
 | TEST-29 | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-29-killplane.log, evidence/G2/TEST-29-killplane.png | `node scripts/run-test.mjs 29 --slug killplane -- --timeout 150 --screenshot ./evidence/G2/TEST-29-killplane.png ./vitexec/smoke-killplane.ts` | c0b9422 | 2026-10-30 |
-| TEST-30 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-30 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-30-persist-reload.log | `node scripts/run-test.mjs 30 --slug persist-reload --cmd "node scripts/smoke-dist.mjs --test 30 --dist dist --base sub/"` | ea77dad+dirty | 2026-11-19 |
 | TEST-31 | G1 | VERIFIED-PASS | 3 | evidence/G1/TEST-31-framerate.log | `node scripts/run-test.mjs 31 --slug framerate -- --timeout 120 ./vitexec/physics-framerate.ts` | ec416ee | 2026-10-30 |
 | TEST-32 | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-32-frame-order.log, evidence/G1/TEST-32-frame-order.png | `node scripts/run-test.mjs 32 --slug frame-order -- --timeout 150 --screenshot ./evidence/G1/TEST-32-frame-order.png ./vitexec/smoke-frame-order.ts` | ec416ee | 2026-10-30 |
 | TEST-33 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-33-stairs.log | `node scripts/run-test.mjs 33 --slug stairs -- --timeout 180 ./vitexec/physics-stairs.ts` | ffbaa12+dirty | 2026-10-30 |
@@ -63,9 +63,9 @@ three: 0.186.1 (bundle revision 186) | @react-three/fiber: 9.8.2 | drei: 10.7.9 
 | TEST-34b | G2 | VERIFIED-PASS | 1 | evidence/G2/TEST-34b-bar-tunnel.log | `node scripts/run-test.mjs 34b --slug bar-tunnel -- --timeout 240 ./vitexec/physics-bar-tunnel.ts` | 27ef10e | 2026-10-30 |
 | TEST-35a | G1 | VERIFIED-PASS | 2 | evidence/G1/TEST-35a-state.log | `node scripts/run-test.mjs 35a --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ec416ee | 2026-10-30 |
 | TEST-35b | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-35b-state.log | `node scripts/run-test.mjs 35b --slug state --cmd "pnpm vitest run src/game/state.test.ts"` | ffbaa12+dirty | 2026-10-30 |
-| TEST-36 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-37 | G3 | NOT-STARTED | 0 | | | | |
-| TEST-38 | G3 | NOT-STARTED | 0 | | | | |
+| TEST-36 | G3 | VERIFIED-PASS | 1 | evidence/G3/TEST-36-lint.json, evidence/G3/TEST-36-lint.log, evidence/G3/TEST-36-sim.json | `node scripts/run-test.mjs 36 --slug lint --cmd "node scripts/level-lint.mjs --out evidence/G3/TEST-36-lint.json"` | ea77dad+dirty | 2026-11-19 |
+| TEST-37 | G3 | VERIFIED-PASS | 3 | evidence/G3/TEST-37-sightline.log, evidence/G3/TEST-37-summit.png, evidence/G3/TEST-37-elevation.svg | `node scripts/run-test.mjs 37 --slug sightline -- --timeout 240 --viewport 1920x1080 --screenshot ./evidence/G3/TEST-37-summit.png ./vitexec/smoke-sightline.ts` | ea77dad+dirty | 2026-11-19 |
+| TEST-38 | G3 | IMPLEMENTED | 1 | evidence/G3/noisy-bot.json | `node scripts/extract-log-json.mjs .tmp/noisy-z1-clean.log noisy evidence/G3/noisy-bot.json` | ea77dad+dirty | 2026-11-19 |
 | TEST-39 | G3 | VERIFIED-PASS | 3 | evidence/G3/TEST-39-settings.log, evidence/G3/TEST-39-settings.png, evidence/G3/TEST-39-settings-attempt1-FAIL.log (attempt 2: threshold; attempt 1 log overwritten: settings panel taller than the viewport at 150 % UI scale, fixed in src/index.css) | `node scripts/run-test.mjs 39 --slug settings -- --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-39-settings.png ./vitexec/smoke-settings.ts` | 1578cd2+dirty | 2026-10-30 |
 | TEST-40 | G3 | VERIFIED-PASS | 2 | evidence/G3/TEST-40-victory.log, evidence/G3/TEST-40-victory.png, evidence/G3/TEST-40-victory-attempt1-FAIL.log (summit height missing from records at victory: fixed in game.ts; test run was shorter than the 1 s best-time floor) | `node scripts/run-test.mjs 40 --slug victory -- --timeout 240 --path ?level=slice --screenshot ./evidence/G3/TEST-40-victory.png ./vitexec/smoke-victory.ts` | ffbaa12+dirty | 2026-10-30 |
 ## Placeholders still present

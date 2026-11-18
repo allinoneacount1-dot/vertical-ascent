@@ -22,6 +22,7 @@ import { clearRunSave, loadRecords, loadRunSave, recordsAfterHeight, recordsAfte
 import type { Records, RunSave } from './persist.ts'
 import { applyBindings } from './input-bindings.ts'
 import { setLang, t } from '../ui/strings.ts'
+import { playJump, playLand, syncAudioSettings } from '../audio/engine.ts'
 
 export type GameLogEvent = { t: number; type: string; data?: unknown }
 
@@ -75,6 +76,8 @@ class Game {
   model: LoadedModel | null = null
   canvas: HTMLCanvasElement | null = null
   physicsWorld: BvhPhysicsWorld | null = null
+  /** Merged static visuals of the level (read-only; sightline and landmark tests raycast what is drawn, TEST-37). */
+  visualRoot: Object3D | null = null
   sprintMode: SprintMode = 'toggle'
   rawInput = true
   reducedMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -136,6 +139,7 @@ class Game {
     this.applyCameraSettings()
     if (this.controller) this.controller.edgeGuard = settings.edgeGuard
     this.setDpr?.(Math.min(window.devicePixelRatio || 1, MAX_DPR) * settings.renderScale)
+    syncAudioSettings(settings.volume.master, settings.volume.sfx, settings.volume.ambience)
     useUi.setState((s) => ({ hud: { ...s.hud, showTimer: settings.showTimer }, uiScale: settings.uiScale, lang: settings.lang }))
   }
 
@@ -346,8 +350,14 @@ class Game {
     this.port = createCharacterPhysicsPort(world, root, {}, this.motion.nearKinematic)
     this.controller = new CharacterController(this.port, this.motion, {
       onCarryYaw: (dy) => this.cameraRig?.addYaw(dy),
-      onTakeoff: (time, kind) => this.log('takeoff', { simTime: time, kind }),
-      onBigFall: (time) => this.log('bigFall', { simTime: time }),
+      onTakeoff: (time, kind) => {
+        playJump(kind === 'air')
+        this.log('takeoff', { simTime: time, kind })
+      },
+      onBigFall: (time) => {
+        if (this.cameraRig) this.cameraRig.bigFallExtra = 1
+        this.log('bigFall', { simTime: time })
+      },
       onLand: (info) => this.onLand(info),
       afterSlice: () => this.afterSlice(),
     })
@@ -448,6 +458,8 @@ class Game {
 
   /** Landing: bigFall counters and meters lost (D-008, ref/02 §Run semantics). */
   private onLand(info: { simTime: number; fallMeters: number; bigFall: boolean; impactVy: number }): void {
+    if (this.cameraRig) this.cameraRig.bigFallExtra = 0
+    playLand(info.impactVy)
     const y = this.port?.position.y ?? this.lastGroundedY
     const lost = this.lastGroundedY - y
     if (lost >= LOSS_MIN_M) this.run.metersLost += lost
@@ -455,6 +467,11 @@ class Game {
       this.run.bigFalls++
       this.records = { ...this.records, lifetimeBigFalls: this.records.lifetimeBigFalls + 1 }
       saveRecords(this.records)
+      if (lost >= LOSS_MIN_M && this.snapshot.state === 'PLAYING') {
+        const rounded = Math.round(lost)
+        this.toast(t('lostMeters').replace('{n}', String(rounded)))
+        useUi.setState((s) => ({ hud: { ...s.hud, lostM: rounded } }))
+      }
     }
     if (!this.firstFallShown && lost >= FIRST_FALL_M && this.snapshot.state === 'PLAYING') {
       this.firstFallShown = true

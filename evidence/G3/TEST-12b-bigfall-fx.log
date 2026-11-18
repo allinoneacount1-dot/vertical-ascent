@@ -1,0 +1,18 @@
+# run-test TEST-12b slug=bigfall-fx gate=G3 commit=ea77dad+dirty started=2026-11-18T22:21:56.235Z
+# command: pnpm exec vitexec --timeout 180 ./vitexec/smoke-bigfall-fx.ts
+logs:
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[warning] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warning] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[log] env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+[warning] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+(209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+(210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+[log] menu after ms 1106
+[log] synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+[log] after Play click {"frames":0,"locked":true,"state":"PLAYING","active":"CANVAS"}
+[log] TEST-12b PASS {"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","bigFall":{"sawBigFall":true,"zoom0":4,"zoomDuring":5,"wind0":0.05,"windDuring":0.548,"hudLost":"−1 m","toastText":"Lost 1 m"}}
+# exit=0 flagged=0 seconds=12.8 result=PASS
+# log: evidence/G3/TEST-12b-bigfall-fx.log

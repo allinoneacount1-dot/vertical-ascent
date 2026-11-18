@@ -1,0 +1,18 @@
+# run-test TEST-36 slug=lint gate=G3 commit=ea77dad+dirty started=2026-11-18T19:20:33.483Z
+# command: node scripts/level-lint.mjs --out evidence/G3/TEST-36-lint.json
+PASS schema-prefabs-tags — 647 entries, 432 walkable surfaces > 1 m², 0 schema errors
+PASS jump-margin-and-rise — 424 pairs, 0 over the zone margin or 0.85 apex
+PASS fall-cost — z1 max 10 m / 10, over 0; z2 max 18 m / 30, over 0; z3 max 40 m / 80, over 0; z4 max 36.5 m / 120, over 0; landings without route ≤2 jumps: 0
+PASS movers-period-dwell-window — 31 movers/lifts, 0 below period 3 s / dwell 0.5 s; 62 mover jumps, min window 2.15 s
+PASS hazard-sweep-clearance — 10 hazards, 0 problems
+PASS rest-chain-discovery — z1 chain 1/9, 1 rest per 1.046/9; z2 chain 3/12, 1 rest per 1.177/12; z3 chain 3/14, 1 rest per 1.237/12; z4 chain 3/14, 1 rest per 1.132/12
+PASS fake-summit-and-trap — 1 fake summit, 1 fork, 3 options (1 safe)
+PASS scale-cues — 154 cues up to 500 m, 0 gaps > 15 m
+PASS kit-scale — 1 kits, scale cues use one scale per kit
+PASS invisible-blockers-recorded — 0 invisible colliders, 0 not in GAME_DESIGN.md
+PASS inside-floor-aabb — floorAABB x [-216, 216] z [-238, 194], 0 colliders outside
+PASS collision-triangles — 11136 triangles (physics 526 boxes + camera 402 boxes) ≤ 300000
+PASS route-proven — 424/424 pairs proven (evidence/G3/TEST-36-sim.json: 424/424)
+evidence/G3/TEST-36-lint.json: 13/13 rules pass
+# exit=0 flagged=0 seconds=0.5 result=PASS
+# log: evidence/G3/TEST-36-lint.log

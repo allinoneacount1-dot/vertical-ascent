@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Reachability sim test (ref/03 §Lint, TEST-36): every route pair of the 500 m world replayed with the vendored physics
 // on a two-box world (source and destination colliders at the poses the route was generated for) and the bot's input:
 // stand on the takeoff point, aim at the target, run (when the route says so) + jump, steer in the air, release forward

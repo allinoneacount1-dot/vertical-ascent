@@ -2,7 +2,7 @@
 // ?level= in DEV). <BvhPhysicsWorld> without <Viverse> (D-003). The Canvas never unmounts between menu and game (D-005).
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Object3D, Vector3 } from 'three'
+import { BackSide, Mesh, MeshBasicMaterial, Object3D, SphereGeometry, Vector3 } from 'three'
 import type { DirectionalLight } from 'three'
 import { Environment, Sky } from '@react-three/drei'
 import { BvhPhysicsWorld, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
@@ -16,6 +16,7 @@ import { Overlay } from './ui/Overlay.tsx'
 import { game } from './game/game.ts'
 import { installPlayGuards } from './game/enter-playing.ts'
 import { attachRenderer } from './game/debug.ts'
+import { updateAudioFrame } from './audio/engine.ts'
 import { CAMERA } from './camera/camera-rig.ts'
 import { assetUrl } from './assets.ts'
 
@@ -45,13 +46,20 @@ function SunLight() {
   const light = useRef<DirectionalLight>(null)
   const target = useMemo(() => new Object3D(), [])
   const offset = useMemo(() => new Vector3(...SUN).normalize().multiplyScalar(SUN_DISTANCE), [])
-  useFrame(() => {
+  useFrame((_, dt) => {
     const l = light.current
     const at = game.port?.position
-    if (l == null || at == null) return
-    target.position.copy(at)
-    l.position.copy(at).add(offset)
-    target.updateMatrixWorld()
+    if (l != null && at != null) {
+      target.position.copy(at)
+      l.position.copy(at).add(offset)
+      target.updateMatrixWorld()
+    }
+    const p = game.port
+    const c = game.controller
+    const playing = game.snapshot.state === 'PLAYING'
+    const hRatio = game.level.summitM > 0 ? game.run.heightM / game.level.summitM : 0
+    const moving = p != null && p.isGroundedRaw && Math.hypot(p.velocity.x, p.velocity.z) > 0.5
+    updateAudioFrame(Math.min(dt, 0.1), playing, hRatio, c?.bigFall ?? false, moving, c?.sprintActive ?? false)
   })
   return (
     <>
@@ -72,6 +80,27 @@ function SunLight() {
       />
     </>
   )
+}
+
+/**
+ * Fog-coloured bowl below the horizon, centred on the camera: where no ground is drawn (past the far ground plane, seen
+ * from the summit) the view shows haze instead of the sky dome's lower half, so the world has no visible edge (ref/03).
+ * Drawn after the opaque scene without writing depth, it only fills pixels nothing else covered.
+ */
+function HorizonBowl() {
+  const bowl = useMemo(() => {
+    const m = new Mesh(
+      new SphereGeometry(CAMERA_FAR * 0.8, 48, 12, 0, Math.PI * 2, Math.PI / 2 + 0.004, Math.PI / 2 - 0.004),
+      new MeshBasicMaterial({ color: FOG_COLOR, side: BackSide, fog: false, depthWrite: false }),
+    )
+    m.renderOrder = 1
+    m.frustumCulled = false
+    return m
+  }, [])
+  useFrame(({ camera }) => {
+    bowl.position.copy(camera.position)
+  })
+  return <primitive object={bowl} />
 }
 
 function Lights() {
@@ -99,6 +128,13 @@ export default function App() {
           attachRenderer(gl)
           installInputBindings(gl.domElement)
           installPlayGuards(gl.domElement)
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault()
+            game.dispatch({ type: 'contextLost' })
+          })
+          gl.domElement.addEventListener('webglcontextrestored', () => {
+            game.dispatch({ type: 'contextRestored' })
+          })
           game.setDpr = setDpr
           game.applySettings(game.settings)
         }}
@@ -107,6 +143,7 @@ export default function App() {
           <Bindings />
           <Sky sunPosition={SUN} />
           <fog attach="fog" args={[FOG_COLOR, FOG_NEAR, FOG_FAR]} />
+          <HorizonBowl />
           <Lights />
           <Suspense fallback={null}>
             <Level level={game.level} />

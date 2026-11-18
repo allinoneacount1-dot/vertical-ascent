@@ -87,6 +87,12 @@ function MergedStatics({ level }: { level: LoadedLevel }) {
     game.log('mergedStatics', { meshes, entries: level.data.platforms.length })
     return g
   }, [level])
+  useEffect(() => {
+    game.visualRoot = root
+    return () => {
+      if (game.visualRoot === root) game.visualRoot = null
+    }
+  }, [root])
   return <primitive object={root} />
 }
 

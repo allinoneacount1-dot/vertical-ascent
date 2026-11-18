@@ -49,6 +49,13 @@ function Hud() {
           »
         </div>
       )}
+      {hud.lostM != null && (
+        <div className="hud-block">
+          <span className="hud-value" data-testid="hud-lost">
+            −{hud.lostM} m
+          </span>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,0 +1,14 @@
+# run-test TEST-19b slug=zones gate=G3 commit=ea77dad+dirty started=2026-11-18T19:20:04.091Z
+# command: pnpm vitest run src/level/zones.test.ts
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mD:/CLAUDE/vertical-ascent[39m
+
+ [32m✓[39m src/level/zones.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 02:20:05
+[2m   Duration [22m 384ms[2m (import 41%, transform 37%, tests 17%, worker 5%)[22m
+
+# exit=0 flagged=0 seconds=1.7 result=PASS
+# log: evidence/G3/TEST-19b-zones.log

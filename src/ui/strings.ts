@@ -43,6 +43,7 @@ export const STRINGS = {
   fakeSignTitle: { id: 'Hampir.', en: 'Almost.' },
   fakeSignBody: { id: 'Lihat ke atas — awan menyembunyikan sisanya.', en: 'Look up — the clouds hide the rest.' },
   firstFall: { id: 'Jatuh tidak melukai. Lanjut panjat dari sini.', en: "Falls don't hurt. Keep climbing from here." },
+  lostMeters: { id: 'Turun {n} m', en: 'Lost {n} m' },
   continueFallback: { id: 'Posisi tersimpan tidak ditemukan — mulai dari bawah.', en: 'Saved spot not found — starting at the bottom.' },
   continue: { id: 'Lanjutkan', en: 'Continue' },
   newClimb: { id: 'Pendakian baru', en: 'New climb' },

@@ -1,0 +1,27 @@
+# run-test TEST-22 slug=perf gate=G3 commit=ea77dad+dirty started=2026-11-18T22:22:22.571Z
+# command: node scripts/smoke-dist.mjs --test 22 --dist dist --base sub/
+# smoke-dist {"test":"22","what":"first-load bytes and spawn frame time (reported, not judged)","url":"http://127.0.0.1:5180/sub/","dist":"D:\\CLAUDE\\vertical-ascent\\dist","playwright":"1.63.0-beta-1788477194000","headless":true,"args":[],"viewport":{"width":1280,"height":720}}
+browser {"version":"153.0.8010.12"}
+[warn] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[warn] THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.
+[warn] THREE.WebGLProgram: Program Info Log: (210,81-129): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision | (209,37-61): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision | (210,82-106): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision | (209,37-61): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision | (210,82-106): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+load {"tCanvasMs":222,"tWorldReadyMs":537,"tFramesMs":2578,"frame":60,"state":"MENU","canvases":1,"gamePresent":true,"alert":null}
+menu {"ok":true,"ms":0,"state":"MENU","alert":null}
+env {"ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36","renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","vendor":"Google Inc. (NVIDIA)","dpr":1,"ext":true}
+check canvas PASS {"tCanvasMs":222,"canvases":1,"deadlineMs":15000}
+check frames PASS {"frame":60,"min":60,"tFramesMs":2578,"deadlineMs":15000}
+check world-ready PASS {"tWorldReadyMs":537,"deadlineMs":15000}
+check menu PASS {"ms":0,"state":"MENU","alert":null}
+synthetic: settings-seed {"rawInput":false,"reason":"D-040 test isolation"}
+check play PASS {"retries":0,"attempts":[{"ok":true,"ms":0,"state":"PLAYING","locked":true,"hint":null}]}
+perf {"build":"prod","where":"spawn","seconds":10,"renderer":"ANGLE (NVIDIA, NVIDIA GeForce RTX 2050 (0x000025AD) Direct3D11 vs_5_0 ps_5_0, D3D11)","samples":750,"p50":13.3,"p95":13.5,"p99":13.6,"max":14.4,"canvas":[1280,720],"dpr":1,"render":{"calls":57,"triangles":137552,"geometries":73,"textures":7,"programs":11},"state":"PLAYING"}
+first-load {"requests":13,"bytes":4251509,"mb":4.25}
+check frametime-sampled PASS {"samples":750,"state":"PLAYING"}
+check page-errors PASS {"pageErrors":0}
+check console-errors PASS {"consoleErrors":0}
+check requests-failed PASS {"failed":0,"abortedByReload":0}
+check http-errors PASS {"responses4xx5xx":0}
+summary {"checks":10,"failed":[],"served":14,"pageErrors":0,"consoleErrors":0,"requestFailed":0,"abortedByReload":0,"httpErrors":0,"foreign":0}
+# smoke-dist 22 PASS
+# exit=0 flagged=0 seconds=16.4 result=PASS
+# log: evidence/G3/TEST-22-perf.log

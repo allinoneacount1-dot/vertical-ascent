@@ -1,0 +1,280 @@
+{
+  "test": "TEST-36",
+  "level": "main",
+  "seed": 20261030,
+  "rules": 13,
+  "failed": 0,
+  "results": [
+    {
+      "rule": "schema-prefabs-tags",
+      "ok": true,
+      "summary": "647 entries, 432 walkable surfaces > 1 m², 0 schema errors",
+      "errors": []
+    },
+    {
+      "rule": "jump-margin-and-rise",
+      "ok": true,
+      "summary": "424 pairs, 0 over the zone margin or 0.85 apex",
+      "reachModelVsMeasured": {
+        "runUp1m": [
+          3.822,
+          3.812
+        ],
+        "runDown2m": [
+          5.97,
+          5.99
+        ],
+        "djFlat": [
+          8.133,
+          8.142
+        ]
+      },
+      "perZone": [
+        {
+          "zone": "z1",
+          "pairs": 67,
+          "maxRatio": 0.752,
+          "maxRise": 1.288
+        },
+        {
+          "zone": "z2",
+          "pairs": 113,
+          "maxRatio": 0.85,
+          "maxRise": 1.7
+        },
+        {
+          "zone": "z3",
+          "pairs": 115,
+          "maxRatio": 0.85,
+          "maxRise": 1.7
+        },
+        {
+          "zone": "z4",
+          "pairs": 129,
+          "maxRatio": 0.85,
+          "maxRise": 1.7
+        }
+      ],
+      "failures": []
+    },
+    {
+      "rule": "fall-cost",
+      "ok": true,
+      "summary": "z1 max 10 m / 10, over 0; z2 max 18 m / 30, over 0; z3 max 40 m / 80, over 0; z4 max 36.5 m / 120, over 0; landings without route ≤2 jumps: 0",
+      "perZone": [
+        {
+          "zone": "z1",
+          "budgetM": 10,
+          "misses": 407,
+          "maxCostM": 10,
+          "overBudgetPairs": 0,
+          "exceptionsAllowed": 0,
+          "examples": []
+        },
+        {
+          "zone": "z2",
+          "budgetM": 30,
+          "misses": 707,
+          "maxCostM": 18,
+          "overBudgetPairs": 0,
+          "exceptionsAllowed": 0,
+          "examples": []
+        },
+        {
+          "zone": "z3",
+          "budgetM": 80,
+          "misses": 759,
+          "maxCostM": 40,
+          "overBudgetPairs": 0,
+          "exceptionsAllowed": 3,
+          "examples": []
+        },
+        {
+          "zone": "z4",
+          "budgetM": 120,
+          "misses": 859,
+          "maxCostM": 36.5,
+          "overBudgetPairs": 0,
+          "exceptionsAllowed": 3,
+          "examples": []
+        }
+      ],
+      "landingsWithoutRoute": []
+    },
+    {
+      "rule": "movers-period-dwell-window",
+      "ok": true,
+      "summary": "31 movers/lifts, 0 below period 3 s / dwell 0.5 s; 62 mover jumps, min window 2.15 s",
+      "periodDwellFailures": [],
+      "shortWindows": []
+    },
+    {
+      "rule": "hazard-sweep-clearance",
+      "ok": true,
+      "summary": "10 hazards, 0 problems",
+      "problems": []
+    },
+    {
+      "rule": "rest-chain-discovery",
+      "ok": true,
+      "summary": "z1 chain 1/9, 1 rest per 1.046/9; z2 chain 3/12, 1 rest per 1.177/12; z3 chain 3/14, 1 rest per 1.237/12; z4 chain 3/14, 1 rest per 1.132/12",
+      "perZone": [
+        {
+          "zone": "z1",
+          "jumps": 68,
+          "beatsJumps": [
+            60,
+            68
+          ],
+          "rests": 65,
+          "jumpsPerRest": 1.046,
+          "restEveryJumps": 9,
+          "maxChain": 1,
+          "beatsMaxChain": 9,
+          "discovery": 0,
+          "ok": true
+        },
+        {
+          "zone": "z2",
+          "jumps": 113,
+          "beatsJumps": [
+            105,
+            113
+          ],
+          "rests": 96,
+          "jumpsPerRest": 1.177,
+          "restEveryJumps": 12,
+          "maxChain": 3,
+          "beatsMaxChain": 12,
+          "discovery": 0,
+          "ok": true
+        },
+        {
+          "zone": "z3",
+          "jumps": 115,
+          "beatsJumps": [
+            111,
+            115
+          ],
+          "rests": 93,
+          "jumpsPerRest": 1.237,
+          "restEveryJumps": 12,
+          "maxChain": 3,
+          "beatsMaxChain": 14,
+          "discovery": 0,
+          "ok": true
+        },
+        {
+          "zone": "z4",
+          "jumps": 129,
+          "beatsJumps": [
+            125,
+            129
+          ],
+          "rests": 114,
+          "jumpsPerRest": 1.132,
+          "restEveryJumps": 12,
+          "maxChain": 3,
+          "beatsMaxChain": 14,
+          "discovery": 0,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule": "fake-summit-and-trap",
+      "ok": true,
+      "summary": "1 fake summit, 1 fork, 3 options (1 safe)",
+      "fakeSummit": [
+        {
+          "id": "z4-deckE600",
+          "top": 467
+        }
+      ],
+      "options": [
+        {
+          "safe": true,
+          "pads": [
+            "z4-r606",
+            "z4-r608",
+            "z4-r610"
+          ]
+        },
+        {
+          "safe": false,
+          "pads": [
+            "z4-trap612",
+            "z4-trap613",
+            "z4-trap614"
+          ]
+        },
+        {
+          "safe": false,
+          "pads": [
+            "z4-trap615",
+            "z4-trap616",
+            "z4-trap617"
+          ]
+        }
+      ],
+      "safeOnRoute": true,
+      "decoysCatch": true
+    },
+    {
+      "rule": "scale-cues",
+      "ok": true,
+      "summary": "154 cues up to 500 m, 0 gaps > 15 m",
+      "gaps": []
+    },
+    {
+      "rule": "kit-scale",
+      "ok": true,
+      "summary": "1 kits, scale cues use one scale per kit",
+      "kits": [
+        {
+          "kit": "procedural",
+          "cueScales": [
+            1
+          ]
+        }
+      ],
+      "mixed": []
+    },
+    {
+      "rule": "invisible-blockers-recorded",
+      "ok": true,
+      "summary": "0 invisible colliders, 0 not in GAME_DESIGN.md",
+      "invisible": []
+    },
+    {
+      "rule": "inside-floor-aabb",
+      "ok": true,
+      "summary": "floorAABB x [-216, 216] z [-238, 194], 0 colliders outside",
+      "floorAabb": {
+        "min": [
+          -216,
+          -1,
+          -238
+        ],
+        "max": [
+          216,
+          500,
+          194
+        ]
+      },
+      "outside": []
+    },
+    {
+      "rule": "collision-triangles",
+      "ok": true,
+      "summary": "11136 triangles (physics 526 boxes + camera 402 boxes) ≤ 300000",
+      "tris": 11136
+    },
+    {
+      "rule": "route-proven",
+      "ok": true,
+      "summary": "424/424 pairs proven (evidence/G3/TEST-36-sim.json: 424/424)",
+      "ROUTE_UNPROVEN": []
+    }
+  ]
+}
