@@ -109,7 +109,7 @@ function snapshotGame() {
       programs: info?.programs?.length ?? 0,
     },
     hero: { id: game.heroId, modelUrl: HERO_MODEL_OPTIONS[game.heroId].url },
-    livingWorld: LIVING_WORLD_META,
+    livingWorld: { ...LIVING_WORLD_META, ...game.livingWorld },
     multiplayer: game.multiplayer.snapshot(),
     bvh: { buildMs: { ...game.bvh.buildMs }, tris: { ...game.bvh.tris } },
     events: game.events.slice(),

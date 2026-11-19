@@ -1,6 +1,6 @@
 // Character model + animation graph of the hybrid controller (DIRECTIVE D-001). Reads game-owned flags only;
 // never writes position, velocity, the controller's input velocity or the camera (ref/02 Pemilik besaran).
-// Supports lazy-swapping across 4 real 3D Hero models via HERO_MODEL_OPTIONS[heroId].
+// Fase 6: Supports lazy-loading 4 distinct 3D hero models (3 VRoid CC0 VRMs + 1 UAL2 Automaton GLB).
 import { Suspense, useEffect } from 'react'
 import { LoopOnce, LoopRepeat } from 'three'
 import type { RootState } from '@react-three/fiber'
@@ -8,8 +8,9 @@ import { Graph, GrapthState, RunTimeline, Switch, SwitchCase, forever } from '@r
 import type { TimelineClock } from '@react-three/timeline'
 import { CharacterAnimationAction, CharacterModelProvider, useCharacterModelLoader } from '@react-three/viverse'
 import { CLIPS, FADE_S, HERO_MODEL_OPTIONS, JUMP_UP_MIN_S, LAND_HOLD_S, RISING_VY } from './rig.ts'
-import type { HeroId } from './heroes.ts'
 import { addClimbingPack } from './protagonist-style.ts'
+import { applyHeroStyle } from './heroes.ts'
+import type { HeroId } from './heroes.ts'
 import { game } from '../game/game.ts'
 import { useUi } from '../game/store.ts'
 import { setClipReporter } from '../game/debug.ts'
@@ -58,15 +59,18 @@ const startJumpUp = () => {
 const newAirJump = () => airJumpCount() !== seenAirJumps
 setClipReporter(() => activeClip)
 
-function CharacterModelView({ heroId }: { heroId: HeroId }) {
-  const opts = HERO_MODEL_OPTIONS[heroId]
-  const model = useCharacterModelLoader(opts)
+function HeroModelVisual({ heroId }: { heroId: HeroId }) {
+  const model = useCharacterModelLoader(HERO_MODEL_OPTIONS[heroId])
   useEffect(() => {
     const humanoid = (model as { humanoid?: Parameters<typeof addClimbingPack>[1] }).humanoid
     if (humanoid != null) addClimbingPack(model.scene, humanoid)
+    applyHeroStyle(model.scene, heroId)
     game.setModel(model)
-    return () => game.setModel(null)
-  }, [model])
+    return () => {
+      if (game.model === model) game.setModel(null)
+    }
+  }, [model, heroId])
+
   return (
     <CharacterModelProvider model={model}>
       <RunTimeline>
@@ -133,7 +137,7 @@ export function CharacterVisual() {
   const heroId = useUi((s) => s.heroId)
   return (
     <Suspense fallback={null}>
-      <CharacterModelView key={heroId} heroId={heroId} />
+      <HeroModelVisual key={heroId} heroId={heroId} />
     </Suspense>
   )
 }

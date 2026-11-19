@@ -1,0 +1,9 @@
+# run-test TEST-38 slug=noisy gate=G3 commit=ea77dad+dirty started=2026-11-18T19:27:54.387Z
+# command: pnpm exec vitexec --timeout 120 --path ?zone=z1&seeds=1,2&limitS=45 ./vitexec/play-noisy.ts
+vitexec failed: Expected code or a script file.
+'seeds' is not recognized as an internal or external command,
+operable program or batch file.
+'limitS' is not recognized as an internal or external command,
+operable program or batch file.
+# exit=1 flagged=0 seconds=0.9 result=FAIL
+# log: evidence/G3/TEST-38-noisy.log

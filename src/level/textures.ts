@@ -24,6 +24,7 @@ function makeCanvas(size = 512): [HTMLCanvasElement, CanvasRenderingContext2D] |
   c.height = size
   const g = c.getContext('2d')
   if (!g) return null
+  if (size !== 256) g.scale(size / 256, size / 256)
   return [c, g]
 }
 

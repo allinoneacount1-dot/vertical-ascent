@@ -144,6 +144,9 @@ class Game {
       return { total, visible, culled: total - visible }
     },
   }
+  readonly livingWorld = {
+    litShrines: 0,
+  }
   readonly atmosphere = {
     fogHex: '#ecd8c2',
     skyTopHex: '#6eb1eb',

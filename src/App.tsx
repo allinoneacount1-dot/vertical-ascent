@@ -10,6 +10,7 @@ import { installInputBindings } from './game/input-bindings.ts'
 import { Level } from './level/Level.tsx'
 import { AtmosphereParticles } from './level/AtmosphereParticles.tsx'
 import { Player } from './controller/Player.tsx'
+import { PlayerVfx } from './controller/PlayerVfx.tsx'
 import { GameLoop } from './controller/GameLoop.tsx'
 import { CameraDriver } from './camera/CameraDriver.tsx'
 import { HudAndShadow } from './ui/HudSampler.tsx'
@@ -239,6 +240,7 @@ export default function App() {
             <Level level={game.level} />
           </Suspense>
           <Player />
+          <PlayerVfx />
           <GameLoop />
           <CameraDriver />
           <HudAndShadow />
