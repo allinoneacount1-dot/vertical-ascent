@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import { DEFAULT_SLOTS, stubViverseDefaults } from './scripts/stub-viverse-defaults.ts'
 
 // All default slots (mannequin + 6 clips + jump-forward) are replaced by project assets (D-044, D-047, protagonist-f).
-const GAP_SLOTS = DEFAULT_SLOTS.filter(() => false)
+const GAP_SLOTS = DEFAULT_SLOTS.filter((s) => s === 'mannequin')
 
 // Spec: docs/directive/ref/01-templates.md §vite.config.ts. G5 adds the license plugin.
 export default defineConfig({

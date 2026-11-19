@@ -1,4 +1,4 @@
-// TEST-49: E2E smoke test for Fase 6 Gelombang A — Living Ghibli World, Artifacts, Windmills, God Rays & Character VFX
+// TEST-49: E2E smoke test for Fase 6 Gelombang A (Living Ghibli World, Artifacts, God Rays, Windmills & CharacterJuice)
 import { game as liveGame } from '/src/game/game.ts'
 import { bootToPlaying, logRenderer, nextFrame, sleep } from '/vitexec/lib/move-smoke.ts'
 
@@ -8,44 +8,51 @@ const out: Record<string, unknown> = { renderer: logRenderer() }
 await bootToPlaying()
 for (let i = 0; i < 8; i++) await nextFrame()
 
-const snap = (window as unknown as { __game: { livingWorld?: Record<string, number> } }).__game
-out.livingWorldMeta = snap.livingWorld ?? null
-if (!snap.livingWorld || snap.livingWorld.grassCount < 500) {
-  failures.push(`livingWorld meta missing or invalid: ${JSON.stringify(snap.livingWorld)}`)
-}
-
-// Verify Living World scene nodes exist via scene traversal from visualRoot parent
+// Traverse live Three.js scene via visualRoot's parent (the Scene)
 const scene = liveGame.visualRoot?.parent
-const expectedNames = [
-  'living-ghibli-world',
-  'living-grass',
-  'living-banners',
-  'living-shrines',
-  'living-windmills',
-  'living-godrays',
-  'living-cumulus',
-  'living-relic-altars',
-  'player-dust-vfx',
-  'player-jump-ring',
-]
-const found: Record<string, boolean> = {}
-for (const name of expectedNames) {
-  const ok = scene?.getObjectByName(name) != null
-  found[name] = ok
-  if (!ok) failures.push(`Missing LivingWorld scene node: ${name}`)
-}
-out.nodes = found
+if (!scene) {
+  failures.push('Scene root not found via liveGame.visualRoot.parent')
+} else {
+  const living = scene.getObjectByName('living-world')
+  const juice = scene.getObjectByName('character-juice')
+  const grass = scene.getObjectByName('living-grass') as { count?: number } | undefined
+  const altars = scene.getObjectByName('relic-altars') as { count?: number } | undefined
+  const godrays = scene.getObjectByName('living-godrays')
+  const cumulus = scene.getObjectByName('living-cumulus') as { count?: number } | undefined
+  const shrineStart = scene.getObjectByName('toro-start-e')
+  const windmillPlaza = scene.getObjectByName('windmill-plaza')
+  const bannerStart = scene.getObjectByName('banner-start-1')
 
-// Verify windmill blades rotate over time
-const mill = scene?.getObjectByName('mill-z1-w')
-const blades = mill?.children[2]
-const rot0 = blades?.rotation.z ?? 0
-await sleep(300)
-for (let i = 0; i < 6; i++) await nextFrame()
-const rot1 = blades?.rotation.z ?? 0
-const bladeDelta = Math.abs(rot1 - rot0)
-out.windmillDelta = Math.round(bladeDelta * 1000) / 1000
-if (bladeDelta < 0.05) failures.push(`Windmill blades did not rotate: delta=${bladeDelta}`)
+  // Check windmill rotor actually rotates over 400 ms
+  const rotorBefore = windmillPlaza?.children?.[2]?.rotation?.z ?? 0
+  await sleep(400)
+  for (let i = 0; i < 4; i++) await nextFrame()
+  const rotorAfter = windmillPlaza?.children?.[2]?.rotation?.z ?? 0
+  const rotorDelta = Math.abs(rotorAfter - rotorBefore)
+
+  out.livingWorld = {
+    mounted: Boolean(living),
+    characterJuiceMounted: Boolean(juice),
+    grassCount: grass?.count ?? 0,
+    altarCount: altars?.count ?? 0,
+    godRayCount: godrays?.children?.length ?? 0,
+    cumulusCount: cumulus?.count ?? 0,
+    hasShrine: Boolean(shrineStart),
+    hasWindmill: Boolean(windmillPlaza),
+    hasBanner: Boolean(bannerStart),
+    windmillRotorDeltaRad: Math.round(rotorDelta * 1000) / 1000,
+  }
+
+  if (!living) failures.push('living-world group missing')
+  if (!juice) failures.push('character-juice group missing')
+  if ((grass?.count ?? 0) < 500) failures.push(`Expected >=500 instanced grass blades, got ${grass?.count ?? 0}`)
+  if ((altars?.count ?? 0) !== 12) failures.push(`Expected 12 relic altars, got ${altars?.count ?? 0}`)
+  if ((godrays?.children?.length ?? 0) < 4) failures.push(`Expected >=4 god rays, got ${godrays?.children?.length ?? 0}`)
+  if ((cumulus?.count ?? 0) < 20) failures.push(`Expected >=20 cumulus puffs, got ${cumulus?.count ?? 0}`)
+  if (!shrineStart) failures.push('toro-start-e shrine missing')
+  if (!bannerStart) failures.push('banner-start-1 banner missing')
+  if (rotorDelta < 0.05) failures.push(`Windmill rotor did not spin: delta=${rotorDelta}`)
+}
 
 const passed = failures.length === 0
 console.log(JSON.stringify({ test: 'TEST-49-living-world', passed, failures, ...out }, null, 2))

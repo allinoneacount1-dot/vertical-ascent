@@ -22,6 +22,7 @@ import { CloudSea } from './CloudSea.tsx'
 import { SkyRelics } from './SkyRelics.tsx'
 import { GhostRacer } from './GhostRacer.tsx'
 import { RemotePlayers } from './RemotePlayers.tsx'
+import { CharacterJuice } from './CharacterJuice.tsx'
 const LazyOdysseyWorld = lazy(() => import('./OdysseyWorld.tsx').then((m) => ({ default: m.OdysseyWorld })))
 import { PersonalBestFlag } from './PersonalBestFlag.tsx'
 
@@ -234,6 +235,7 @@ export function Level({ level }: { level: LoadedLevel }) {
       <SkyRelics level={level} />
       <GhostRacer level={level} />
       <RemotePlayers />
+      <CharacterJuice />
       <Suspense fallback={null}>
         <LazyOdysseyWorld level={level} />
       </Suspense>

@@ -98,6 +98,7 @@ export const HERO_MODEL_OPTIONS = Object.freeze({
 }) satisfies Readonly<Record<HeroId, unknown>>
 
 /** Default model options kept for backwards compatibility. */
+/** Model options for this page, chosen once at module load (the loader key must stay identical, D-001). */
 export const ACTIVE_MODEL_OPTIONS = MODEL_OPTIONS
 
 export const UAL1_BONE_MAP: Readonly<Record<string, VRMHumanBoneName>> = Object.freeze({

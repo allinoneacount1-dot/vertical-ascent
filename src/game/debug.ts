@@ -93,6 +93,7 @@ function snapshotGame() {
       lastHit: rig?.lastHit == null ? null : r3(rig.lastHit),
       pos: rig?.camera ? arr(rig.camera.position) : ([0, 0, 0] as Vec3),
     },
+    heroId: game.heroId,
     model: { uuid: game.model?.scene.uuid ?? '' },
     anim: { clip: currentClip(), mixerTime: r3(game.model?.mixer.time ?? 0) },
     simTime: r3(controller?.simTime ?? 0),

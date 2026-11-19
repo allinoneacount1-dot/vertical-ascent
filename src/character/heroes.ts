@@ -1,9 +1,6 @@
-// Selectable 3D Ghibli Heroes (Fase 4 + Fase 6 Gelombang B):
-// Each hero now loads its own distinct CC0 3D model:
-// - Sora: AvatarSample_F (protagonist-f.vrm, 1.71 m)
-// - Kaze: AvatarSample_G (protagonist-g.vrm, 1.74 m)
-// - Aoi:  AvatarSample_E (protagonist-e.vrm, 1.41 m scaled 1.12x -> 1.58 m)
-// - Ren:  UAL2 Female Mannequin (mannequin-f.glb, styled as an ivory-gold Ghibli Sky Automaton)
+// Selectable 3D Ghibli Heroes (Fase 6 — Gelombang B):
+// 4 distinct 3D models: Sora (protagonist-f.vrm), Kaze/Victoria (protagonist-g.vrm),
+// Aoi/Vivi (protagonist-e.vrm, normalized 1.12x -> 1.58 m), and Ren (Quaternius Sky Automaton mannequin).
 import { Mesh, MeshStandardMaterial } from 'three'
 import type { Object3D } from 'three'
 
@@ -16,57 +13,54 @@ export type HeroSpec = {
   name: string
   title: string
   modelLabel: string
-  scale: number
   swatch: string
-  outfitTint: string
   packBody: string
   packTrim: string
+  scale: number
+  isAutomaton?: boolean
 }
 
 export const HEROES: readonly HeroSpec[] = [
   {
     id: 'sora',
     name: 'Sora',
-    title: 'Sky Explorer (Vita VRM)',
+    title: 'Sky Explorer (VRM Vita)',
     modelLabel: 'protagonist-f.vrm',
-    scale: 1,
     swatch: '#d8b56a',
-    outfitTint: '#ffffff',
     packBody: '#4b3a2c',
     packTrim: '#d8b56a',
+    scale: 1.0,
   },
   {
     id: 'kaze',
     name: 'Kaze',
-    title: 'Wind Runner (Victoria VRM)',
+    title: 'Wind Runner (VRM Victoria)',
     modelLabel: 'protagonist-g.vrm',
-    scale: 1,
     swatch: '#5fd4a3',
-    outfitTint: '#ffffff',
     packBody: '#1e4d3b',
     packTrim: '#72eac0',
+    scale: 1.0,
   },
   {
     id: 'aoi',
     name: 'Aoi',
-    title: 'Celestial Star (Vivi VRM)',
+    title: 'Celestial Traveler (VRM Vivi)',
     modelLabel: 'protagonist-e.vrm',
-    scale: 1.12,
     swatch: '#818cf8',
-    outfitTint: '#ffffff',
     packBody: '#242b57',
     packTrim: '#ffd166',
+    scale: 1.12,
   },
   {
     id: 'ren',
     name: 'Ren',
-    title: 'Sky Sentinel (Automaton)',
-    modelLabel: 'mannequin-f.glb',
-    scale: 1,
-    swatch: '#fb7185',
-    outfitTint: '#f5ecd9',
+    title: 'Sky Automaton (Mannequin)',
+    modelLabel: 'automaton-mannequin',
+    swatch: '#f3d9a4',
     packBody: '#6e2632',
     packTrim: '#fde68a',
+    scale: 1.0,
+    isAutomaton: true,
   },
 ]
 
@@ -96,13 +90,12 @@ export function saveHeroId(id: HeroId): void {
   }
 }
 
-/** Applies hero scale, climbing pack palette, and ivory-gold Ghibli automaton finish for Ren. */
+/** Applies scale normalization, climbing pack palette, and Automaton ceramic/gold finish for Ren. */
 export function applyHeroStyle(scene: Object3D | null | undefined, heroId: HeroId): void {
   if (!scene) return
   const hero = getHeroSpec(heroId)
   scene.scale.setScalar(hero.scale)
 
-  // 1. Style climbing pack colors (attached to VRM humanoid chest)
   const pack = scene.getObjectByName('protagonist-pack')
   if (pack) {
     let idx = 0
@@ -114,23 +107,22 @@ export function applyHeroStyle(scene: Object3D | null | undefined, heroId: HeroI
     })
   }
 
-  // 2. Give Ren (mannequin-f.glb) a stylized Laputa ivory-and-gold automaton finish
-  if (heroId === 'ren') {
-    let partIdx = 0
+  if (hero.isAutomaton) {
+    let meshIdx = 0
     scene.traverse((obj) => {
       if (!(obj instanceof Mesh)) return
       const mats = Array.isArray(obj.material) ? obj.material : [obj.material]
       for (const mat of mats) {
         if (mat instanceof MeshStandardMaterial) {
-          const isTrim = partIdx % 2 === 1
-          mat.color.set(isTrim ? '#d8a64e' : '#f3ead6')
-          mat.roughness = isTrim ? 0.36 : 0.48
-          mat.metalness = isTrim ? 0.55 : 0.18
-          mat.emissive.set('#3d2c12')
-          mat.emissiveIntensity = 0.12
-          partIdx++
+          const isAccent = meshIdx % 2 === 1
+          mat.color.set(isAccent ? '#d8b56a' : '#f2ead8')
+          mat.roughness = isAccent ? 0.35 : 0.55
+          mat.metalness = isAccent ? 0.65 : 0.15
+          mat.emissive.set(isAccent ? '#5fd4a3' : '#2a2216')
+          mat.emissiveIntensity = isAccent ? 0.18 : 0.05
         }
       }
+      meshIdx++
     })
   }
 }
