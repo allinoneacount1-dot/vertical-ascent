@@ -105,6 +105,7 @@ function snapshotGame() {
       textures: info?.memory.textures ?? 0,
       programs: info?.programs?.length ?? 0,
     },
+    multiplayer: game.multiplayer.snapshot(),
     bvh: { buildMs: { ...game.bvh.buildMs }, tris: { ...game.bvh.tris } },
     events: game.events.slice(),
   }

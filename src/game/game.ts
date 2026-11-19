@@ -1,4 +1,5 @@
 import { GhostSystem } from './ghost.ts'
+import { MultiplayerSystem, readRoomCodeFromUrl } from './multiplayer.ts'
 import { applyHeroStyle, loadHeroId, saveHeroId } from '../character/heroes.ts'
 import type { HeroId } from '../character/heroes.ts'
 import { AETHER_GRAVITY, AETHER_LOW_G_ALTITUDE_M, ODYSSEY_SUMMIT_M, ODYSSEY_UPDRAFS } from '../level/odyssey.ts'
@@ -154,13 +155,26 @@ class Game {
   readonly ghost = new GhostSystem()
   readonly collectedRelics: Set<string> = loadCollectedRelics()
   heroId: HeroId = loadHeroId()
+  readonly multiplayer = new MultiplayerSystem({
+    onUiChange: (mp) => useUi.setState({ multiplayer: mp }),
+    onEpochSync: (epochMs) => {
+      const targetClock = ((Date.now() - epochMs) / 1000) % 3600
+      if (Math.abs(this.motion.worldClock - targetClock) > 0.35) {
+        this.motion.worldClock = targetClock
+        this.motion.syncPrev()
+      }
+    },
+    onToast: (text) => this.toast(text),
+  })
 
   constructor() {
     this.level = loadLevel(currentLevelId())
     this.records = loadRecords(this.level.summitM)
     this.setLevel(this.level)
     this.refreshSavedRun()
-    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId, multiplayer: this.multiplayer.getUiState() })
+    const urlRoom = readRoomCodeFromUrl()
+    if (urlRoom) void this.multiplayer.joinRoom(urlRoom)
   }
 
   setLevel(level: LoadedLevel): void {

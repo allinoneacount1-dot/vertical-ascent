@@ -12,7 +12,8 @@ import { loadSettings, saveSettings } from '../game/settings.ts'
 import type { ActionId, Settings } from '../game/settings.ts'
 import { BINDING_PRESETS, keyLabel } from '../game/input-bindings.ts'
 import { SKY_RELICS } from '../level/relicsData.ts'
-import { HEROES } from '../character/heroes.ts'
+import { HEROES, getHeroSpec } from '../character/heroes.ts'
+import { buildInviteUrl } from '../game/multiplayer.ts'
 import { assetUrl } from '../assets.ts'
 import type { SprintMode } from '../controller/locomotion.ts'
 import credits from './credits.json'
@@ -33,6 +34,7 @@ function Hud() {
   const splits = hud.splits
   const relicCount = useUi((s) => s.relicCount)
   const aetherLowG = useUi((s) => s.aetherLowG)
+  const mp = useUi((s) => s.multiplayer)
 
   return (
     <div className="hud" aria-hidden="true" tabIndex={-1}>
@@ -103,11 +105,28 @@ function Hud() {
                 style={{ bottom: `${Math.min(100, (game.records.bestHeightM / hud.targetM) * 100)}%` }}
               />
             )}
+            {mp.peers.map((peer) => (
+              <span
+                key={peer.id}
+                className="elev-peer-dot"
+                data-testid="elev-peer-dot"
+                title={`${peer.name} (${peer.heightM} m)`}
+                style={{
+                  bottom: `${Math.max(0, Math.min(100, (peer.heightM / hud.targetM) * 100))}%`,
+                  background: getHeroSpec(peer.heroId).swatch,
+                }}
+              />
+            ))}
             <span
               className="elev-dot"
               style={{ bottom: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }}
             />
           </div>
+          {mp.roomCode && (
+            <span className="elev-label elev-mp" data-testid="hud-mp-badge">
+              {mp.roomCode} · {mp.peerCount + 1}P
+            </span>
+          )}
           {aetherLowG && <span className="elev-label" data-testid="hud-lowg">0.65G</span>}
           <span className="elev-label" data-testid="hud-relics">✦ {relicCount}/{SKY_RELICS.length}</span>
           <span className="elev-label">V</span>
@@ -342,6 +361,9 @@ function MenuMain() {
   const modifiers = useUi((s) => s.modifiers)
   const odysseyMode = useUi((s) => s.odysseyMode)
   const heroId = useUi((s) => s.heroId)
+  const mp = useUi((s) => s.multiplayer)
+  const [joinInput, setJoinInput] = useState('')
+  const [linkCopied, setLinkCopied] = useState(false)
 
   return (
     <div className="panel menu" data-testid="panel-menu">
@@ -423,6 +445,78 @@ function MenuMain() {
             {h.name}
           </button>
         ))}
+      </div>
+
+      {/* Multiplayer WebRTC P2P Room + Link Share (?room=KODE) */}
+      <div className="mp-lobby" data-testid="mp-lobby">
+        <div className="mp-row">
+          <input
+            type="text"
+            className="mp-input mp-name"
+            data-testid="mp-name-input"
+            maxLength={16}
+            value={mp.playerName}
+            placeholder="Nickname"
+            onChange={(e) => game.multiplayer.setPlayerName(e.target.value)}
+          />
+          {mp.roomCode == null ? (
+            <>
+              <button
+                type="button"
+                className="chip active"
+                data-testid="mp-create"
+                onClick={() => game.multiplayer.createRoom()}
+              >
+                Create Room
+              </button>
+              <input
+                type="text"
+                className="mp-input mp-code"
+                data-testid="mp-code-input"
+                maxLength={12}
+                value={joinInput}
+                placeholder="CODE"
+                onChange={(e) => setJoinInput(e.target.value.toUpperCase())}
+              />
+              <button
+                type="button"
+                className="chip"
+                data-testid="mp-join"
+                disabled={joinInput.trim().length < 3}
+                onClick={() => void game.multiplayer.joinRoom(joinInput)}
+              >
+                Join
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="mp-badge" data-testid="mp-room-badge">
+                Room {mp.roomCode} · {mp.peerCount + 1}P
+              </span>
+              <button
+                type="button"
+                className="chip active"
+                data-testid="mp-copy-link"
+                onClick={() => {
+                  const url = buildInviteUrl(mp.roomCode!)
+                  void navigator.clipboard?.writeText(url).catch(() => {})
+                  setLinkCopied(true)
+                  setTimeout(() => setLinkCopied(false), 2000)
+                }}
+              >
+                {linkCopied ? 'Copied!' : 'Copy Link'}
+              </button>
+              <button
+                type="button"
+                className="chip"
+                data-testid="mp-leave"
+                onClick={() => game.multiplayer.leaveRoom(true)}
+              >
+                Leave
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Optional Challenge Modifiers */}

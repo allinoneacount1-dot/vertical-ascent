@@ -472,3 +472,64 @@ canvas:focus {
   padding: 2px 6px;
   border-radius: 6px;
 }
+
+.elev-peer-dot {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, 50%);
+  border-radius: 50%;
+  border: 2px solid #0e131b;
+  box-shadow: 0 0 6px rgba(114, 234, 192, 0.85);
+}
+
+.elev-mp {
+  color: #72eac0;
+  border: 1px solid rgba(114, 234, 192, 0.45);
+}
+
+.mp-lobby {
+  margin: 8px auto 4px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(14, 19, 27, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.mp-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.mp-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 13px;
+  padding: 4px 8px;
+}
+
+.mp-input.mp-name {
+  width: 112px;
+}
+
+.mp-input.mp-code {
+  width: 78px;
+  text-transform: uppercase;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.mp-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #72eac0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(114, 234, 192, 0.14);
+  border: 1px solid rgba(114, 234, 192, 0.35);
+}

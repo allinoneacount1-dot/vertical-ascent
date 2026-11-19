@@ -7,6 +7,7 @@ import type { ZoneSplits } from './run.ts'
 import { DEFAULT_MODIFIERS } from '../level/challenges.ts'
 import type { ChallengeMode, ChallengeModifiers } from '../level/challenges.ts'
 import type { HeroId } from '../character/heroes.ts'
+import type { MultiplayerUi } from './multiplayer.ts'
 
 export type Hud = {
   heightM: number
@@ -66,6 +67,7 @@ export type UiStore = {
   odysseyMode: boolean
   aetherLowG: boolean
   heroId: HeroId
+  multiplayer: MultiplayerUi
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -105,4 +107,5 @@ export const useUi = create<UiStore>(() => ({
   odysseyMode: false,
   aetherLowG: false,
   heroId: 'sora',
+  multiplayer: { roomCode: null, playerName: 'Climber', peerCount: 0, peers: [], transport: 'idle' },
 }))

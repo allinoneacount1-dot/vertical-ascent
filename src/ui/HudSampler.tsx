@@ -19,6 +19,17 @@ export class HudSampler {
       const before = game.run.highestM
       game.run.updateHeight(port.position.y, port.isGroundedRaw)
       if (playing && game.run.highestM > before) game.noteGroundedHeight(game.run.highestM)
+      game.multiplayer.tick(
+        now,
+        game.heroId,
+        port.position.x,
+        port.position.y,
+        port.position.z,
+        game.controller?.facingYaw ?? game.spawnYaw,
+        game.run.heightM,
+      )
+    } else if (game.multiplayer.roomCode != null) {
+      game.multiplayer.tick(now, game.heroId, game.spawn.x, game.spawn.y, game.spawn.z, game.spawnYaw, 0)
     }
     const slot = Math.floor(now / 100)
     if (slot === this.lastSlot) return
