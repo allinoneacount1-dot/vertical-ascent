@@ -8,7 +8,7 @@ export type Vec3 = [number, number, number]
 
 /** ref/03 §Data level, platform.motion. */
 export type Motion = {
-  type: 'linear' | 'loop' | 'rotate'
+  type: 'linear' | 'loop' | 'rotate' | 'orbit' | 'pendulum'
   /** linear: ping-pong along the polyline; loop: closed loop through the points (offsets from the platform pos). */
   points: Vec3[]
   /** rotate only: rotation axis in the platform's yawed frame (default [0, 1, 0]). */
@@ -17,6 +17,12 @@ export type Motion = {
   phaseS: number
   /** linear/loop: pause at each end point (linear) or each point (loop). */
   dwellS: number
+  /** orbit only: vertical circular radius (m) and spin direction (+1 CCW, -1 CW). */
+  orbitRadius?: number
+  orbitDir?: 1 | -1
+  /** pendulum only: suspension rope length (m) and peak swing angle (rad). */
+  ropeLen?: number
+  swingAmp?: number
 }
 
 /** Pose of a moving platform at a world-clock time, relative to its base position. */
@@ -62,6 +68,22 @@ export function evaluateMotion(m: Motion, t: number, out: Pose): Pose {
   if (m.type === 'rotate') {
     out.offset.set(0, 0, 0)
     out.yaw = (local / m.periodS) * Math.PI * 2
+    return out
+  }
+  if (m.type === 'orbit') {
+    const theta = (local / m.periodS) * Math.PI * 2 * (m.orbitDir ?? 1)
+    const r = m.orbitRadius ?? 4
+    out.offset.set(Math.cos(theta) * r, Math.sin(theta) * r, 0)
+    out.yaw = 0
+    return out
+  }
+  if (m.type === 'pendulum') {
+    const phase = (local / m.periodS) * Math.PI * 2
+    const amp = m.swingAmp ?? 0.4
+    const len = m.ropeLen ?? 6
+    const theta = amp * Math.sin(phase)
+    out.offset.set(Math.sin(theta) * len, (1 - Math.cos(theta)) * len, 0)
+    out.yaw = 0
     return out
   }
   out.yaw = 0
@@ -169,8 +191,11 @@ export class PlatformMotion {
   /** Writes the mover transform for time t and refreshes cur, the AABB and the phase. */
   private place(p: KinematicPlatform, t: number): void {
     evaluateMotion(p.motion, t, pose)
-    p.mover.position.copy(p.basePos).add(pose.offset)
     q.setFromAxisAngle(yAxis, p.baseYaw)
+    if (p.motion.type === 'orbit' || p.motion.type === 'pendulum') {
+      pose.offset.applyQuaternion(q)
+    }
+    p.mover.position.copy(p.basePos).add(pose.offset)
     if (p.motion.type === 'rotate') {
       // rotation axis in the platform's yawed frame (G2: horizontal axes for windmill obstacles)
       spinAxis.fromArray(p.motion.axis ?? [0, 1, 0]).normalize()

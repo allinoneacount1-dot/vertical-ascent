@@ -9,6 +9,8 @@ let sfxGain: GainNode | null = null
 let ambienceGain: GainNode | null = null
 let windGain: GainNode | null = null
 let windFilter: BiquadFilterNode | null = null
+let millHumGain: GainNode | null = null
+let skyAirGain: GainNode | null = null
 let windStarted = false
 
 let targetMaster = 0.8
@@ -50,6 +52,29 @@ function ensureGraph(): AudioContext | null {
     windFilter.Q.value = 1.2
     windFilter.connect(windGain)
     windGain.connect(ambienceGain)
+
+    // Subtle zone-blended ambient beds: z2 warm mill/steam hum + z3 open-sky harmonic air
+    millHumGain = ctx.createGain()
+    millHumGain.gain.value = 0
+    millHumGain.connect(ambienceGain)
+    const humOsc = ctx.createOscillator()
+    humOsc.type = 'triangle'
+    humOsc.frequency.value = 68
+    const humFilter = ctx.createBiquadFilter()
+    humFilter.type = 'lowpass'
+    humFilter.frequency.value = 140
+    humOsc.connect(humFilter)
+    humFilter.connect(millHumGain)
+    humOsc.start()
+
+    skyAirGain = ctx.createGain()
+    skyAirGain.gain.value = 0
+    skyAirGain.connect(ambienceGain)
+    const airOsc = ctx.createOscillator()
+    airOsc.type = 'sine'
+    airOsc.frequency.value = 293.66 // D4 open airy resonance
+    airOsc.connect(skyAirGain)
+    airOsc.start()
   }
   if (!windStarted && windFilter != null) {
     windStarted = true
@@ -272,6 +297,90 @@ export function playMantle(): void {
   osc.stop(now + 0.09)
 }
 
+/** Warm wooden rope-bridge creak when stepping onto swaying planks. */
+export function playWoodCreak(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const filter = ctx.createBiquadFilter()
+  const g = ctx.createGain()
+  osc.type = 'sawtooth'
+  osc.frequency.setValueAtTime(92, now)
+  osc.frequency.exponentialRampToValueAtTime(64, now + 0.16)
+  filter.type = 'bandpass'
+  filter.frequency.value = 340
+  filter.Q.value = 3.2
+  g.gain.setValueAtTime(0.12, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.18)
+  osc.connect(filter)
+  filter.connect(g)
+  g.connect(sfxGain)
+  osc.start(now)
+  osc.stop(now + 0.19)
+}
+
+/** Gentle Ghibli temple-lantern chime when landing on a pendulum lantern. */
+export function playLanternChime(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  for (const [freq, amp] of [
+    [784, 0.11],
+    [1175, 0.05],
+  ]) {
+    const osc = ctx.createOscillator()
+    const g = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(freq, now)
+    g.gain.setValueAtTime(amp, now)
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.48)
+    osc.connect(g)
+    g.connect(sfxGain)
+    osc.start(now)
+    osc.stop(now + 0.5)
+  }
+}
+
+/** Soft wooden-copper gear tick when stepping onto a vertical gear wheel. */
+export function playGearTick(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const g = ctx.createGain()
+  osc.type = 'triangle'
+  osc.frequency.setValueAtTime(210, now)
+  osc.frequency.exponentialRampToValueAtTime(95, now + 0.07)
+  g.gain.setValueAtTime(0.14, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.08)
+  osc.connect(g)
+  g.connect(sfxGain)
+  osc.start(now)
+  osc.stop(now + 0.09)
+}
+
+/** Gentle Ghibli sanctuary wind-chime arpeggio when first arriving at a Catch Deck (125/250/375 m). */
+export function playWindChime(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const notes = [880, 1174.66, 1318.51, 1760]
+  notes.forEach((freq, idx) => {
+    const start = now + idx * 0.085
+    const osc = ctx.createOscillator()
+    const g = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(freq, start)
+    g.gain.setValueAtTime(0.08, start)
+    g.gain.exponentialRampToValueAtTime(0.0006, start + 0.72)
+    osc.connect(g)
+    g.connect(sfxGain!)
+    osc.start(start)
+    osc.stop(start + 0.75)
+  })
+}
+
 export function updateAudioFrame(
   dt: number,
   playing: boolean,
@@ -285,11 +394,21 @@ export function updateAudioFrame(
   if (ctx == null || windGain == null || windFilter == null) return
   const h = Math.max(0, Math.min(1, heightRatio))
   const g = Math.max(0, Math.min(1, gustIntensity))
-  // Wind bed target: 0.05 at 0%, 0.25 at 50%, 0.45 at 100%, +0.35 during bigFall, +0.32 during crosswind gust
-  const target = playing ? Math.min(1, 0.05 + 0.4 * h + (bigFall ? 0.35 : 0) + g * 0.32) : 0
+  // Wind bed target: valley breeze (z1) -> mid climb -> summit wind howl (z4), + bigFall & crosswind gust
+  const target = playing ? Math.min(1, 0.05 + 0.42 * h + (bigFall ? 0.35 : 0) + g * 0.32) : 0
   currentWindGain = target
   windGain.gain.value = target
-  windFilter.frequency.value = 340 + 500 * h + (bigFall ? 650 : 0) + g * 720
+  windFilter.frequency.value = 320 + 560 * h + (bigFall ? 650 : 0) + g * 720
+
+  // Smooth altitude crossfades for z2 mill hum (peaks ~0.32) & z3/z4 open-sky resonance (peaks ~0.68)
+  if (millHumGain) {
+    const millBell = Math.exp(-Math.pow((h - 0.32) / 0.16, 2))
+    millHumGain.gain.value = playing ? millBell * 0.055 : 0
+  }
+  if (skyAirGain) {
+    const skyBell = Math.exp(-Math.pow((h - 0.68) / 0.22, 2))
+    skyAirGain.gain.value = playing ? skyBell * 0.032 : 0
+  }
 
   if (playing && movingOnGround) {
     stepTimer -= dt

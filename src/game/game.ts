@@ -37,11 +37,15 @@ import { setLang, t } from '../ui/strings.ts'
 import {
   playBounceTwang,
   playCrumbleCrack,
+  playGearTick,
   playGondolaBell,
   playJump,
   playLand,
+  playLanternChime,
   playMantle,
   playSteamHiss,
+  playWindChime,
+  playWoodCreak,
   setFocusAudio,
   syncAudioSettings,
 } from '../audio/engine.ts'
@@ -122,6 +126,14 @@ class Game {
   modifiers: ChallengeModifiers = { ...DEFAULT_MODIFIERS }
   /** Highest unlocked relaxed checkpoint index (-1 = none, 0 = 125m, 1 = 250m, 2 = 375m). */
   checkpointIndex = -1
+  readonly atmosphere = {
+    fogHex: '#ecd8c2',
+    skyTopHex: '#6eb1eb',
+    starOpacity: 0,
+    zone: 'z1' as 'z1' | 'z2' | 'z3' | 'z4',
+  }
+  private lastSculpturalBody: string | null = null
+  private visitedSanctuaries = new Set<number>()
 
   constructor() {
     this.level = loadLevel(currentLevelId())
@@ -286,6 +298,26 @@ class Game {
     this.controller?.onEnterPlaying()
     this.toast(t('quickRestartToast'))
     this.log('quickRestart', { count: this.records.restartCount })
+  }
+
+  /** Optional Vista Look (V key): safely glances toward the summit/next landmark when grounded & nearly stationary. */
+  triggerVistaLook(): boolean {
+    if (this.snapshot.state !== 'PLAYING' || this.port == null || this.cameraRig == null || this.controller == null) return false
+    if (!this.port.isGroundedRaw || this.controller.moveSpeed > 0.8) return false
+    const feet = this.port.position
+    const finish = this.level.data.platforms.find((p) => p.id === this.level.data.finish)
+    const tx = finish ? finish.pos[0] : 78
+    const ty = finish ? finish.pos[1] : this.level.summitM
+    const tz = finish ? finish.pos[2] : -6.7
+    const dx = tx - feet.x
+    const dy = ty - (feet.y + 1.5)
+    const dz = tz - feet.z
+    const horiz = Math.max(1, Math.hypot(dx, dz))
+    const targetYaw = Math.atan2(-dx, -dz)
+    const targetPitch = Math.atan2(dy, horiz)
+    this.cameraRig.startVistaLook(targetYaw, targetPitch, this.reducedMotion)
+    this.log('vistaLook', { target: [tx, ty, tz] })
+    return true
   }
 
   /** Return to highest unlocked checkpoint in Relaxed (Santai) mode. */
@@ -493,7 +525,7 @@ class Game {
     if (this.worldReady && this.modelReady) this.dispatch({ type: 'loaded', worldReady: true })
   }
 
-  // ---- per-frame challenge physics (Tahap 1–3) -----------------------------------------------------
+  // ---- per-frame challenge physics (Tahap 1â€“3) -----------------------------------------------------
 
   stepChallenges(simDt: number): void {
     if (this.level.id !== 'main' || this.port == null || this.controller == null) return
@@ -555,6 +587,20 @@ class Game {
     this.controller.onSlippery = onSlippery
     if (!onSlippery) this.controller.slipperySlide.set(0, 0, 0)
 
+    // 2b. Subtle sculptural surface audio cues on first step onto bridge planks, pendulum lanterns, or vertical gear treads
+    const gb = this.controller.groundBody
+    if (gb !== this.lastSculpturalBody) {
+      if (gb != null) {
+        if (gb.includes('rope-bridge-plank')) playWoodCreak()
+        else if (gb.includes('pendulum-lantern')) playLanternChime()
+        else if (gb.includes('vertical-gear')) playGearTick()
+      }
+      this.lastSculpturalBody = gb
+    }
+    if (this.cameraRig?.vistaActive && this.controller.moveSpeed > 0.8) {
+      this.cameraRig.cancelVistaLook()
+    }
+
     // 3. Crosswind Gust push (z4 or Badai Konstan) with upwind shelter raycast
     if (this.challenges.windPhase === 'gust') {
       const gx = Math.cos(this.challenges.windAngle)
@@ -580,6 +626,7 @@ class Game {
           this.checkpointIndex = i
           this.toast(t('checkpointUnlocked').replace('{n}', RELAXED_CHECKPOINTS[i].label))
           this.log('checkpointUnlocked', { index: i, label: RELAXED_CHECKPOINTS[i].label })
+          playWindChime()
           break
         }
       }
@@ -655,6 +702,8 @@ class Game {
     this.motion.reset()
     this.challenges.reset()
     this.checkpointIndex = -1
+    this.lastSculpturalBody = null
+    this.visitedSanctuaries.clear()
     this.controller?.resetRun(this.spawn, this.spawnYaw, false)
     if (this.visual) this.controller?.applyFacing(this.visual)
     this.applyModifierEffects()

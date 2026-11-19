@@ -81,6 +81,7 @@ export const useUi = create<UiStore>(() => ({
     windSheltered: false,
     splits: { z1: null, z2: null, z3: null, z4: null },
     checkpointLabel: null,
+    bestHeightM: 0,
     tick: 0,
   },
   toasts: [],

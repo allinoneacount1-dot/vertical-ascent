@@ -67,6 +67,16 @@ export class CameraRig {
   private frameDt = 0
   private side = 0
   private recentre: { from: number; to: number; fromPitch: number; t: number } | null = null
+  private vista: {
+    origYaw: number
+    origPitch: number
+    targetYaw: number
+    targetPitch: number
+    elapsed: number
+    inS: number
+    holdS: number
+    outS: number
+  } | null = null
   private readonly options: CharacterCameraBehaviorOptions
 
   lastHit: number | null = null
@@ -98,6 +108,7 @@ export class CameraRig {
     this.behavior.rotationYaw = yaw
     this.behavior.rotationPitch = pitch
     this.recentre = null
+    this.vista = null
     this.smoothed = null
   }
 
@@ -106,6 +117,7 @@ export class CameraRig {
   }
 
   startRecentre(facingYaw: number, reducedMotion: boolean): void {
+    this.vista = null
     const from = this.behavior.rotationYaw
     let to = facingYaw
     to = from + Math.atan2(Math.sin(to - from), Math.cos(to - from))
@@ -114,6 +126,33 @@ export class CameraRig {
       return
     }
     this.recentre = { from, to, fromPitch: this.behavior.rotationPitch, t: 0 }
+  }
+
+  /** Brief optional Vista Look (V key): smoothly pans toward a landmark/summit then returns cleanly. */
+  startVistaLook(targetYaw: number, targetPitch: number, reducedMotion: boolean): void {
+    const origYaw = this.behavior.rotationYaw
+    const origPitch = this.behavior.rotationPitch
+    const shortestTargetYaw = origYaw + Math.atan2(Math.sin(targetYaw - origYaw), Math.cos(targetYaw - origYaw))
+    const clampedPitch = MathUtils.clamp(targetPitch, CAMERA.minPitch, CAMERA.maxPitch)
+    this.recentre = null
+    this.vista = {
+      origYaw,
+      origPitch,
+      targetYaw: shortestTargetYaw,
+      targetPitch: clampedPitch,
+      elapsed: 0,
+      inS: reducedMotion ? 0.05 : 0.45,
+      holdS: 1.35,
+      outS: reducedMotion ? 0.05 : 0.45,
+    }
+  }
+
+  cancelVistaLook(): void {
+    this.vista = null
+  }
+
+  get vistaActive(): boolean {
+    return this.vista != null
   }
 
   drainInput(): void {
@@ -139,6 +178,7 @@ export class CameraRig {
     const dYaw = b.yawReader.get()
     const dPitch = b.pitchReader.get()
     if (dYaw === 0 && dPitch === 0) return
+    this.vista = null
     this.behavior.rotationYaw += dYaw * this.sensitivity
     const pitch = this.behavior.rotationPitch + dPitch * this.sensitivity * (this.invertY ? -1 : 1)
     this.behavior.rotationPitch = MathUtils.clamp(pitch, CAMERA.minPitch, CAMERA.maxPitch)
@@ -159,6 +199,28 @@ export class CameraRig {
       this.behavior.rotationYaw = r.from + (r.to - r.from) * e
       this.behavior.rotationPitch = r.fromPitch + (CAMERA.defaultPitch - r.fromPitch) * e
       if (r.t >= 1) this.recentre = null
+    } else if (this.vista != null) {
+      const v = this.vista
+      v.elapsed += dt
+      const total = v.inS + v.holdS + v.outS
+      if (v.elapsed < v.inS) {
+        const u = Math.min(1, v.elapsed / Math.max(0.01, v.inS))
+        const e = u * u * (3 - 2 * u)
+        this.behavior.rotationYaw = v.origYaw + (v.targetYaw - v.origYaw) * e
+        this.behavior.rotationPitch = v.origPitch + (v.targetPitch - v.origPitch) * e
+      } else if (v.elapsed < v.inS + v.holdS) {
+        this.behavior.rotationYaw = v.targetYaw
+        this.behavior.rotationPitch = v.targetPitch
+      } else if (v.elapsed < total) {
+        const u = Math.min(1, (v.elapsed - v.inS - v.holdS) / Math.max(0.01, v.outS))
+        const e = u * u * (3 - 2 * u)
+        this.behavior.rotationYaw = v.targetYaw + (v.origYaw - v.targetYaw) * e
+        this.behavior.rotationPitch = v.targetPitch + (v.origPitch - v.targetPitch) * e
+      } else {
+        this.behavior.rotationYaw = v.origYaw
+        this.behavior.rotationPitch = v.origPitch
+        this.vista = null
+      }
     }
 
     if (performance.now() < this.suppressUntil) this.dropRotationInput()

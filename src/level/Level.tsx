@@ -15,6 +15,9 @@ import { CameraRig } from '../camera/camera-rig.ts'
 import { buildMergedStatics, colliderSize, localPieces, materialFor } from './procedural.ts'
 import { SummitFeatures } from './Summit.tsx'
 import { ChallengeObjects } from './ChallengeObjects.tsx'
+import { SculpturalObjects } from './SculpturalObjects.tsx'
+import { WorldVista } from './WorldVista.tsx'
+import { CloudSea } from './CloudSea.tsx'
 import { PersonalBestFlag } from './PersonalBestFlag.tsx'
 
 const ROTATION_ORDER = 'YXZ'
@@ -219,6 +222,9 @@ export function Level({ level }: { level: LoadedLevel }) {
           <Mover key={e.id} entry={e} prefab={prefabOf(e)} />
         ))}
       <ChallengeObjects level={level} />
+      <SculpturalObjects level={level} />
+      <WorldVista level={level} />
+      <CloudSea level={level} />
       <PersonalBestFlag level={level} />
       <FinishSensor level={level} />
       <SummitFeatures level={level} />

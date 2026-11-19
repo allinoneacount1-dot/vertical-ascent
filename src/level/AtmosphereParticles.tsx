@@ -12,7 +12,7 @@ const SPAN_Y = 45
 
 const COL_LOW = new Color('#ffe7b0')
 const COL_MID = new Color('#eef7ff')
-const COL_HIGH = new Color('#cde4ff')
+const COL_HIGH = new Color('#ffe699')
 const COL_GUST = new Color('#ffffff')
 const tmpColor = new Color()
 
@@ -92,12 +92,14 @@ export function AtmosphereParticles() {
     const windSpeed = 1.4 + hRatio * 4.2 + gust * 18.0
     const t = state.clock.elapsedTime
 
+    const heightM = at != null ? Math.max(0, at.y - game.spawn.y) : game.run.heightM
+    const fireflyBoost = Math.max(0, Math.min(1, (heightM - 380) / 80))
     if (hRatio < 0.5) tmpColor.copy(COL_LOW).lerp(COL_MID, hRatio * 2)
     else tmpColor.copy(COL_MID).lerp(COL_HIGH, (hRatio - 0.5) * 2)
     if (gust > 0.05) tmpColor.lerp(COL_GUST, Math.min(1, gust * 0.85))
     mat.color.copy(tmpColor)
-    mat.opacity = Math.min(0.95, 0.42 + hRatio * 0.32 + gust * 0.42)
-    mat.size = 0.42 + gust * 0.48
+    mat.opacity = Math.min(0.95, 0.42 + hRatio * 0.32 + fireflyBoost * 0.22 + gust * 0.42)
+    mat.size = 0.42 + fireflyBoost * 0.26 + gust * 0.48
 
     const attr = geom.getAttribute('position') as BufferAttribute
     const arr = attr.array as Float32Array

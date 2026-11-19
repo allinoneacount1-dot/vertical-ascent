@@ -81,6 +81,32 @@ function Hud() {
           »
         </div>
       )}
+      {!freeRoam && hud.targetM > 0 && (
+        <div className="hud-elevation" data-testid="hud-elevation-map" aria-hidden="true">
+          <div className="elev-track">
+            <div className="elev-fill" style={{ height: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }} />
+            {[125, 250, 375].map((m) => (
+              <span
+                key={m}
+                className="elev-tick"
+                style={{ bottom: `${Math.min(100, (m / hud.targetM) * 100)}%` }}
+                title={`Catch Deck ${m}m`}
+              />
+            ))}
+            {game.records.bestHeightM > 1 && (
+              <span
+                className="elev-pb"
+                style={{ bottom: `${Math.min(100, (game.records.bestHeightM / hud.targetM) * 100)}%` }}
+              />
+            )}
+            <span
+              className="elev-dot"
+              style={{ bottom: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }}
+            />
+          </div>
+          <span className="elev-label">V</span>
+        </div>
+      )}
       {hud.lostM != null && (
         <div className="hud-block">
           <span className="hud-value" data-testid="hud-lost">

@@ -404,3 +404,71 @@ canvas:focus {
     color: CanvasText;
   }
 }
+
+.hud-elevation {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.elev-track {
+  position: relative;
+  width: 8px;
+  height: 220px;
+  border-radius: 999px;
+  background: rgba(14, 19, 27, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.elev-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: linear-gradient(to top, #72eac0, #ffd166);
+}
+
+.elev-tick {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.elev-pb {
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  height: 2px;
+  background: #ff6b6b;
+}
+
+.elev-dot {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, 50%);
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #0e131b;
+  box-shadow: 0 0 8px rgba(255, 209, 102, 0.9);
+}
+
+.elev-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(14, 19, 27, 0.65);
+  padding: 2px 6px;
+  border-radius: 6px;
+}

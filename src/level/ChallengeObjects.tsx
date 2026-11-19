@@ -339,9 +339,21 @@ function SteamPipe({ spec }: { spec: ChallengeSpec }) {
   )
 }
 
-/** Partial Catch Deck at zone transitions (125 m, 250 m, 375 m) with warm Ghibli lanterns. */
+/** Partial Catch Deck Mini-Sanctuary at zone transitions (125 m, 250 m, 375 m) with warm lanterns, wooden bench & swaying prayer flags. */
 function CatchDeck({ spec }: { spec: ChallengeSpec }) {
+  const flagsRef = useRef<Group>(null)
   const [w, h, d] = spec.size
+  const flagColors = ['#e6644c', '#f5cf6b', '#6ab5d9', '#f2efe6', '#7eb87a']
+
+  useFrame((state) => {
+    const g = flagsRef.current
+    if (!g) return
+    const t = state.clock.elapsedTime
+    for (let i = 0; i < g.children.length; i++) {
+      g.children[i].rotation.x = Math.sin(t * 3.1 + i * 0.7) * 0.22
+    }
+  })
+
   return (
     <>
       <group position={spec.pos}>
@@ -353,14 +365,52 @@ function CatchDeck({ spec }: { spec: ChallengeSpec }) {
           <boxGeometry args={[w * 0.94, h * 0.5, d * 0.94]} />
           <meshStandardMaterial color="#7a7268" roughness={0.92} />
         </mesh>
+        {/* Sanctuary corner lantern posts */}
         {([-1, 1] as const).map((sx) =>
           ([-1, 1] as const).map((sz) => (
-            <mesh key={`${sx},${sz}`} position={[sx * (w / 2 - 0.5), h / 2 + 0.35, sz * (d / 2 - 0.5)]}>
-              <boxGeometry args={[0.35, 0.7, 0.35]} />
-              <meshStandardMaterial color="#fff3cc" emissive="#ffc857" emissiveIntensity={1.2} roughness={0.35} />
-            </mesh>
+            <group key={`${sx},${sz}`} position={[sx * (w / 2 - 0.55), h / 2, sz * (d / 2 - 0.55)]}>
+              <mesh position={[0, 1.05, 0]} castShadow>
+                <cylinderGeometry args={[0.07, 0.09, 2.1, 6]} />
+                <meshStandardMaterial color="#6e4b32" roughness={0.9} />
+              </mesh>
+              <mesh position={[0, 2.25, 0]}>
+                <boxGeometry args={[0.36, 0.48, 0.36]} />
+                <meshStandardMaterial color="#fff3cc" emissive="#ffc857" emissiveIntensity={1.35} roughness={0.35} />
+              </mesh>
+            </group>
           )),
         )}
+        {/* Sanctuary wooden bench (non-collider decor tucked at back edge) */}
+        <group position={[0, h / 2, -d / 2 + 1.15]}>
+          <mesh position={[0, 0.46, 0]} castShadow receiveShadow>
+            <boxGeometry args={[2.6, 0.12, 0.65]} />
+            <meshStandardMaterial color="#9c6b43" roughness={0.85} />
+          </mesh>
+          <mesh position={[0, 0.88, -0.26]} rotation={[-0.14, 0, 0]} castShadow>
+            <boxGeometry args={[2.6, 0.44, 0.1]} />
+            <meshStandardMaterial color="#875a36" roughness={0.86} />
+          </mesh>
+          {([-1.0, 1.0] as const).map((lx) => (
+            <mesh key={lx} position={[lx, 0.22, 0]}>
+              <boxGeometry args={[0.14, 0.44, 0.55]} />
+              <meshStandardMaterial color="#5e3e26" roughness={0.9} />
+            </mesh>
+          ))}
+        </group>
+        {/* Swaying Ghibli festival cloth flags strung between back posts */}
+        <group ref={flagsRef} position={[0, h / 2 + 2.05, -d / 2 + 0.55]}>
+          {Array.from({ length: 9 }, (_, i) => {
+            const u = (i + 0.5) / 9
+            const x = (u - 0.5) * (w - 1.5)
+            const sag = Math.sin(u * Math.PI) * 0.42
+            return (
+              <mesh key={i} position={[x, -0.25 - sag, 0]}>
+                <boxGeometry args={[0.52, 0.52, 0.04]} />
+                <meshStandardMaterial color={flagColors[i % flagColors.length]} roughness={0.82} />
+              </mesh>
+            )
+          })}
+        </group>
       </group>
       <BvhPhysicsBody>
         <mesh position={spec.pos}>

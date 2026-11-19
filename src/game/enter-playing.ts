@@ -118,6 +118,11 @@ export function installPlayGuards(canvas: HTMLCanvasElement): void {
       game.challenges.focusHeld = true
       return
     }
+    // Optional Vista Look via V key (glances toward summit when stationary & grounded)
+    if (e.code === 'KeyV' && game.snapshot.state === 'PLAYING') {
+      game.triggerVistaLook()
+      return
+    }
     // Relaxed mode checkpoint return via C key
     if (e.code === 'KeyC' && game.snapshot.state === 'PLAYING' && game.challengeMode === 'relaxed') {
       game.returnToCheckpoint()
