@@ -1,8 +1,8 @@
-// Procedural stylized Ghibli/anime CanvasTextures + bump maps (zero external files, cached once per surface kind).
-// Safe in headless/Node environments where document is unavailable (returns null maps).
+// Procedural stylized Genshin Impact / Studio Ghibli 512px CanvasTextures + bump maps (cached once per surface kind).
+// Zero external image files; safe in headless/Node environments where document is unavailable (returns null maps).
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 
-export type SurfaceStyle = 'stone' | 'facade' | 'metal' | 'moss' | 'marble' | 'concrete' | 'hazard' | 'trim'
+export type SurfaceStyle = 'cliff' | 'stone' | 'facade' | 'metal' | 'moss' | 'marble' | 'concrete' | 'hazard' | 'trim'
 
 type TexturePair = { map: CanvasTexture; bumpMap: CanvasTexture }
 const cache = new Map<string, TexturePair>()
@@ -24,7 +24,6 @@ function makeCanvas(size = 512): [HTMLCanvasElement, CanvasRenderingContext2D] |
   c.height = size
   const g = c.getContext('2d')
   if (!g) return null
-  g.scale(size / 256, size / 256)
   return [c, g]
 }
 
@@ -39,225 +38,242 @@ function finalize(c: HTMLCanvasElement, repeatX: number, repeatY: number, isColo
   return t
 }
 
-/** Generates a stylized painted color texture and matching height/bump map for a given surface style. */
+/** Generates a 512px stylized painterly color texture and matching height/bump map for a given surface style. */
 export function getSurfaceTextures(style: SurfaceStyle): TexturePair | null {
   const existing = cache.get(style)
   if (existing) return existing
-  const col = makeCanvas(512)
-  const bmp = makeCanvas(512)
+  const S = 512
+  const col = makeCanvas(S)
+  const bmp = makeCanvas(S)
   if (!col || !bmp) return null
   const [cc, cg] = col
   const [bc, bg] = bmp
   const rng = mulberry32(style.split('').reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7))
 
-  // Neutral white base so MeshStandardMaterial.color tints it cleanly
-  cg.fillStyle = '#eceae4'
-  cg.fillRect(0, 0, 256, 256)
+  // Neutral sunlit base so MeshStandardMaterial.color tints cleanly
+  cg.fillStyle = '#eee8dc'
+  cg.fillRect(0, 0, S, S)
   bg.fillStyle = '#808080'
-  bg.fillRect(0, 0, 256, 256)
+  bg.fillRect(0, 0, S, S)
 
-  if (style === 'stone') {
-    // Hand-painted warm sunlit flagstones (Ghibli cobble)
-    const rows = 4
-    const rowH = 256 / rows
+  if (style === 'cliff' || style === 'facade') {
+    // Genshin Impact (Mondstadt / Liyue) painterly stratified limestone & sandstone cliff rock
+    cg.fillStyle = '#e5d4ba'
+    cg.fillRect(0, 0, S, S)
+    // Horizontal sedimentary strata bands
+    let y = 0
+    while (y < S) {
+      const bandH = 26 + rng() * 54
+      const tone = 202 + Math.round((rng() - 0.5) * 34)
+      const warmG = Math.max(0, tone - 14 + Math.round((rng() - 0.5) * 10))
+      const warmB = Math.max(0, tone - 34 + Math.round((rng() - 0.5) * 12))
+      cg.fillStyle = `rgb(${tone},${warmG},${warmB})`
+      cg.fillRect(0, y, S, bandH)
+      // Sunlit upper ridge highlight on each stratum
+      cg.fillStyle = 'rgba(255,248,228,0.28)'
+      cg.fillRect(0, y, S, 5)
+      // Deep shadow under ledge
+      cg.fillStyle = 'rgba(72,56,44,0.24)'
+      cg.fillRect(0, y + bandH - 4, S, 4)
+
+      const bv = Math.round(135 + (rng() - 0.5) * 55)
+      bg.fillStyle = `rgb(${bv},${bv},${bv})`
+      bg.fillRect(0, y, S, bandH)
+      bg.fillStyle = '#383838'
+      bg.fillRect(0, y + bandH - 4, S, 4)
+      y += bandH
+    }
+    // Painterly angular rock facets
+    for (let i = 0; i < 64; i++) {
+      const fx = rng() * S
+      const fy = rng() * S
+      const fw = 28 + rng() * 76
+      const fh = 18 + rng() * 48
+      cg.fillStyle = rng() > 0.5 ? 'rgba(255,246,225,0.16)' : 'rgba(96,74,56,0.16)'
+      cg.beginPath()
+      cg.moveTo(fx, fy)
+      cg.lineTo(fx + fw, fy + (rng() - 0.5) * 14)
+      cg.lineTo(fx + fw * 0.85, fy + fh)
+      cg.lineTo(fx - fw * 0.1, fy + fh * 0.9)
+      cg.closePath()
+      cg.fill()
+    }
+    // Vertical cliff fissures & cracks
+    cg.strokeStyle = 'rgba(66,52,40,0.34)'
+    bg.strokeStyle = '#242424'
+    for (let i = 0; i < 18; i++) {
+      let cx = rng() * S
+      let cy = rng() * S * 0.4
+      const segs = 4 + Math.floor(rng() * 5)
+      cg.lineWidth = 1.5 + rng() * 2.2
+      bg.lineWidth = 3
+      cg.beginPath()
+      bg.moveTo(cx, cy)
+      bg.beginPath()
+      bg.moveTo(cx, cy)
+      for (let s = 0; s < segs; s++) {
+        cx += (rng() - 0.5) * 28
+        cy += 24 + rng() * 38
+        cg.lineTo(cx, cy)
+        bg.lineTo(cx, cy)
+      }
+      cg.stroke()
+      bg.stroke()
+    }
+    // Subtle moss streaks tucked into top crevices
+    for (let i = 0; i < 28; i++) {
+      cg.fillStyle = 'rgba(104,158,88,0.28)'
+      cg.beginPath()
+      cg.ellipse(rng() * S, rng() * S * 0.35, 10 + rng() * 22, 4 + rng() * 8, (rng() - 0.5) * 0.4, 0, Math.PI * 2)
+      cg.fill()
+    }
+  } else if (style === 'stone') {
+    // Hand-painted warm sunlit ancient temple flagstones
+    const rows = 6
+    const rowH = S / rows
     for (let r = 0; r < rows; r++) {
-      const cols = 4
-      const off = (r % 2) * 32
-      const cellW = 256 / cols
+      const cols = 6
+      const off = (r % 2) * (S / cols / 2)
+      const cellW = S / cols
       for (let i = -1; i <= cols; i++) {
         const x = i * cellW + off
         const y = r * rowH
-        const shade = Math.round(224 + (rng() - 0.5) * 26)
-        const warm = Math.round(shade - 6 + rng() * 6)
-        cg.fillStyle = `rgb(${shade},${warm},${Math.max(0, warm - 10)})`
-        cg.fillRect(x + 3, y + 3, cellW - 6, rowH - 6)
-        // painterly brush highlight
-        cg.fillStyle = 'rgba(255,252,240,0.22)'
-        cg.fillRect(x + 5, y + 5, cellW - 14, 10)
-        // subtle mossy fleck on corners
-        if (rng() > 0.55) {
-          cg.fillStyle = 'rgba(116,154,102,0.26)'
+        const shade = Math.round(224 + (rng() - 0.5) * 28)
+        const warm = Math.round(shade - 7 + rng() * 7)
+        cg.fillStyle = `rgb(${shade},${warm},${Math.max(0, warm - 14)})`
+        cg.fillRect(x + 4, y + 4, cellW - 8, rowH - 8)
+        cg.fillStyle = 'rgba(255,252,240,0.26)'
+        cg.fillRect(x + 7, y + 7, cellW - 18, 14)
+        if (rng() > 0.52) {
+          cg.fillStyle = 'rgba(108,158,92,0.28)'
           cg.beginPath()
-          cg.arc(x + 6, y + 6, 5 + rng() * 5, 0, Math.PI * 2)
+          cg.arc(x + 8, y + 8, 7 + rng() * 8, 0, Math.PI * 2)
           cg.fill()
         }
-        const bVal = Math.round(145 + (rng() - 0.5) * 30)
+        const bVal = Math.round(145 + (rng() - 0.5) * 34)
         bg.fillStyle = `rgb(${bVal},${bVal},${bVal})`
-        bg.fillRect(x + 3, y + 3, cellW - 6, rowH - 6)
+        bg.fillRect(x + 4, y + 4, cellW - 8, rowH - 8)
       }
     }
-    // Mortar lines
-    cg.strokeStyle = 'rgba(72,62,52,0.34)'
-    cg.lineWidth = 3
-    bg.strokeStyle = '#303030'
-    bg.lineWidth = 4
+    cg.strokeStyle = 'rgba(68,56,46,0.38)'
+    cg.lineWidth = 4
+    bg.strokeStyle = '#282828'
+    bg.lineWidth = 5
     for (let r = 0; r <= rows; r++) {
       const y = r * rowH
-      cg.beginPath(); cg.moveTo(0, y); cg.lineTo(256, y); cg.stroke()
-      bg.beginPath(); bg.moveTo(0, y); bg.lineTo(256, y); bg.stroke()
-    }
-  } else if (style === 'facade') {
-    // Stylized anime city building facade: warm plaster + sunlit/sky-reflected windows
-    cg.fillStyle = '#e7e2d8'
-    cg.fillRect(0, 0, 256, 256)
-    // Soft horizontal floor bands
-    for (let y = 0; y < 256; y += 32) {
-      cg.fillStyle = y % 64 === 0 ? 'rgba(95,86,78,0.14)' : 'rgba(255,250,242,0.18)'
-      cg.fillRect(0, y, 256, 4)
-      bg.fillStyle = '#606060'
-      bg.fillRect(0, y, 256, 3)
-    }
-    // Window grid
-    for (let row = 0; row < 4; row++) {
-      for (let colIdx = 0; colIdx < 4; colIdx++) {
-        const wx = colIdx * 64 + 14
-        const wy = row * 64 + 12
-        const lit = rng() > 0.62
-        // Window sill & frame
-        cg.fillStyle = '#8b847c'
-        cg.fillRect(wx - 2, wy - 2, 40, 40)
-        // Glass: warm amber interior or soft sky reflection
-        const grad = cg.createLinearGradient(wx, wy, wx, wy + 36)
-        if (lit) {
-          grad.addColorStop(0, '#ffe8a3')
-          grad.addColorStop(1, '#f4b860')
-        } else {
-          grad.addColorStop(0, '#7ea8cc')
-          grad.addColorStop(1, '#4c6d8a')
-        }
-        cg.fillStyle = grad
-        cg.fillRect(wx, wy, 36, 36)
-        // Diagonal anime glass sheen
-        cg.fillStyle = 'rgba(255,255,255,0.28)'
-        cg.beginPath()
-        cg.moveTo(wx + 4, wy)
-        cg.lineTo(wx + 16, wy)
-        cg.lineTo(wx, wy + 22)
-        cg.lineTo(wx, wy + 10)
-        cg.closePath()
-        cg.fill()
-        // Window mullion
-        cg.fillStyle = 'rgba(70,68,66,0.45)'
-        cg.fillRect(wx + 17, wy, 2, 36)
-        cg.fillRect(wx, wy + 17, 36, 2)
-        bg.fillStyle = '#383838'
-        bg.fillRect(wx, wy, 36, 36)
-      }
+      cg.beginPath(); cg.moveTo(0, y); cg.lineTo(S, y); cg.stroke()
+      bg.beginPath(); bg.moveTo(0, y); bg.lineTo(S, y); bg.stroke()
     }
   } else if (style === 'metal') {
-    // Painted industrial steel plates with rivets and diagonal grip
-    cg.fillStyle = '#dce2e8'
-    cg.fillRect(0, 0, 256, 256)
-    for (let y = 0; y < 256; y += 64) {
-      for (let x = 0; x < 256; x += 64) {
-        const v = Math.round(212 + (rng() - 0.5) * 20)
-        cg.fillStyle = `rgb(${v},${v + 4},${v + 8})`
-        cg.fillRect(x + 2, y + 2, 60, 60)
-        cg.strokeStyle = 'rgba(48,58,70,0.35)'
+    // Weathered ancient bronze & brass sky-ruin plates with carved trim
+    cg.fillStyle = '#dcd7c9'
+    cg.fillRect(0, 0, S, S)
+    for (let y = 0; y < S; y += 128) {
+      for (let x = 0; x < S; x += 128) {
+        const v = Math.round(210 + (rng() - 0.5) * 22)
+        cg.fillStyle = `rgb(${v + 4},${v},${v - 8})`
+        cg.fillRect(x + 4, y + 4, 120, 120)
+        cg.strokeStyle = 'rgba(62,58,52,0.34)'
+        cg.lineWidth = 3
+        cg.strokeRect(x + 4, y + 4, 120, 120)
+        cg.strokeStyle = 'rgba(245,210,126,0.3)'
         cg.lineWidth = 2
-        cg.strokeRect(x + 2, y + 2, 60, 60)
+        cg.strokeRect(x + 14, y + 14, 100, 100)
         bg.fillStyle = '#9a9a9a'
-        bg.fillRect(x + 2, y + 2, 60, 60)
-        // Rivets
-        for (const [rx, ry] of [[8, 8], [56, 8], [8, 56], [56, 56]]) {
-          cg.fillStyle = 'rgba(52,64,78,0.45)'
-          cg.beginPath(); cg.arc(x + rx, y + ry, 2.5, 0, Math.PI * 2); cg.fill()
-          bg.fillStyle = '#d8d8d8'
-          bg.beginPath(); bg.arc(x + rx, y + ry, 2.5, 0, Math.PI * 2); bg.fill()
-        }
+        bg.fillRect(x + 4, y + 4, 120, 120)
       }
     }
   } else if (style === 'moss') {
-    // Ghibli painterly sunlit grass & mossy stone
-    cg.fillStyle = '#cfd9c6'
-    cg.fillRect(0, 0, 256, 256)
-    for (let i = 0; i < 420; i++) {
-      const x = rng() * 256
-      const y = rng() * 256
-      const r = 4 + rng() * 14
-      const gCol = Math.round(185 + rng() * 45)
-      const rCol = Math.round(gCol - 28 + rng() * 18)
-      const bCol = Math.round(gCol - 44 + rng() * 16)
-      cg.fillStyle = `rgba(${rCol},${gCol},${bCol},0.35)`
+    // Vibrant Genshin / Ghibli sunlit emerald grass & wildflowers
+    cg.fillStyle = '#bdd9a8'
+    cg.fillRect(0, 0, S, S)
+    for (let i = 0; i < 820; i++) {
+      const x = rng() * S
+      const y = rng() * S
+      const r = 6 + rng() * 20
+      const gCol = Math.round(182 + rng() * 52)
+      const rCol = Math.round(gCol - 34 + rng() * 20)
+      const bCol = Math.round(gCol - 54 + rng() * 18)
+      cg.fillStyle = `rgba(${rCol},${gCol},${bCol},0.36)`
       cg.beginPath()
-      cg.ellipse(x, y, r, r * 0.55, rng() * Math.PI, 0, Math.PI * 2)
+      cg.ellipse(x, y, r, r * 0.5, rng() * Math.PI, 0, Math.PI * 2)
       cg.fill()
-      const bv = Math.round(115 + rng() * 55)
-      bg.fillStyle = `rgba(${bv},${bv},${bv},0.35)`
-      bg.beginPath(); bg.arc(x, y, r * 0.6, 0, Math.PI * 2); bg.fill()
+      const bv = Math.round(112 + rng() * 62)
+      bg.fillStyle = `rgba(${bv},${bv},${bv},0.32)`
+      bg.beginPath(); bg.arc(x, y, r * 0.55, 0, Math.PI * 2); bg.fill()
     }
-    // Tiny warm sunlit wildflowers
-    for (let i = 0; i < 24; i++) {
-      cg.fillStyle = rng() > 0.4 ? 'rgba(255,244,186,0.75)' : 'rgba(255,220,210,0.7)'
+    // Sunlit golden, cream, and sky-blue wildflowers
+    for (let i = 0; i < 64; i++) {
+      const pick = rng()
+      cg.fillStyle =
+        pick > 0.65 ? 'rgba(255,240,152,0.88)' : pick > 0.3 ? 'rgba(255,252,240,0.84)' : 'rgba(155,222,255,0.82)'
       cg.beginPath()
-      cg.arc(rng() * 256, rng() * 256, 2.2, 0, Math.PI * 2)
+      cg.arc(rng() * S, rng() * S, 2.8 + rng() * 2.2, 0, Math.PI * 2)
       cg.fill()
     }
   } else if (style === 'marble') {
-    // Celestial white-gold veined sanctuary marble
-    cg.fillStyle = '#f5f4f0'
-    cg.fillRect(0, 0, 256, 256)
-    for (let i = 0; i < 14; i++) {
-      cg.strokeStyle = i % 3 === 0 ? 'rgba(222,190,118,0.42)' : 'rgba(175,186,202,0.32)'
-      cg.lineWidth = 1 + rng() * 2.5
+    // Celestia ivory-gold veined sanctuary marble with delicate teal rune flecks
+    cg.fillStyle = '#f6f3ec'
+    cg.fillRect(0, 0, S, S)
+    for (let i = 0; i < 24; i++) {
+      cg.strokeStyle = i % 3 === 0 ? 'rgba(226,192,114,0.44)' : 'rgba(154,186,204,0.32)'
+      cg.lineWidth = 1.5 + rng() * 3
       cg.beginPath()
-      let x = rng() * 256
+      let x = rng() * S
       let y = 0
       cg.moveTo(x, y)
-      for (let s = 1; s <= 8; s++) {
-        x += (rng() - 0.5) * 44
-        y = s * 32
+      for (let s = 1; s <= 10; s++) {
+        x += (rng() - 0.5) * 62
+        y = s * (S / 10)
         cg.lineTo(x, y)
       }
       cg.stroke()
     }
-    // Large temple tile seams
-    cg.strokeStyle = 'rgba(180,168,142,0.35)'
-    cg.lineWidth = 2
-    cg.strokeRect(2, 2, 124, 124)
-    cg.strokeRect(130, 2, 124, 124)
-    cg.strokeRect(2, 130, 124, 124)
-    cg.strokeRect(130, 130, 124, 124)
-    bg.strokeStyle = '#505050'
-    bg.lineWidth = 2
-    bg.strokeRect(2, 2, 124, 124)
-    bg.strokeRect(130, 130, 124, 124)
+    cg.strokeStyle = 'rgba(182,166,136,0.38)'
+    cg.lineWidth = 3
+    cg.strokeRect(4, 4, 248, 248)
+    cg.strokeRect(260, 4, 248, 248)
+    cg.strokeRect(4, 260, 248, 248)
+    cg.strokeRect(260, 260, 248, 248)
+    bg.strokeStyle = '#484848'
+    bg.lineWidth = 3
+    bg.strokeRect(4, 4, 248, 248)
+    bg.strokeRect(260, 260, 248, 248)
   } else if (style === 'concrete') {
-    // Sunlit courtyard plaza stone
-    cg.fillStyle = '#d4d8dc'
-    cg.fillRect(0, 0, 256, 256)
-    for (let y = 0; y < 256; y += 32) {
-      for (let x = 0; x < 256; x += 32) {
-        const v = Math.round(205 + (rng() - 0.5) * 18)
-        cg.fillStyle = `rgb(${v},${v + 2},${v + 4})`
-        cg.fillRect(x + 1, y + 1, 30, 30)
+    // Sunlit ancient sanctuary courtyard tiles (warm carved stone, not grey urban concrete)
+    cg.fillStyle = '#dfd8c8'
+    cg.fillRect(0, 0, S, S)
+    for (let y = 0; y < S; y += 64) {
+      for (let x = 0; x < S; x += 64) {
+        const v = Math.round(212 + (rng() - 0.5) * 18)
+        cg.fillStyle = `rgb(${v},${v - 4},${v - 12})`
+        cg.fillRect(x + 2, y + 2, 60, 60)
       }
     }
-    for (let i = 0; i < 200; i++) {
-      const bv = Math.round(110 + rng() * 45)
+    for (let i = 0; i < 300; i++) {
+      const bv = Math.round(110 + rng() * 48)
       bg.fillStyle = `rgba(${bv},${bv},${bv},0.3)`
-      bg.fillRect(rng() * 256, rng() * 256, 4, 4)
+      bg.fillRect(rng() * S, rng() * S, 6, 6)
     }
   } else if (style === 'hazard') {
-    // Crisp painted warning stripes
-    cg.fillStyle = '#e8e8e8'
-    cg.fillRect(0, 0, 256, 256)
+    cg.fillStyle = '#ece6d8'
+    cg.fillRect(0, 0, S, S)
     cg.fillStyle = 'rgba(0,0,0,0.12)'
-    for (let i = -256; i < 512; i += 32) {
+    for (let i = -S; i < S * 2; i += 48) {
       cg.beginPath()
-      cg.moveTo(i, 0); cg.lineTo(i + 16, 0); cg.lineTo(i - 64, 256); cg.lineTo(i - 80, 256)
+      cg.moveTo(i, 0); cg.lineTo(i + 24, 0); cg.lineTo(i - 96, S); cg.lineTo(i - 120, S)
       cg.closePath(); cg.fill()
     }
   } else {
-    // Subtle brushed trim grain
-    for (let i = 0; i < 120; i++) {
+    // Subtle hand-painted carved timber/stone trim grain
+    for (let i = 0; i < 180; i++) {
       const v = Math.round(210 + rng() * 35)
-      cg.fillStyle = `rgba(${v},${v},${v},0.3)`
-      cg.fillRect(0, rng() * 256, 256, 2)
+      cg.fillStyle = `rgba(${v},${v - 4},${v - 10},0.32)`
+      cg.fillRect(0, rng() * S, S, 3)
     }
   }
 
-  const repeat = style === 'concrete' ? 24 : style === 'facade' ? 3 : 1
+  const repeat = style === 'concrete' ? 24 : style === 'cliff' || style === 'facade' ? 2 : 1
   const pair: TexturePair = {
     map: finalize(cc, repeat, repeat, true),
     bumpMap: finalize(bc, repeat, repeat, false),

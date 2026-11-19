@@ -1,7 +1,7 @@
-// Selectable 3D Ghibli Heroes (Fase 6 — Gelombang B):
-// 4 distinct 3D models: Sora (protagonist-f.vrm), Kaze/Victoria (protagonist-g.vrm),
-// Aoi/Vivi (protagonist-e.vrm, normalized 1.12x -> 1.58 m), and Ren (Quaternius Sky Automaton mannequin).
-import { Mesh, MeshStandardMaterial } from 'three'
+// Selectable 3D Heroes (Tahap 3):
+// 4 genuinely distinct 3D character models (3 VRoid CC0 VRM models + 1 stylized Celestia Automaton mannequin),
+// all sharing VRM humanoid skeletons and all 6 UAL1 parkour animations.
+import { Color, Mesh, MeshStandardMaterial } from 'three'
 import type { Object3D } from 'three'
 
 export const HERO_KEY = 'va.hero.v1'
@@ -12,11 +12,11 @@ export type HeroSpec = {
   id: HeroId
   name: string
   title: string
-  modelLabel: string
   swatch: string
+  outfitTint: string
   packBody: string
   packTrim: string
-  scale: number
+  modelScale: number
   isAutomaton?: boolean
 }
 
@@ -24,42 +24,42 @@ export const HEROES: readonly HeroSpec[] = [
   {
     id: 'sora',
     name: 'Sora',
-    title: 'Sky Explorer (VRM Vita)',
-    modelLabel: 'protagonist-f.vrm',
+    title: 'Sky Explorer (VRM F)',
     swatch: '#d8b56a',
+    outfitTint: '#ffffff',
     packBody: '#4b3a2c',
     packTrim: '#d8b56a',
-    scale: 1.0,
+    modelScale: 1,
   },
   {
     id: 'kaze',
-    name: 'Kaze',
-    title: 'Wind Runner (VRM Victoria)',
-    modelLabel: 'protagonist-g.vrm',
+    name: 'Victoria',
+    title: 'Wind Runner (VRM G)',
     swatch: '#5fd4a3',
+    outfitTint: '#ffffff',
     packBody: '#1e4d3b',
     packTrim: '#72eac0',
-    scale: 1.0,
+    modelScale: 1,
   },
   {
     id: 'aoi',
-    name: 'Aoi',
-    title: 'Celestial Traveler (VRM Vivi)',
-    modelLabel: 'protagonist-e.vrm',
+    name: 'Vivi',
+    title: 'Celestial Traveler (VRM E)',
     swatch: '#818cf8',
+    outfitTint: '#ffffff',
     packBody: '#242b57',
     packTrim: '#ffd166',
-    scale: 1.12,
+    modelScale: 1.12,
   },
   {
     id: 'ren',
-    name: 'Ren',
-    title: 'Sky Automaton (Mannequin)',
-    modelLabel: 'automaton-mannequin',
-    swatch: '#f3d9a4',
-    packBody: '#6e2632',
-    packTrim: '#fde68a',
-    scale: 1.0,
+    name: 'Automaton',
+    title: 'Sky Sentinel (Mannequin)',
+    swatch: '#f0c975',
+    outfitTint: '#f2ede0',
+    packBody: '#d8a64e',
+    packTrim: '#58d5b8',
+    modelScale: 1,
     isAutomaton: true,
   },
 ]
@@ -90,12 +90,16 @@ export function saveHeroId(id: HeroId): void {
   }
 }
 
-/** Applies scale normalization, climbing pack palette, and Automaton ceramic/gold finish for Ren. */
+const SKIP_MAT_RE = /(skin|face|eye|brow|lash|mouth|tooth|tongue|body_00)/i
+const tintColor = new Color()
+
+/** Applies the chosen hero's scale, climbing pack palette, and stylized automaton finish (for Ren). */
 export function applyHeroStyle(scene: Object3D | null | undefined, heroId: HeroId): void {
   if (!scene) return
   const hero = getHeroSpec(heroId)
-  scene.scale.setScalar(hero.scale)
+  scene.scale.setScalar(hero.modelScale)
 
+  // 1. Update climbing pack colors
   const pack = scene.getObjectByName('protagonist-pack')
   if (pack) {
     let idx = 0
@@ -107,6 +111,7 @@ export function applyHeroStyle(scene: Object3D | null | undefined, heroId: HeroI
     })
   }
 
+  // 2. Stylized Celestia Ivory-and-Gold finish for the Automaton Mannequin hero
   if (hero.isAutomaton) {
     let meshIdx = 0
     scene.traverse((obj) => {
@@ -114,15 +119,31 @@ export function applyHeroStyle(scene: Object3D | null | undefined, heroId: HeroI
       const mats = Array.isArray(obj.material) ? obj.material : [obj.material]
       for (const mat of mats) {
         if (mat instanceof MeshStandardMaterial) {
-          const isAccent = meshIdx % 2 === 1
-          mat.color.set(isAccent ? '#d8b56a' : '#f2ead8')
-          mat.roughness = isAccent ? 0.35 : 0.55
-          mat.metalness = isAccent ? 0.65 : 0.15
-          mat.emissive.set(isAccent ? '#5fd4a3' : '#2a2216')
-          mat.emissiveIntensity = isAccent ? 0.18 : 0.05
+          const isAccent = meshIdx % 3 === 1
+          mat.color.set(isAccent ? '#e0b45c' : '#f2ede0')
+          mat.roughness = isAccent ? 0.34 : 0.48
+          mat.metalness = isAccent ? 0.58 : 0.18
+          mat.emissive.set(isAccent ? '#2a6b62' : '#18140d')
+          mat.emissiveIntensity = isAccent ? 0.35 : 0.08
         }
       }
       meshIdx++
     })
+    return
   }
+
+  // 3. Preserve original VRM face/skin/outfit textures cleanly
+  tintColor.set(hero.outfitTint)
+  scene.traverse((obj) => {
+    if (!(obj instanceof Mesh)) return
+    if (obj.parent?.name === 'protagonist-pack') return
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material]
+    for (const mat of mats) {
+      if (!mat || typeof mat !== 'object' || !('color' in mat)) continue
+      const name = (mat as { name?: string }).name ?? ''
+      if (SKIP_MAT_RE.test(name)) continue
+      const c = (mat as { color?: Color }).color
+      if (c instanceof Color) c.copy(tintColor)
+    }
+  })
 }

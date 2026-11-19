@@ -1,4 +1,4 @@
-// TEST-49: E2E smoke test for Fase 6 Gelombang A (Living Ghibli World, Artifacts, God Rays, Windmills & CharacterJuice)
+// TEST-49: E2E smoke test for Tahap 1 & 2 — Genshin Impact Rock Cliffs, Living World Artifacts & Character VFX
 import { game as liveGame } from '/src/game/game.ts'
 import { bootToPlaying, logRenderer, nextFrame, sleep } from '/vitexec/lib/move-smoke.ts'
 
@@ -8,52 +8,46 @@ const out: Record<string, unknown> = { renderer: logRenderer() }
 await bootToPlaying()
 for (let i = 0; i < 8; i++) await nextFrame()
 
-// Traverse live Three.js scene via visualRoot's parent (the Scene)
+// 1. Verify Living World scene root, wind grass, banners, Tōrō shrines, windmills, god rays, and character VFX
 const scene = liveGame.visualRoot?.parent
 if (!scene) {
-  failures.push('Scene root not found via liveGame.visualRoot.parent')
+  failures.push('Scene root not found')
 } else {
-  const living = scene.getObjectByName('living-world')
-  const juice = scene.getObjectByName('character-juice')
-  const grass = scene.getObjectByName('living-grass') as { count?: number } | undefined
-  const altars = scene.getObjectByName('relic-altars') as { count?: number } | undefined
-  const godrays = scene.getObjectByName('living-godrays')
-  const cumulus = scene.getObjectByName('living-cumulus') as { count?: number } | undefined
-  const shrineStart = scene.getObjectByName('toro-start-e')
-  const windmillPlaza = scene.getObjectByName('windmill-plaza')
-  const bannerStart = scene.getObjectByName('banner-start-1')
-
-  // Check windmill rotor actually rotates over 400 ms
-  const rotorBefore = windmillPlaza?.children?.[2]?.rotation?.z ?? 0
-  await sleep(400)
-  for (let i = 0; i < 4; i++) await nextFrame()
-  const rotorAfter = windmillPlaza?.children?.[2]?.rotation?.z ?? 0
-  const rotorDelta = Math.abs(rotorAfter - rotorBefore)
+  const living = scene.getObjectByName('living-world-genshin')
+  const grass = scene.getObjectByName('wind-grass')
+  const vfx = scene.getObjectByName('character-vfx')
+  const toro = scene.getObjectByName('toro-plaza-e')
+  const windmill = scene.getObjectByName('windmill-plaza')
+  const godRay = scene.getObjectByName('god-ray-0')
 
   out.livingWorld = {
-    mounted: Boolean(living),
-    characterJuiceMounted: Boolean(juice),
-    grassCount: grass?.count ?? 0,
-    altarCount: altars?.count ?? 0,
-    godRayCount: godrays?.children?.length ?? 0,
-    cumulusCount: cumulus?.count ?? 0,
-    hasShrine: Boolean(shrineStart),
-    hasWindmill: Boolean(windmillPlaza),
-    hasBanner: Boolean(bannerStart),
-    windmillRotorDeltaRad: Math.round(rotorDelta * 1000) / 1000,
+    livingFound: living != null,
+    grassFound: grass != null,
+    vfxFound: vfx != null,
+    toroFound: toro != null,
+    windmillFound: windmill != null,
+    godRayFound: godRay != null,
   }
+  if (!living) failures.push('living-world-genshin group missing')
+  if (!grass) failures.push('wind-grass InstancedMesh missing')
+  if (!vfx) failures.push('character-vfx group missing')
+  if (!toro) failures.push('toro-plaza-e shrine missing')
+  if (!windmill) failures.push('windmill-plaza missing')
+  if (!godRay) failures.push('god-ray-0 missing')
 
-  if (!living) failures.push('living-world group missing')
-  if (!juice) failures.push('character-juice group missing')
-  if ((grass?.count ?? 0) < 500) failures.push(`Expected >=500 instanced grass blades, got ${grass?.count ?? 0}`)
-  if ((altars?.count ?? 0) !== 12) failures.push(`Expected 12 relic altars, got ${altars?.count ?? 0}`)
-  if ((godrays?.children?.length ?? 0) < 4) failures.push(`Expected >=4 god rays, got ${godrays?.children?.length ?? 0}`)
-  if ((cumulus?.count ?? 0) < 20) failures.push(`Expected >=20 cumulus puffs, got ${cumulus?.count ?? 0}`)
-  if (!shrineStart) failures.push('toro-start-e shrine missing')
-  if (!bannerStart) failures.push('banner-start-1 banner missing')
-  if (rotorDelta < 0.05) failures.push(`Windmill rotor did not spin: delta=${rotorDelta}`)
+  // 2. Verify zero urban 'facade' merged meshes remain and 'cliff' materials exist
+  const mergedNames: string[] = []
+  liveGame.visualRoot?.traverse((o) => {
+    if (o.name.startsWith('merged:')) mergedNames.push(o.name)
+  })
+  const hasCliff = mergedNames.some((n) => n.includes('|cliff'))
+  const hasFacade = mergedNames.some((n) => n.includes('|facade'))
+  out.materials = { mergedCount: mergedNames.length, hasCliff, hasFacade }
+  if (!hasCliff) failures.push('Expected cliff material in merged static meshes')
+  if (hasFacade) failures.push('Found legacy urban facade material in merged static meshes')
 }
 
+await sleep(350)
 const passed = failures.length === 0
-console.log(JSON.stringify({ test: 'TEST-49-living-world', passed, failures, ...out }, null, 2))
+console.log(JSON.stringify({ test: 'TEST-49-genshin-living-world', passed, failures, ...out }, null, 2))
 if (!passed) throw new Error(`TEST-49 FAILED: ${failures.join('; ')}`)

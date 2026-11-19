@@ -1,12 +1,13 @@
-// Procedural visuals (DIRECTIVE D-017 stylized Ghibli/anime; D-013 visuals outside the bodies): every prefab visual is
-// turned into world-space geometry pieces keyed by material, and the static ones are merged into one mesh per
-// material so a world of hundreds of platforms stays at a few dozen draw calls (shadows on, ref/06 §Performa).
-// Fase 6 Organic Footholds: static pads & decks become varied floating mossy sky islands, faceted boulders,
-// weathered stone ruins, and celestial crystal monoliths while keeping top surfaces flush with BvhPhysicsBody colliders.
-// Pure three.js (no React): used by Level.tsx and by tests.
+// Procedural visuals (DIRECTIVE D-017 stylized Genshin Impact x Ghibli; D-013 visuals outside the bodies):
+// Every prefab visual is turned into world-space geometry pieces keyed by material, and static ones are merged into
+// one mesh per material so hundreds of platforms stay at a few dozen draw calls (60 FPS safe).
+// Genshin Impact Cliff Pass: all urban bldg-* blocks become stratified limestone/sandstone rock cliffs with emerald
+// grass crowns, metal decks become Liyue sandstone terraces, and movers become Anemo rune-stone platforms while
+// keeping top surfaces strictly flush with BvhPhysicsBody colliders.
 import {
   BoxGeometry,
   BufferGeometry,
+  Color,
   ConeGeometry,
   CylinderGeometry,
   DodecahedronGeometry,
@@ -97,7 +98,45 @@ function sculptedCapGeo(rx: number, rz: number, capH: number, seed: number, side
   return geo
 }
 
-/** Tapered Laputa-style floating island rocky underside (flat top at y = 0, jagged craggy tip at y = -depth). */
+/**
+ * Genshin Impact (Mondstadt/Liyue) stratified karst rock cliff column replacing boxy urban buildings.
+ * Keeps top rim flush below y = +h/2 (leaving room for the overhanging emerald grass cap) and broadens organically
+ * toward the base with horizontal sedimentary strata ledges and angular rock crevices.
+ */
+function sculptedCliffPillarGeo(w: number, h: number, d: number, seed: number): BufferGeometry {
+  const sides = 10
+  const heightSegs = Math.max(4, Math.min(8, Math.round(h / 2.2)))
+  const geo = new CylinderGeometry(1, 1.14, h, sides, heightSegs)
+  const rng = mulberry32(seed ^ 0x7f4a7c15)
+  const angularProfile: number[] = []
+  for (let s = 0; s < sides; s++) angularProfile.push(0.9 + rng() * 0.22)
+  const strataPhase = rng() * Math.PI * 2
+
+  const rx = w * 0.58
+  const rz = d * 0.58
+  const pos = geo.attributes.position
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i)
+    const y = pos.getY(i)
+    const z = pos.getZ(i)
+    const r = Math.hypot(x, z)
+    if (r > 1e-4) {
+      const ang = ((Math.atan2(z, x) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
+      const idx = Math.round((ang / (Math.PI * 2)) * sides) % sides
+      const t = (y + h / 2) / Math.max(0.1, h) // 0 at bottom, 1 at top
+      // Sedimentary rock step-outs along vertical height (flattest near top rim so collider matches)
+      const strata = 1 + Math.sin(t * Math.PI * 5 + strataPhase) * 0.085 * (1 - t * 0.65)
+      const crag = angularProfile[idx] * (1 + Math.cos(ang * 3 + t * 4.5 + seed * 0.13) * 0.09)
+      const k = strata * crag
+      pos.setX(i, x * rx * k)
+      pos.setZ(i, z * rz * k)
+    }
+  }
+  geo.computeVertexNormals()
+  return geo
+}
+
+/** Tapered Laputa/Genshin floating island rocky underside (flat top at y = 0, jagged craggy tip at y = -depth). */
 function floatingIslandUndersideGeo(rx: number, rz: number, depth: number, seed: number, sides = 9): BufferGeometry {
   const geo = new CylinderGeometry(1, 0.14, depth, sides, 3)
   geo.translate(0, -depth / 2, 0)
@@ -108,7 +147,7 @@ function floatingIslandUndersideGeo(rx: number, rz: number, depth: number, seed:
     const y = pos.getY(i)
     const z = pos.getZ(i)
     const r = Math.hypot(x, z)
-    const t = Math.max(0, Math.min(1, -y / depth)) // 0 at top, 1 at bottom point
+    const t = Math.max(0, Math.min(1, -y / depth))
     if (r > 1e-4) {
       const ang = Math.atan2(z, x)
       const crag = 1 + Math.sin(ang * 3 + seed * 0.1) * 0.14 + Math.cos(ang * 5 - seed * 0.2) * 0.09 + (rng() - 0.5) * 0.12
@@ -136,7 +175,6 @@ function boulderBellyGeo(rx: number, rz: number, depth: number, seed: number): B
     const n = 0.88 + rng() * 0.24
     pos.setX(i, x * rx * n)
     pos.setZ(i, z * rz * n)
-    // Compress upper hemisphere flat to y <= 0, stretch lower hemisphere to -depth
     pos.setY(i, y >= 0 ? -y * 0.06 : y * depth * (0.85 + rng() * 0.25))
   }
   geo.computeVertexNormals()
@@ -162,11 +200,11 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     const depth = d / steps
     const out: Piece[] = []
     for (let i = 0; i < steps; i++) {
-      out.push(piece(boxAt([w, (i + 1) * rise, depth], [0, -h / 2 + ((i + 1) * rise) / 2, d / 2 - (i + 0.5) * depth]), v.color, { roughness: 0.9, style: 'stone' }))
+      out.push(piece(boxAt([w, (i + 1) * rise, depth], [0, -h / 2 + ((i + 1) * rise) / 2, d / 2 - (i + 0.5) * depth]), '#c9b89c', { roughness: 0.88, style: 'stone' }))
     }
     return out
   }
-  if (v.kind === 'pole') return [piece(new CylinderGeometry(w / 2, w / 2, h, 12), v.color, { style: 'metal' })]
+  if (v.kind === 'pole') return [piece(new CylinderGeometry(w / 2, w / 2, h, 12), '#b8a992', { style: 'stone' })]
   if (v.kind === 'blade') {
     const bands = 6
     const out = [piece(new BoxGeometry(w, h, d), v.color, { roughness: 0.45, metalness: 0.35, style: 'hazard' })]
@@ -185,28 +223,46 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     out.push(piece(boxAt([TRIM, 0.04, d - 2 * TRIM], [-w / 2 + TRIM / 2, y, 0]), color, { emissive, roughness, style: 'trim' }))
   }
 
-  // Stylized Ghibli / anime architectural geometry per prefab family (colliders untouched)
+  // Genshin Impact Cliff Conversion: ALL bldg-* urban boxes become stratified karst rock cliffs with lush emerald grass crowns
   if (id.startsWith('bldg-')) {
+    const seed = entrySeed || hashString(id)
+    const capH = Math.min(0.46, Math.max(0.28, h * 0.14))
+    const cliffH = Math.max(0.4, h - capH)
+    const rockPalette = ['#c6a278', '#b8946c', '#cfa97e', '#b38d68']
+    const rockColor = rockPalette[seed % rockPalette.length]
+    const cliffBody = sculptedCliffPillarGeo(w, cliffH, d, seed).translate(0, -capH / 2, 0)
+    const grassCap = sculptedCapGeo(w * 0.56, d * 0.56, capH, seed ^ 0x2233, 10, 0.08).translate(0, h / 2 - capH / 2, 0)
     const out: Piece[] = [
-      piece(new BoxGeometry(w, h, d), v.color, { roughness: 0.88, style: 'facade' }),
-      piece(boxAt([w * 0.98, 0.06, d * 0.98], [0, h / 2 - 0.01, 0]), '#d8cbb8', { roughness: 0.92, style: 'concrete' }),
+      piece(cliffBody, rockColor, { roughness: 0.9, style: 'cliff' }),
+      piece(grassCap, '#72b564', { roughness: 0.84, style: 'moss' }),
     ]
-    addTrim(out, '#8e6b4a')
+    // Subtle lower rock buttress hugging the base of taller cliffs (strictly below top plane)
+    if (h >= 3.2) {
+      const bH = h * 0.42
+      const buttress = boulderBellyGeo(w * 0.44, d * 0.44, bH * 0.65, seed ^ 0x99).translate(w * 0.28, -h / 2 + bH * 0.55, d * 0.22)
+      out.push(piece(buttress, '#9e7e5b', { roughness: 0.92, style: 'cliff' }))
+    }
     return out
   }
 
+  // Floating Ancient Anemo Rune-Stone Platforms (replaces boxy industrial metal movers)
   if (id === 'mover-m' || id === 'lift-l') {
-    const topH = h * 0.55
-    const botH = h * 0.45
+    const topH = h * 0.52
+    const seed = entrySeed || hashString(id)
+    const slab = sculptedCapGeo(w * 0.54, d * 0.54, topH, seed, 8, 0.05).translate(0, h / 2 - topH / 2, 0)
+    const coreH = Math.max(0.55, h * 0.72)
+    const core = new ConeGeometry(Math.min(w, d) * 0.38, coreH, 6)
+      .rotateX(Math.PI)
+      .translate(0, h / 2 - topH - coreH / 2, 0)
     const out: Piece[] = [
-      piece(boxAt([w, topH, d], [0, h / 2 - topH / 2, 0]), '#4a88b5', { roughness: 0.48, metalness: 0.35, style: 'metal' }),
-      piece(boxAt([w * 0.72, botH, d * 0.72], [0, -h / 2 + botH / 2, 0]), '#2c4154', { roughness: 0.55, metalness: 0.4, style: 'metal' }),
+      piece(slab, '#e5dfd0', { roughness: 0.72, style: 'marble' }),
+      piece(core, '#58d5b8', { emissive: '#2fb8a6', roughness: 0.3, metalness: 0.2 }),
     ]
-    addTrim(out, '#a8f0f5', '#42c6d4', 0.35)
+    addTrim(out, '#8ff7e2', '#42c6d4', 0.35)
     return out
   }
 
-  // Organic non-monotonous Ghibli footholds (floating mossy islands, boulders, ruins, crystal monoliths)
+  // Organic non-monotonous Genshin/Ghibli footholds (floating mossy islands, boulders, ruins, crystal monoliths)
   if (id.startsWith('pad-') || id === 'finish-pad') {
     const isFinish = id === 'finish-pad'
     const isRest = id === 'pad-rest'
@@ -218,17 +274,16 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     const rng = mulberry32(seed)
 
     if (isFinish || isRest) {
-      // Sanctuary Floating Island with glowing corner beacons & deep Laputa rock spire
       const capH = Math.min(0.42, h * 0.55)
       const spireDepth = Math.max(2.2, Math.min(w, d) * 0.85)
       const cap = sculptedCapGeo(rx, rz, capH, seed, 10, 0.07).translate(0, h / 2 - capH / 2, 0)
       const under = floatingIslandUndersideGeo(rx * 0.92, rz * 0.92, spireDepth, seed, 10).translate(0, h / 2 - capH, 0)
       const out: Piece[] = [
-        piece(cap, isFinish ? '#f7ecd0' : isCelestial ? '#ece8dc' : '#86b57c', {
+        piece(cap, isFinish ? '#f7ecd0' : isCelestial ? '#ece8dc' : '#78b86a', {
           roughness: isFinish ? 0.62 : 0.84,
           style: isFinish || isCelestial ? 'marble' : 'moss',
         }),
-        piece(under, isCelestial ? '#c7beab' : '#7b6d5e', { roughness: 0.92, style: isCelestial ? 'marble' : 'stone' }),
+        piece(under, isCelestial ? '#c7beab' : '#a8845f', { roughness: 0.92, style: isCelestial ? 'marble' : 'cliff' }),
       ]
       const cx = w * 0.38
       const cz = d * 0.38
@@ -246,16 +301,14 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     const archetype = seed % 4
 
     if (archetype === 0) {
-      // 1. Floating Mossy Sky Island (Pulau Melayang Berlumut + akar gantung)
       const capH = Math.min(0.38, Math.max(0.24, h * 0.52))
       const islandDepth = 1.35 + Math.min(w, d) * 0.55 + rng() * 0.9
       const cap = sculptedCapGeo(rx, rz, capH, seed, 9, 0.11).translate(0, h / 2 - capH / 2, 0)
       const under = floatingIslandUndersideGeo(rx * 0.9, rz * 0.9, islandDepth, seed, 9).translate(0, h / 2 - capH, 0)
       const out: Piece[] = [
-        piece(cap, isCelestial ? '#e9e4d6' : '#7eb374', { roughness: 0.86, style: isCelestial ? 'marble' : 'moss' }),
-        piece(under, isCelestial ? '#bdb5a4' : '#7a6c5d', { roughness: 0.92, style: 'stone' }),
+        piece(cap, isCelestial ? '#e9e4d6' : '#74b866', { roughness: 0.85, style: isCelestial ? 'marble' : 'moss' }),
+        piece(under, isCelestial ? '#bdb5a4' : '#b28d66', { roughness: 0.92, style: 'cliff' }),
       ]
-      // Hanging Ghibli vine/root tendrils beneath island (zero sightline impact)
       const vineCount = 2 + (seed % 2)
       for (let i = 0; i < vineCount; i++) {
         const ang = rng() * Math.PI * 2
@@ -266,22 +319,20 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
           h / 2 - capH - vLen / 2 - 0.1,
           Math.sin(ang) * vr,
         )
-        out.push(piece(vine, isCelestial ? '#d9c48c' : '#588c53', { roughness: 0.88 }))
+        out.push(piece(vine, isCelestial ? '#d9c48c' : '#589452', { roughness: 0.88 }))
       }
       return out
     }
 
     if (archetype === 1) {
-      // 2. Sculpted Floating Boulder (Batu Terapung Berfaset + kerikil satelit)
       const capH = Math.min(0.32, Math.max(0.2, h * 0.45))
       const bellyDepth = 0.95 + Math.min(w, d) * 0.45 + rng() * 0.55
       const cap = sculptedCapGeo(rx * 0.98, rz * 0.98, capH, seed, 7, 0.14).translate(0, h / 2 - capH / 2, 0)
       const belly = boulderBellyGeo(rx * 0.96, rz * 0.96, bellyDepth, seed).translate(0, h / 2 - capH * 0.7, 0)
       const out: Piece[] = [
-        piece(cap, isCelestial ? '#dfd9cc' : '#9c9385', { roughness: 0.88, style: isCelestial ? 'marble' : 'stone' }),
-        piece(belly, isCelestial ? '#b4ad9f' : '#6c655c', { roughness: 0.94, style: 'stone' }),
+        piece(cap, isCelestial ? '#dfd9cc' : '#c6a782', { roughness: 0.86, style: isCelestial ? 'marble' : 'cliff' }),
+        piece(belly, isCelestial ? '#b4ad9f' : '#947657', { roughness: 0.92, style: 'cliff' }),
       ]
-      // Tiny orbiting satellite pebble hovering underneath
       const ang = rng() * Math.PI * 2
       const pr = Math.max(rx, rz) * 0.78
       const pebble = new DodecahedronGeometry(0.24 + rng() * 0.14, 0).translate(
@@ -289,23 +340,22 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
         -bellyDepth * 0.55,
         Math.sin(ang) * pr,
       )
-      out.push(piece(pebble, '#877d71', { roughness: 0.92, style: 'stone' }))
+      out.push(piece(pebble, '#a88966', { roughness: 0.9, style: 'cliff' }))
       return out
     }
 
     if (archetype === 2) {
-      // 3. Ancient Carved Ruin Stone (Reruntuhan Candi Langit + trim lumut/emas)
       const topH = Math.min(0.34, h * 0.46)
       const midH = Math.max(0.24, h * 0.42)
       const corbelH = 0.65 + rng() * 0.55
       const out: Piece[] = [
-        piece(boxAt([w, topH, d], [0, h / 2 - topH / 2, 0]), isCelestial ? '#eeeae0' : '#aba192', {
-          roughness: isCelestial ? 0.68 : 0.86,
+        piece(boxAt([w, topH, d], [0, h / 2 - topH / 2, 0]), isCelestial ? '#eeeae0' : '#cabba2', {
+          roughness: isCelestial ? 0.68 : 0.85,
           style: isCelestial ? 'marble' : 'stone',
         }),
-        piece(boxAt([w * 0.84, midH, d * 0.84], [0, h / 2 - topH - midH / 2, 0]), isCelestial ? '#d6c8a8' : '#7b6e5e', {
+        piece(boxAt([w * 0.84, midH, d * 0.84], [0, h / 2 - topH - midH / 2, 0]), isCelestial ? '#d6c8a8' : '#9c7e5d', {
           roughness: 0.9,
-          style: 'stone',
+          style: 'cliff',
         }),
         piece(
           new CylinderGeometry(Math.min(w, d) * 0.34, Math.min(w, d) * 0.14, corbelH, 6).translate(
@@ -313,24 +363,24 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
             h / 2 - topH - midH - corbelH / 2,
             0,
           ),
-          '#64594c',
-          { roughness: 0.92, style: 'stone' },
+          '#7f664b',
+          { roughness: 0.92, style: 'cliff' },
         ),
       ]
-      addTrim(out, isCelestial ? '#e8c468' : '#7fa872', isCelestial ? '#c79f42' : null, isCelestial ? 0.45 : 0.82)
+      addTrim(out, isCelestial ? '#e8c468' : '#74b566', isCelestial ? '#c79f42' : null, isCelestial ? 0.45 : 0.82)
       return out
     }
 
-    // 4. Archetype 3: Z1-Z2 Timber Sky Dock OR Z3-Z4 Celestial Crystal Monolith
     if (!isHigh) {
-      const topH = Math.min(0.28, h * 0.42)
-      const out: Piece[] = [
-        piece(boxAt([w, topH, d], [0, h / 2 - topH / 2, 0]), '#9e6f46', { roughness: 0.84, style: 'trim' }),
-        piece(boxAt([w * 0.88, 0.24, d * 0.22], [0, h / 2 - topH - 0.12, d * 0.28]), '#6b472b', { roughness: 0.9 }),
-        piece(boxAt([w * 0.88, 0.24, d * 0.22], [0, h / 2 - topH - 0.12, -d * 0.28]), '#6b472b', { roughness: 0.9 }),
+      // Sculpted Liyue Warm Sandstone Outcrop with moss ledge (Z1-Z2)
+      const capH = Math.min(0.32, Math.max(0.22, h * 0.44))
+      const rockDepth = 1.15 + rng() * 0.75
+      const cap = sculptedCapGeo(rx, rz, capH, seed, 8, 0.1).translate(0, h / 2 - capH / 2, 0)
+      const under = floatingIslandUndersideGeo(rx * 0.92, rz * 0.92, rockDepth, seed ^ 0x41, 8).translate(0, h / 2 - capH, 0)
+      return [
+        piece(cap, '#d1b38b', { roughness: 0.84, style: 'stone' }),
+        piece(under, '#a57f59', { roughness: 0.92, style: 'cliff' }),
       ]
-      addTrim(out, '#d8a852', null, 0.62)
-      return out
     }
     // Celestial Crystal Monolith (Z3-Z4)
     const capH = Math.min(0.34, h * 0.48)
@@ -339,51 +389,52 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     const spire = new ConeGeometry(Math.min(rx, rz) * 0.72, crystalDepth, 6)
       .rotateX(Math.PI)
       .translate(0, h / 2 - capH - crystalDepth / 2, 0)
-    const out: Piece[] = [
+    return [
       piece(cap, '#f0ede4', { roughness: 0.66, style: 'marble' }),
-      piece(spire, '#72eac0', { emissive: '#38bdf8', roughness: 0.32, metalness: 0.2 }),
+      piece(spire, '#58d5b8', { emissive: '#38bdf8', roughness: 0.32, metalness: 0.2 }),
     ]
-    return out
   }
 
+  // Z2 Catch Deck: Liyue Warm Sandstone & Mossy Karst Terrace (replaces boxy gray metal deck)
   if (id.startsWith('deck-z2-')) {
     const out: Piece[] = [
-      piece(new BoxGeometry(w, h, d), '#8b99a6', { roughness: 0.6, metalness: 0.25, style: 'metal' }),
+      piece(boxAt([w, h * 0.34, d], [0, h / 2 - (h * 0.34) / 2, 0]), '#78b86a', { roughness: 0.84, style: 'moss' }),
+      piece(boxAt([w * 0.98, h * 0.66, d * 0.98], [0, -h / 2 + (h * 0.66) / 2, 0]), '#c49d72', { roughness: 0.88, style: 'cliff' }),
       piece(
-        floatingIslandUndersideGeo(w * 0.48, d * 0.48, Math.min(5.2, Math.max(2.4, Math.min(w, d) * 0.45)), entrySeed || 202, 10).translate(
+        floatingIslandUndersideGeo(w * 0.49, d * 0.49, Math.min(5.6, Math.max(2.6, Math.min(w, d) * 0.46)), entrySeed || 202, 10).translate(
           0,
           -h / 2,
           0,
         ),
-        '#566370',
-        { roughness: 0.78, metalness: 0.2, style: 'stone' },
+        '#9c7a56',
+        { roughness: 0.92, style: 'cliff' },
       ),
     ]
-    addTrim(out, '#d8a84e')
+    addTrim(out, '#e4bc68')
     return out
   }
 
   if (id.startsWith('deck-z3-')) {
     const out: Piece[] = [
-      piece(boxAt([w, h * 0.38, d], [0, h / 2 - (h * 0.38) / 2, 0]), '#82b578', { roughness: 0.88, style: 'moss' }),
-      piece(boxAt([w * 0.98, h * 0.62, d * 0.98], [0, -h / 2 + (h * 0.62) / 2, 0]), '#968f84', { roughness: 0.9, style: 'stone' }),
+      piece(boxAt([w, h * 0.38, d], [0, h / 2 - (h * 0.38) / 2, 0]), '#78b86a', { roughness: 0.86, style: 'moss' }),
+      piece(boxAt([w * 0.98, h * 0.62, d * 0.98], [0, -h / 2 + (h * 0.62) / 2, 0]), '#bfa07d', { roughness: 0.9, style: 'cliff' }),
       piece(
         floatingIslandUndersideGeo(w * 0.48, d * 0.48, Math.min(6.0, Math.max(2.6, Math.min(w, d) * 0.48)), entrySeed || 303, 10).translate(
           0,
           -h / 2,
           0,
         ),
-        '#797165',
-        { roughness: 0.92, style: 'stone' },
+        '#8f7254',
+        { roughness: 0.92, style: 'cliff' },
       ),
     ]
-    addTrim(out, '#c9b382')
+    addTrim(out, '#d8be86')
     return out
   }
 
   if (id.startsWith('deck-z4-')) {
     const out: Piece[] = [
-      piece(new BoxGeometry(w, h, d), '#f0eee8', { roughness: 0.68, style: 'marble' }),
+      piece(new BoxGeometry(w, h, d), '#f2efe8', { roughness: 0.66, style: 'marble' }),
       piece(
         floatingIslandUndersideGeo(w * 0.46, d * 0.46, Math.min(5.6, Math.max(2.5, Math.min(w, d) * 0.44)), entrySeed || 404, 10).translate(
           0,
@@ -398,7 +449,7 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     return out
   }
 
-  const defaultStyle: SurfaceStyle = id.includes('floor') ? 'concrete' : prefab.surface === 'metal' ? 'metal' : 'stone'
+  const defaultStyle: SurfaceStyle = id.includes('floor') ? 'concrete' : prefab.surface === 'metal' ? 'stone' : 'cliff'
   const out = [piece(new BoxGeometry(w, h, d), v.color, { style: defaultStyle })]
   if (v.accent != null) addTrim(out, v.accent)
   return out
@@ -426,7 +477,28 @@ export function visualMatrix(entry: PlatformEntry, prefab: Prefab): Matrix4 {
   return new Matrix4().compose(origin, q, new Vector3(1, 1, 1))
 }
 
+const RIM_COLOR = new Color('#ffe7b0')
 const materials = new Map<string, MeshStandardMaterial>()
+
+/** Injects a lightweight Genshin/Ghibli golden-hour fresnel rim highlight into standard rock/grass materials. */
+function applyStylizedRim(mat: MeshStandardMaterial): void {
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uRimColor = { value: RIM_COLOR }
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        '#include <common>\nuniform vec3 uRimColor;',
+      )
+      .replace(
+        '#include <dithering_fragment>',
+        `float vaRim = pow(1.0 - max(0.0, dot(normalize(vNormal), normalize(vViewPosition))), 3.1);
+         gl_FragColor.rgb += uRimColor * vaRim * 0.16;
+         #include <dithering_fragment>`,
+      )
+  }
+  mat.customProgramCacheKey = () => 'va-genshin-rim-v1'
+}
+
 export function materialFor(p: Piece): MeshStandardMaterial {
   let m = materials.get(p.key)
   if (m == null) {
@@ -435,11 +507,13 @@ export function materialFor(p: Piece): MeshStandardMaterial {
       color: p.color,
       roughness: p.roughness,
       metalness: p.metalness,
-      ...(tex ? { map: tex.map, bumpMap: tex.bumpMap, bumpScale: 0.042 } : {}),
+      ...(tex ? { map: tex.map, bumpMap: tex.bumpMap, bumpScale: 0.055 } : {}),
     })
     if (p.emissive) {
       m.emissive.set(p.emissive)
       m.emissiveIntensity = 1.4
+    } else if (p.style === 'cliff' || p.style === 'moss' || p.style === 'stone' || p.style === 'marble') {
+      applyStylizedRim(m)
     }
     materials.set(p.key, m)
   }

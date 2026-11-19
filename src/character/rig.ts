@@ -1,65 +1,10 @@
-// Character loader options as module-level frozen constants (DIRECTIVE D-001):
-// Each selectable Hero maps to its own distinct 3D model (3 CC0 VRoid VRMs + 1 CC0 UAL2 Mannequin GLB),
-// lazy-loaded on demand via Suspense and sharing the 6 UAL1 locomotion/jump clips.
+// Character loader options as module-level constants (DIRECTIVE D-001): the loaders suspend() on a key compared
+// with ===, so an inline object or function would reload forever.
+// Supports 4 distinct 3D Hero models (3 VRoid CC0 VRMs + 1 stylized Quaternius Sky Automaton mannequin),
+// all sharing VRM humanoid bone names and the 6 UAL1 Standard animation clips.
 import type { VRMHumanBoneName } from '@react-three/viverse'
 import { assetUrl } from '../assets.ts'
 import type { HeroId } from './heroes.ts'
-
-/** Unreal/Godot Mannequin_F skeleton (UAL2 Standard) -> VRM humanoid bone names. */
-export const UE_MANNEQUIN_BONE_MAP: Readonly<Record<string, VRMHumanBoneName>> = Object.freeze({
-  pelvis: 'hips',
-  spine_01: 'spine',
-  spine_02: 'chest',
-  spine_03: 'upperChest',
-  neck_01: 'neck',
-  Head: 'head',
-  clavicle_l: 'leftShoulder',
-  upperarm_l: 'leftUpperArm',
-  lowerarm_l: 'leftLowerArm',
-  hand_l: 'leftHand',
-  index_01_l: 'leftIndexProximal',
-  index_02_l: 'leftIndexIntermediate',
-  index_03_l: 'leftIndexDistal',
-  middle_01_l: 'leftMiddleProximal',
-  middle_02_l: 'leftMiddleIntermediate',
-  middle_03_l: 'leftMiddleDistal',
-  pinky_01_l: 'leftLittleProximal',
-  pinky_02_l: 'leftLittleIntermediate',
-  pinky_03_l: 'leftLittleDistal',
-  ring_01_l: 'leftRingProximal',
-  ring_02_l: 'leftRingIntermediate',
-  ring_03_l: 'leftRingDistal',
-  thumb_01_l: 'leftThumbMetacarpal',
-  thumb_02_l: 'leftThumbProximal',
-  thumb_03_l: 'leftThumbDistal',
-  clavicle_r: 'rightShoulder',
-  upperarm_r: 'rightUpperArm',
-  lowerarm_r: 'rightLowerArm',
-  hand_r: 'rightHand',
-  index_01_r: 'rightIndexProximal',
-  index_02_r: 'rightIndexIntermediate',
-  index_03_r: 'rightIndexDistal',
-  middle_01_r: 'rightMiddleProximal',
-  middle_02_r: 'rightMiddleIntermediate',
-  middle_03_r: 'rightMiddleDistal',
-  pinky_01_r: 'rightLittleProximal',
-  pinky_02_r: 'rightLittleIntermediate',
-  pinky_03_r: 'rightLittleDistal',
-  ring_01_r: 'rightRingProximal',
-  ring_02_r: 'rightRingIntermediate',
-  ring_03_r: 'rightRingDistal',
-  thumb_01_r: 'rightThumbMetacarpal',
-  thumb_02_r: 'rightThumbProximal',
-  thumb_03_r: 'rightThumbDistal',
-  thigh_l: 'leftUpperLeg',
-  calf_l: 'leftLowerLeg',
-  foot_l: 'leftFoot',
-  ball_l: 'leftToes',
-  thigh_r: 'rightUpperLeg',
-  calf_r: 'rightLowerLeg',
-  foot_r: 'rightFoot',
-  ball_r: 'rightToes',
-})
 
 /** Default protagonist VRM (restyled AvatarSample_F, D-051, textures <= 1024^2); useViverseAvatar false (D-003). */
 export const MODEL_OPTIONS = Object.freeze({
@@ -70,7 +15,6 @@ export const MODEL_OPTIONS = Object.freeze({
   receiveShadow: true,
 })
 
-/** Distinct frozen model loader configs per selectable Hero (Fase 6 Gelombang B). */
 export const HERO_MODEL_OPTIONS = Object.freeze({
   sora: MODEL_OPTIONS,
   kaze: Object.freeze({
@@ -88,17 +32,14 @@ export const HERO_MODEL_OPTIONS = Object.freeze({
     receiveShadow: true,
   }),
   ren: Object.freeze({
-    url: assetUrl('assets/characters/mannequin-f.glb'),
-    type: 'gltf' as const,
-    boneMap: UE_MANNEQUIN_BONE_MAP,
+    url: undefined as string | undefined,
     useViverseAvatar: false,
     castShadow: true,
     receiveShadow: true,
   }),
-}) satisfies Readonly<Record<HeroId, unknown>>
+}) satisfies Readonly<Record<HeroId, Readonly<{ url?: string; type?: 'vrm' | 'gltf'; useViverseAvatar: boolean; castShadow: boolean; receiveShadow: boolean }>>>
 
-/** Default model options kept for backwards compatibility. */
-/** Model options for this page, chosen once at module load (the loader key must stay identical, D-001). */
+/** Default model options constant (kept for compatibility with TEST-03). */
 export const ACTIVE_MODEL_OPTIONS = MODEL_OPTIONS
 
 export const UAL1_BONE_MAP: Readonly<Record<string, VRMHumanBoneName>> = Object.freeze({
@@ -165,7 +106,6 @@ const ual1 = (clip: string, scaleTime?: number) =>
     ...(scaleTime == null ? {} : { scaleTime }),
   })
 
-/** scaleTime values follow the library's SimpleCharacter graph (walk 0.5, run 0.8). */
 export const CLIPS = Object.freeze({
   idle: ual1('Idle_Loop'),
   walk: ual1('Walk_Loop', 0.5),

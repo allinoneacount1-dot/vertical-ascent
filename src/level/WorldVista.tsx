@@ -120,8 +120,8 @@ export function WorldVista({ level }: { level: LoadedLevel }) {
         transparent: true,
         opacity: 0.72,
       })
-      const houseMat = new MeshStandardMaterial({ color: '#f2e6d0', roughness: 0.88 })
-      const roofMat = new MeshStandardMaterial({ color: '#c45b41', roughness: 0.8 })
+      const houseMat = new MeshStandardMaterial({ color: '#c49d72', roughness: 0.9 })
+      const roofMat = new MeshStandardMaterial({ color: '#6fb362', roughness: 0.84 })
       const trunkMat = new MeshStandardMaterial({ color: '#6e4c36', roughness: 0.92 })
       const canopyMat = new MeshStandardMaterial({ color: '#5d9658', roughness: 0.86 })
       const islandRockMat = new MeshStandardMaterial({ color: '#8a8275', roughness: 0.92 })
@@ -282,10 +282,10 @@ export function WorldVista({ level }: { level: LoadedLevel }) {
 
       {/* Instanced terracotta village houses */}
       <instancedMesh ref={housesRef} args={[undefined, undefined, WORLD_VISTA_META.villageHouses]} material={houseMat}>
-        <boxGeometry args={[1, 1, 1]} />
+        <cylinderGeometry args={[0.72, 1.05, 2.6, 7]} />
       </instancedMesh>
       <instancedMesh ref={roofsRef} args={[undefined, undefined, WORLD_VISTA_META.villageHouses]} material={roofMat}>
-        <coneGeometry args={[0.92, 1, 4]} />
+        <dodecahedronGeometry args={[0.85, 0]} />
       </instancedMesh>
 
       {/* Instanced stylized valley trees */}

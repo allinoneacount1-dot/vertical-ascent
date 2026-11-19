@@ -1,5 +1,6 @@
-// Character model + animation graph of the hybrid controller (DIRECTIVE D-001 + Fase 6 Multi-Hero 3D).
-// Reads heroId from UI store and lazy-loads that hero's frozen model config via Suspense; never writes physics state.
+// Character model + animation graph of the hybrid controller (DIRECTIVE D-001). Reads game-owned flags only;
+// never writes position, velocity, the controller's input velocity or the camera (ref/02 Pemilik besaran).
+// Supports lazy-swapping across 4 real 3D Hero models via HERO_MODEL_OPTIONS[heroId].
 import { Suspense, useEffect } from 'react'
 import { LoopOnce, LoopRepeat } from 'three'
 import type { RootState } from '@react-three/fiber'
@@ -7,9 +8,8 @@ import { Graph, GrapthState, RunTimeline, Switch, SwitchCase, forever } from '@r
 import type { TimelineClock } from '@react-three/timeline'
 import { CharacterAnimationAction, CharacterModelProvider, useCharacterModelLoader } from '@react-three/viverse'
 import { CLIPS, FADE_S, HERO_MODEL_OPTIONS, JUMP_UP_MIN_S, LAND_HOLD_S, RISING_VY } from './rig.ts'
-import { addClimbingPack } from './protagonist-style.ts'
-import { applyHeroStyle } from './heroes.ts'
 import type { HeroId } from './heroes.ts'
+import { addClimbingPack } from './protagonist-style.ts'
 import { game } from '../game/game.ts'
 import { useUi } from '../game/store.ts'
 import { setClipReporter } from '../game/debug.ts'
@@ -18,7 +18,6 @@ type Flags = { moving: boolean; sprint: boolean; grounded: boolean; vy: number }
 
 const flags: Flags = { moving: false, sprint: false, grounded: true, vy: 0 }
 
-/** Stable getter: graph closures are captured at state start, so they must read live values (pitfall 21). */
 function readFlags(): Flags {
   const c = game.controller
   const p = game.port
@@ -59,15 +58,15 @@ const startJumpUp = () => {
 const newAirJump = () => airJumpCount() !== seenAirJumps
 setClipReporter(() => activeClip)
 
-function CharacterModelSlot({ heroId }: { heroId: HeroId }) {
-  const model = useCharacterModelLoader(HERO_MODEL_OPTIONS[heroId])
+function CharacterModelView({ heroId }: { heroId: HeroId }) {
+  const opts = HERO_MODEL_OPTIONS[heroId]
+  const model = useCharacterModelLoader(opts)
   useEffect(() => {
     const humanoid = (model as { humanoid?: Parameters<typeof addClimbingPack>[1] }).humanoid
     if (humanoid != null) addClimbingPack(model.scene, humanoid)
-    applyHeroStyle(model.scene, heroId)
     game.setModel(model)
     return () => game.setModel(null)
-  }, [model, heroId])
+  }, [model])
   return (
     <CharacterModelProvider model={model}>
       <RunTimeline>
@@ -134,7 +133,7 @@ export function CharacterVisual() {
   const heroId = useUi((s) => s.heroId)
   return (
     <Suspense fallback={null}>
-      <CharacterModelSlot key={heroId} heroId={heroId} />
+      <CharacterModelView key={heroId} heroId={heroId} />
     </Suspense>
   )
 }
