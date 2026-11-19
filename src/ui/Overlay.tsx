@@ -12,6 +12,7 @@ import { loadSettings, saveSettings } from '../game/settings.ts'
 import type { ActionId, Settings } from '../game/settings.ts'
 import { BINDING_PRESETS, keyLabel } from '../game/input-bindings.ts'
 import { SKY_RELICS } from '../level/relicsData.ts'
+import { HEROES } from '../character/heroes.ts'
 import { assetUrl } from '../assets.ts'
 import type { SprintMode } from '../controller/locomotion.ts'
 import credits from './credits.json'
@@ -340,6 +341,7 @@ function MenuMain() {
   const challengeMode = useUi((s) => s.challengeMode)
   const modifiers = useUi((s) => s.modifiers)
   const odysseyMode = useUi((s) => s.odysseyMode)
+  const heroId = useUi((s) => s.heroId)
 
   return (
     <div className="panel menu" data-testid="panel-menu">
@@ -397,6 +399,30 @@ function MenuMain() {
         >
           Odyssey 1000 m (Z5–Z8)
         </button>
+      </div>
+      <div className="mode-row" data-testid="hero-selector">
+        {HEROES.map((h) => (
+          <button
+            key={h.id}
+            type="button"
+            className={heroId === h.id ? 'chip active' : 'chip'}
+            data-testid={`hero-${h.id}`}
+            title={h.title}
+            onClick={() => game.setHero(h.id)}
+          >
+            <span
+              style={{
+                display: 'inline-block',
+                width: 9,
+                height: 9,
+                borderRadius: '50%',
+                background: h.swatch,
+                marginRight: 6,
+              }}
+            />
+            {h.name}
+          </button>
+        ))}
       </div>
 
       {/* Optional Challenge Modifiers */}

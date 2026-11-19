@@ -1,4 +1,6 @@
 import { GhostSystem } from './ghost.ts'
+import { applyHeroStyle, loadHeroId, saveHeroId } from '../character/heroes.ts'
+import type { HeroId } from '../character/heroes.ts'
 import { AETHER_GRAVITY, AETHER_LOW_G_ALTITUDE_M, ODYSSEY_SUMMIT_M, ODYSSEY_UPDRAFS } from '../level/odyssey.ts'
 import { SKY_RELICS, loadCollectedRelics, saveCollectedRelics } from '../level/relicsData.ts'
 // Runtime game singleton: wires the state machine (state.ts) to its effects and owns references to the
@@ -151,13 +153,14 @@ class Game {
   private visitedSanctuaries = new Set<number>()
   readonly ghost = new GhostSystem()
   readonly collectedRelics: Set<string> = loadCollectedRelics()
+  heroId: HeroId = loadHeroId()
 
   constructor() {
     this.level = loadLevel(currentLevelId())
     this.records = loadRecords(this.level.summitM)
     this.setLevel(this.level)
     this.refreshSavedRun()
-    useUi.setState({ relicCount: this.collectedRelics.size })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
   }
 
   setLevel(level: LoadedLevel): void {
@@ -172,6 +175,14 @@ class Game {
   setChallengeMode(mode: ChallengeMode): void {
     this.challengeMode = mode
     useUi.setState({ challengeMode: mode })
+  }
+
+  setHero(id: HeroId): void {
+    this.heroId = id
+    saveHeroId(id)
+    useUi.setState({ heroId: id })
+    applyHeroStyle(this.model?.scene, id)
+    this.log('heroChanged', { heroId: id })
   }
 
   setOdysseyMode(on: boolean): void {
@@ -311,7 +322,7 @@ class Game {
         break
       case 'toMenu':
         this.refreshSavedRun()
-    useUi.setState({ relicCount: this.collectedRelics.size })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
         break
       default:
         break
@@ -356,7 +367,7 @@ class Game {
     if (this.collectedRelics.has(id)) return false
     this.collectedRelics.add(id)
     saveCollectedRelics(this.collectedRelics)
-    useUi.setState({ relicCount: this.collectedRelics.size })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
     playWindChime()
     this.toast(`Sky Relic ${this.collectedRelics.size}/${SKY_RELICS.length} — ${name}`)
     this.log('relicCollected', { id, count: this.collectedRelics.size })
@@ -400,7 +411,7 @@ class Game {
     saveRunSave(save)
     this.log('runSaved', { lastSafe: save.lastSafe, timerMs: Math.round(save.timerMs) })
     this.refreshSavedRun()
-    useUi.setState({ relicCount: this.collectedRelics.size })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
   }
 
   refreshSavedRun(): void {
@@ -473,7 +484,7 @@ class Game {
     saveRecords(records)
     clearRunSave()
     this.refreshSavedRun()
-    useUi.setState({ relicCount: this.collectedRelics.size })
+    useUi.setState({ relicCount: this.collectedRelics.size, heroId: this.heroId })
     this.inputLockedUntil = performance.now() + VICTORY_LOCK_MS
     const victory: VictorySummary = {
       timerMs: this.run.timerMs,
@@ -543,6 +554,7 @@ class Game {
 
   setModel(model: LoadedModel | null): void {
     this.model = model
+    if (model) applyHeroStyle(model.scene, this.heroId)
     this.modelReady = model != null
     this.tryLoaded()
   }

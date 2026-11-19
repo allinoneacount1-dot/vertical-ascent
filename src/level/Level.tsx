@@ -2,7 +2,7 @@
 // level data, procedural visuals outside every BvhPhysicsBody, movers as groups ABOVE a kinematic body, a second
 // camera-blocker world, the finish sensor, and <WorldReady/> after all bodies. Collider meshes stay visible with an
 // invisible material (bake uses traverseVisible).
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { BoxGeometry, Euler, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three'
 import type { Object3D } from 'three'
 import { BvhPhysicsBody, BvhPhysicsSensor, useBvhPhysicsWorld } from '@react-three/viverse'
@@ -20,7 +20,7 @@ import { WorldVista } from './WorldVista.tsx'
 import { CloudSea } from './CloudSea.tsx'
 import { SkyRelics } from './SkyRelics.tsx'
 import { GhostRacer } from './GhostRacer.tsx'
-import { OdysseyWorld } from './OdysseyWorld.tsx'
+const LazyOdysseyWorld = lazy(() => import('./OdysseyWorld.tsx').then((m) => ({ default: m.OdysseyWorld })))
 import { PersonalBestFlag } from './PersonalBestFlag.tsx'
 
 const ROTATION_ORDER = 'YXZ'
@@ -230,7 +230,9 @@ export function Level({ level }: { level: LoadedLevel }) {
       <CloudSea level={level} />
       <SkyRelics level={level} />
       <GhostRacer level={level} />
-      <OdysseyWorld level={level} />
+      <Suspense fallback={null}>
+        <LazyOdysseyWorld level={level} />
+      </Suspense>
       <PersonalBestFlag level={level} />
       <FinishSensor level={level} />
       <SummitFeatures level={level} />

@@ -381,6 +381,49 @@ export function playWindChime(): void {
   })
 }
 
+// Procedural Ghibli Ambient Piano / Harp Arpeggio (Fase 4):
+// Gentle altitude-shifted scales routed through ambienceGain (respects mute, volume & Wind Focus muffle).
+const GHIBLI_SCALES = [
+  [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25], // z1: C major pentatonic (warm morning)
+  [349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25],        // z2: F lydian (adventurous valley)
+  [293.66, 329.63, 349.23, 440.0, 493.88, 523.25, 587.33],       // z3: D dorian (nostalgic Laputa)
+  [440.0, 523.25, 659.25, 783.99, 880.0, 987.77],                // z4-z8: Celestial A-minor chimes
+] as const
+let musicTimer = 0.8
+let musicStep = 0
+let musicNotesPlayed = 0
+
+function playGhibliAmbientNote(hRatio: number): void {
+  const ctx = ensureGraph()
+  if (ctx == null || ambienceGain == null || ctx.state !== 'running') return
+  const scaleIdx = hRatio < 0.25 ? 0 : hRatio < 0.55 ? 1 : hRatio < 0.8 ? 2 : 3
+  const scale = GHIBLI_SCALES[scaleIdx]
+  const freq = scale[(musicStep * 3 + scaleIdx) % scale.length]
+  musicStep++
+  musicNotesPlayed++
+  const now = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const over = ctx.createOscillator()
+  const g = ctx.createGain()
+  osc.type = 'triangle'
+  over.type = 'sine'
+  osc.frequency.setValueAtTime(freq, now)
+  over.frequency.setValueAtTime(freq * 2, now)
+  const overGain = ctx.createGain()
+  overGain.gain.setValueAtTime(0.18, now)
+  g.gain.setValueAtTime(0.0001, now)
+  g.gain.linearRampToValueAtTime(0.045, now + 0.08)
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 2.3)
+  osc.connect(g)
+  over.connect(overGain)
+  overGain.connect(g)
+  g.connect(ambienceGain)
+  osc.start(now)
+  over.start(now)
+  osc.stop(now + 2.4)
+  over.stop(now + 2.4)
+}
+
 export function updateAudioFrame(
   dt: number,
   playing: boolean,
@@ -410,6 +453,14 @@ export function updateAudioFrame(
     skyAirGain.gain.value = playing ? skyBell * 0.032 : 0
   }
 
+  if (playing) {
+    musicTimer -= dt
+    if (musicTimer <= 0) {
+      playGhibliAmbientNote(h)
+      musicTimer = 1.9 + (musicStep % 3) * 0.45
+    }
+  }
+
   if (playing && movingOnGround) {
     stepTimer -= dt
     if (stepTimer <= 0) {
@@ -429,6 +480,7 @@ export function audioSnapshot(): {
   footstepCount: number
   lastFootstepAt: number
   focusMuffled: boolean
+  musicNotesPlayed: number
 } {
   return {
     master: Math.round(targetMaster * 1000) / 1000,
@@ -438,5 +490,6 @@ export function audioSnapshot(): {
     footstepCount,
     lastFootstepAt: Math.round(lastFootstepAt),
     focusMuffled,
+    musicNotesPlayed,
   }
 }

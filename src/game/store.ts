@@ -6,6 +6,7 @@ import type { EnterIntent, Snapshot } from './state.ts'
 import type { ZoneSplits } from './run.ts'
 import { DEFAULT_MODIFIERS } from '../level/challenges.ts'
 import type { ChallengeMode, ChallengeModifiers } from '../level/challenges.ts'
+import type { HeroId } from '../character/heroes.ts'
 
 export type Hud = {
   heightM: number
@@ -64,6 +65,7 @@ export type UiStore = {
   relicCount: number
   odysseyMode: boolean
   aetherLowG: boolean
+  heroId: HeroId
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -102,4 +104,5 @@ export const useUi = create<UiStore>(() => ({
   relicCount: 0,
   odysseyMode: false,
   aetherLowG: false,
+  heroId: 'sora',
 }))
