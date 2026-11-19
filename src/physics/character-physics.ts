@@ -1,4 +1,4 @@
-// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; licence text verbatim in licenses/pmndrs-viverse.LICENSE.txt (THIRD_PARTY_NOTICES.md). Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); drops sub-nanosecond substep remainders and reports isGroundedRaw over the whole step (D-036); writes back the landing substep (D-037); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
+// Derived from pmndrs/viverse packages/viverse/src/physics/index.ts @ b88c0e7 (npm 0.2.29). Copyright 2024 Bela Bohlender, MIT; licence text verbatim in licenses/pmndrs-viverse.LICENSE.txt (THIRD_PARTY_NOTICES.md). Modifications (c) 2026 Vertical Ascent project owner: TS rules (no parameter properties, import type); defaults updatesPerSecond 240, maxGroundSlope 1.0, coyoteTime 0.12; isGroundedRaw, canJump, velocity getter, jump(speed) sets vy, impulse with per-axis cap, resetVelocity, teleport, applyCarry, setGravity, nudge; forceWriteBack for carried steps and near kinematic bodies; throws when the model has no parent; marks shapecast/sensor triangles dirty (stale-plane fix, D-032); drops sub-nanosecond substep remainders and reports isGroundedRaw over the whole step (D-036); writes back the landing substep (D-037); CharacterPhysicsPort facade (DIRECTIVE D-002, ref/04 Checklist vendoring).
 //
 // The only module that writes character position and velocity (ref/02 Pemilik besaran).
 import { Box3, Line3, Matrix4, Object3D, Vector3 } from 'three'
@@ -80,6 +80,11 @@ export class CharacterPhysics {
     return this.options
   }
 
+  /** Dynamic gravity override (e.g. Moon Gravity modifier). */
+  setGravity(gravity: number): void {
+    this.options.gravity = gravity
+  }
+
   /** Library semantics (0.2 s grace); kept for reference, the game uses isGroundedRaw / canJump. */
   get isGrounded(): boolean {
     return this.notGroundedSeconds < 0.2
@@ -137,6 +142,19 @@ export class CharacterPhysics {
     this.prevSubstepGrounded = false
   }
 
+  /** Small world-space offset for smooth ledge mantling without resetting horizontal momentum. */
+  nudge(model: Object3D, dx: number, dy: number, dz: number): void {
+    const parent = requireParent(model)
+    parent.updateWorldMatrix(true, false)
+    carried.copy(model.position).applyMatrix4(parent.matrixWorld)
+    carried.x += dx
+    carried.y += dy
+    carried.z += dz
+    invertedParentMatrix.copy(parent.matrixWorld).invert()
+    model.position.copy(carried).applyMatrix4(invertedParentMatrix)
+    this.carryPending = true
+  }
+
   /** Moves the feet by a world-space rigid transform delta (platform carry); forces write-back on the next update(). */
   applyCarry(model: Object3D, delta: Matrix4): void {
     const parent = requireParent(model)
@@ -184,11 +202,6 @@ export class CharacterPhysics {
         this.notGroundedSeconds = 0
         anyGrounded = true
       }
-      // Library: write back only when airborne or moving (prevents creeping on slopes while idle).
-      // Vendored: also when this step carries the character or the capsule is near a kinematic body,
-      // otherwise an idle player is neither carried nor pushed out (physics/index.ts:111-113, D-012);
-      // and on the landing substep (previous substep airborne), otherwise the landing correction is dropped and
-      // the player hovers one substep of fall travel above the ground, then falls again (D-037).
       if (
         !isGrounded ||
         !this.prevSubstepGrounded ||
@@ -278,11 +291,6 @@ export class CharacterPhysics {
   }
 }
 
-/**
- * The world reuses one ExtendedTriangle and refills it with Triangle.copy, which does not set needsUpdate,
- * so three-mesh-bvh 0.9.17 would keep the cached plane of the first triangle ever tested and run the
- * segment-pierce test against it (ExtendedTriangle.js closestPointToSegment). Mark it dirty first (D-032).
- */
 function markDirty(triangle: unknown): void {
   ;(triangle as { needsUpdate: boolean }).needsUpdate = true
 }
@@ -294,7 +302,6 @@ function requireParent(model: Object3D): Object3D {
   return model.parent
 }
 
-/** World AABB of the capsule standing at feet, grown by KINEMATIC_MARGIN. */
 function capsuleBox(feet: Vector3, options: CharacterPhysicsOptions, target: Box3): Box3 {
   const r = options.capsuleRadius + KINEMATIC_MARGIN
   target.min.set(feet.x - r, feet.y - KINEMATIC_MARGIN, feet.z - r)
@@ -302,22 +309,17 @@ function capsuleBox(feet: Vector3, options: CharacterPhysicsOptions, target: Box
   return target
 }
 
-/**
- * The narrow interface every other module uses (ref/04 Checklist vendoring 8).
- * groundBody is controller state (carry probe), not part of the port.
- */
 export interface CharacterPhysicsPort {
   step(dt: number): void
   jump(speed: number): void
   impulse(v: Vector3, capPerAxis?: number): void
   teleport(p: Vector3): void
+  nudge(dx: number, dy: number, dz: number): void
+  setGravity(gravity: number): void
   resetVelocity(): void
   applyCarry(delta: Matrix4): void
-  /** Mutable vector written only by src/controller/; read by step(). */
   readonly inputVelocity: Vector3
-  /** World-space feet position (copy). */
   readonly position: Vector3
-  /** input + state velocity (copy). */
   readonly velocity: Vector3
   readonly isGroundedRaw: boolean
   readonly canJump: boolean
@@ -337,6 +339,8 @@ export function createCharacterPhysicsPort(
     jump: (speed) => physics.jump(speed),
     impulse: (v, cap) => physics.impulse(v, cap),
     teleport: (p) => physics.teleport(model, p),
+    nudge: (dx, dy, dz) => physics.nudge(model, dx, dy, dz),
+    setGravity: (g) => physics.setGravity(g),
     resetVelocity: () => physics.resetVelocity(),
     applyCarry: (delta) => physics.applyCarry(model, delta),
     inputVelocity: physics.inputVelocity,

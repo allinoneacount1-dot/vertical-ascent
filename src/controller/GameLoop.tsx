@@ -1,14 +1,14 @@
-// Frame order (ref/02 §Frame order): -3 frame clock + platforms, -2 controller. No positive priorities.
+// Frame order (ref/02 §Frame order): -3 frame clock + Wind Focus timeScale + platforms, -2 controller + challenges.
 import { useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { JumpAction, MoveBackwardAction, MoveForwardAction, MoveLeftAction, MoveRightAction, RunAction } from '@react-three/viverse'
 import { game } from '../game/game.ts'
 import { useUi } from '../game/store.ts'
+import { setFocusAudio } from '../audio/engine.ts'
 import type { ControlInput } from './character-controller.ts'
 
 const input: ControlInput = { forward: 0, backward: 0, left: 0, right: 0, run: false }
 
-/** Marks actions as used once per page session; the first-run controls strip fades them (D-021). */
 const used = new Set<string>()
 function markUsed(action: string): void {
   if (used.has(action)) return
@@ -21,7 +21,6 @@ function noteUsed(i: ControlInput): void {
 }
 
 export function GameLoop() {
-  // JumpAction is an EventAction: requiresPointerLock does not gate it, so gate here (D-004); stamp sim time (D-011)
   useEffect(() => {
     const abort = new AbortController()
     JumpAction.subscribe(
@@ -36,19 +35,29 @@ export function GameLoop() {
     return () => abort.abort()
   }, [])
 
-  // -3: clamp/discard the frame delta, then platforms + world clock (or defer to per-slice advance)
+  // -3: clamp/discard the frame delta, apply Wind Focus timeScale (0.45x), then platforms + world clock
   useFrame((_, delta) => {
     game.frame++
     const playing = game.snapshot.state === 'PLAYING'
-    const dt = game.frameClock.begin(delta, playing)
-    game.motion.beginFrame(dt)
+    const rawDt = game.frameClock.begin(delta, playing)
+    const timeScale = game.challenges.updateFocus(
+      rawDt,
+      playing,
+      game.port?.isGroundedRaw ?? false,
+      game.modifiers.noWindFocus,
+    )
+    setFocusAudio(game.challenges.focusActive)
+    if (game.model && playing) game.model.mixer.timeScale = timeScale
+    const simDt = rawDt * timeScale
+    game.simDt = simDt
+    game.motion.beginFrame(simDt)
   }, -3)
 
-  // -2: input → sprintActive → velocity → per slice: carry → jump → step (character-controller.ts)
+  // -2: input → sprintActive → velocity → per slice: carry → jump → step → challenges → kill plane
   useFrame(() => {
     const controller = game.controller
     if (controller == null) return
-    const dt = game.frameClock.dt
+    const dt = game.simDt
     if (dt > 0) {
       input.forward = MoveForwardAction.get()
       input.backward = MoveBackwardAction.get()
@@ -57,6 +66,7 @@ export function GameLoop() {
       input.run = RunAction.get()
       if (input.forward + input.backward + input.left + input.right > 0) game.run.noteMovementInput()
       controller.stepFrame(dt, input, game.cameraRig?.yaw ?? game.spawnYaw, game.sprintMode)
+      game.stepChallenges(dt)
       game.checkKillPlane()
       noteUsed(input)
     }

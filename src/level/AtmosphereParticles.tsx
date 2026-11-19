@@ -1,4 +1,5 @@
 // Single-draw-call ambient wind motes / sunlit pollen / sky stardust (G4/Ghibli atmosphere).
+// Reacts to Crosswind Gust telegraph & active gusts (Tahap 2) by thickening/brightening and accelerating laterally.
 // Wraps smoothly around the player in a 90x45x90 m volume with zero per-frame allocations.
 import { useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -12,6 +13,7 @@ const SPAN_Y = 45
 const COL_LOW = new Color('#ffe7b0')
 const COL_MID = new Color('#eef7ff')
 const COL_HIGH = new Color('#cde4ff')
+const COL_GUST = new Color('#ffffff')
 const tmpColor = new Color()
 
 function softMoteTexture(): CanvasTexture | null {
@@ -84,13 +86,18 @@ export function AtmosphereParticles() {
     const cy = (at?.y ?? 0) + 6
     const cz = at?.z ?? 0
     const hRatio = Math.max(0, Math.min(1, game.level.summitM > 0 ? game.run.heightM / game.level.summitM : 0))
-    const windSpeed = 1.4 + hRatio * 4.2
+    const gust = game.challenges.windIntensity
+    const gustDirX = Math.cos(game.challenges.windAngle)
+    const gustDirZ = Math.sin(game.challenges.windAngle)
+    const windSpeed = 1.4 + hRatio * 4.2 + gust * 18.0
     const t = state.clock.elapsedTime
 
     if (hRatio < 0.5) tmpColor.copy(COL_LOW).lerp(COL_MID, hRatio * 2)
     else tmpColor.copy(COL_MID).lerp(COL_HIGH, (hRatio - 0.5) * 2)
+    if (gust > 0.05) tmpColor.lerp(COL_GUST, Math.min(1, gust * 0.85))
     mat.color.copy(tmpColor)
-    mat.opacity = 0.42 + hRatio * 0.32
+    mat.opacity = Math.min(0.95, 0.42 + hRatio * 0.32 + gust * 0.42)
+    mat.size = 0.42 + gust * 0.48
 
     const attr = geom.getAttribute('position') as BufferAttribute
     const arr = attr.array as Float32Array
@@ -98,9 +105,11 @@ export function AtmosphereParticles() {
     const halfY = SPAN_Y / 2
     for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3
-      let x = arr[i3] + windSpeed * seeds[i3] * step
+      const vx = gust > 0.05 ? gustDirX * windSpeed : windSpeed
+      const vz = gust > 0.05 ? gustDirZ * windSpeed : windSpeed * 0.35
+      let x = arr[i3] + vx * seeds[i3] * step
       let y = arr[i3 + 1] + (0.25 + Math.sin(t * 0.9 + seeds[i3 + 2]) * 0.35) * seeds[i3 + 1] * step
-      let z = arr[i3 + 2] + windSpeed * 0.35 * seeds[i3] * step
+      let z = arr[i3 + 2] + vz * seeds[i3] * step
 
       if (x - cx > halfXZ) x -= SPAN_XZ
       else if (x - cx < -halfXZ) x += SPAN_XZ

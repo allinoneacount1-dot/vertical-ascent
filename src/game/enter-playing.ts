@@ -1,6 +1,4 @@
-// The single path into PLAYING and the pause triggers (DIRECTIVE D-004, D-019; ref/02 §State table).
-// PLAYING is entered only after pointerlockchange → canvas; Esc cannot be relied on, so PAUSED is driven by
-// pointerlockchange → null, visibilitychange → hidden, window blur and the P key.
+// The single path into PLAYING and the pause/focus/quick-restart triggers (DIRECTIVE D-004, D-019; Tahap 1–3).
 import { canEnter } from './state.ts'
 import type { EnterIntent } from './state.ts'
 import { useUi } from './store.ts'
@@ -11,21 +9,18 @@ import { t } from '../ui/strings.ts'
 
 type LockOptions = { unadjustedMovement?: boolean }
 
-/** Rotation input ignored right after lock acquisition (D-033). */
 const LOCK_SETTLE_MS = 150
+const QUICK_RESTART_HOLD_MS = 550
 type LockingCanvas = HTMLCanvasElement & { requestPointerLock(options?: LockOptions): Promise<void> | void }
 
-/** Click handler of Play, Continue, New climb, Resume, Restart, Replay, Free roam (D-004). */
 export async function enterPlaying(intent: EnterIntent): Promise<void> {
   const canvas = game.canvas as LockingCanvas | null
   const { snapshot } = useUi.getState()
   if (canvas == null || !game.isWorldReady || !canEnter(snapshot, intent)) return
   resumeAudio()
-  // stored settings apply at the moment of entering play (D-034, D-040): raw input decides the lock options
   game.rawInput = loadSettings().rawInput
   useUi.setState({ pendingIntent: intent, hint: null })
   if (document.pointerLockElement === canvas) {
-    // already locked (e.g. P pause keeps no lock, but be safe): enter directly
     completeEnter()
     return
   }
@@ -61,16 +56,25 @@ function completeEnter(): void {
 
 let installed = false
 
-/** Installs document/window listeners once (the Canvas never unmounts). */
 export function installPlayGuards(canvas: HTMLCanvasElement): void {
   if (installed) return
   installed = true
+
+  let rHoldTimer: ReturnType<typeof setTimeout> | null = null
+  const clearRHold = () => {
+    if (rHoldTimer != null) {
+      clearTimeout(rHoldTimer)
+      rHoldTimer = null
+    }
+  }
 
   document.addEventListener('pointerlockchange', () => {
     if (document.pointerLockElement === canvas) {
       game.cameraRig?.suppressRotation(LOCK_SETTLE_MS)
       completeEnter()
     } else {
+      game.challenges.focusHeld = false
+      clearRHold()
       game.dispatch({ type: 'lockLost' })
     }
   })
@@ -79,12 +83,29 @@ export function installPlayGuards(canvas: HTMLCanvasElement): void {
   })
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
+      game.challenges.focusHeld = false
+      clearRHold()
       game.dispatch({ type: 'hidden' })
-      game.saveRunIfActive() // D-009: the run is written when the page is hidden
+      game.saveRunIfActive()
     } else resumeAudio()
   })
   window.addEventListener('pagehide', () => game.saveRunIfActive())
-  window.addEventListener('blur', () => game.dispatch({ type: 'blur' }))
+  window.addEventListener('blur', () => {
+    game.challenges.focusHeld = false
+    clearRHold()
+    game.dispatch({ type: 'blur' })
+  })
+
+  // Wind Focus via Right Mouse Button (button === 2)
+  window.addEventListener('mousedown', (e) => {
+    if (e.button === 2 && game.snapshot.state === 'PLAYING' && document.pointerLockElement === canvas) {
+      game.challenges.focusHeld = true
+    }
+  })
+  window.addEventListener('mouseup', (e) => {
+    if (e.button === 2) game.challenges.focusHeld = false
+  })
+
   window.addEventListener('keydown', (e) => {
     if (e.repeat) return
     const keys = game.settings.bindings
@@ -92,12 +113,39 @@ export function installPlayGuards(canvas: HTMLCanvasElement): void {
       game.dispatch({ type: 'pauseKey' })
       return
     }
-    if (keys.recentre.includes(e.code) && game.snapshot.state === 'PLAYING') {
-      game.cameraRig?.startRecentre(game.controller?.facingYaw ?? game.spawnYaw, game.reducedMotion)
+    // Wind Focus via Q key (does not conflict with Shift sprint)
+    if (e.code === 'KeyQ' && game.snapshot.state === 'PLAYING') {
+      game.challenges.focusHeld = true
       return
     }
-    // Space on a focused <button> while playing must not click it (D-004)
+    // Relaxed mode checkpoint return via C key
+    if (e.code === 'KeyC' && game.snapshot.state === 'PLAYING' && game.challengeMode === 'relaxed') {
+      game.returnToCheckpoint()
+      return
+    }
+    // Quick restart (Shift+R or hold R for 550 ms); short tap of R keeps camera recentre intact
+    if (e.code === 'KeyR' && e.shiftKey && game.snapshot.state === 'PLAYING') {
+      game.quickRestart()
+      return
+    }
+    if (keys.recentre.includes(e.code) && game.snapshot.state === 'PLAYING') {
+      game.cameraRig?.startRecentre(game.controller?.facingYaw ?? game.spawnYaw, game.reducedMotion)
+      if (e.code === 'KeyR') {
+        clearRHold()
+        rHoldTimer = setTimeout(() => {
+          rHoldTimer = null
+          if (game.snapshot.state === 'PLAYING') game.quickRestart()
+        }, QUICK_RESTART_HOLD_MS)
+      }
+      return
+    }
     if (e.code === 'Space' && game.snapshot.state === 'PLAYING' && e.target instanceof HTMLButtonElement) e.preventDefault()
   })
+
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'KeyQ') game.challenges.focusHeld = false
+    if (e.code === 'KeyR') clearRHold()
+  })
+
   canvas.addEventListener('contextmenu', (e) => e.preventDefault())
 }

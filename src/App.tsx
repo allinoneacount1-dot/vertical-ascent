@@ -21,22 +21,15 @@ import { updateAudioFrame } from './audio/engine.ts'
 import { CAMERA } from './camera/camera-rig.ts'
 import { assetUrl } from './assets.ts'
 
-/**
- * Mouse bindings mounted once at the Canvas root (D-004). Keyboard bindings are created imperatively once at
- * Canvas creation (src/game/input-bindings.ts) so rebinding never remounts them (D-021).
- */
 function Bindings() {
   usePointerLockRotateZoomActionBindings({ lockOnClick: false })
   return null
 }
 
-/** Poly Haven HDRI as image-based lighting only; the visible sky stays drei <Sky> (ref/05 §Sumber HDRI). */
 const HDRI_URL = assetUrl('assets/hdri/industrial_sunset_puresky_1k.hdr')
 
-/** Sun direction shared by the sky and the shadow light. */
 const SUN: [number, number, number] = [-12, 20, 10]
 const SUN_DISTANCE = 80
-/** Fog band (ref/03 §Isyarat ketinggian): smoothly shifts with altitude from Ghibli sunset to celestial indigo. */
 const FOG_COLOR = '#e4cab6'
 const FOG_NEAR = 220
 const FOG_FAR = 1500
@@ -58,7 +51,7 @@ function lerpStops(stops: Color[], t: number, out: Color): Color {
   return out.copy(stops[i]).lerp(stops[i + 1], scaled - i)
 }
 
-/** Shadow light + altitude-driven Ghibli lighting & audio update. */
+/** Shadow light + altitude-driven Ghibli lighting & audio update (with Crosswind Gust roar). */
 function SunLight() {
   const light = useRef<DirectionalLight>(null)
   const hemi = useRef<HemisphereLight>(null)
@@ -77,9 +70,16 @@ function SunLight() {
     const playing = game.snapshot.state === 'PLAYING'
     const hRatio = game.level.summitM > 0 ? Math.max(0, Math.min(1, game.run.heightM / game.level.summitM)) : 0
     const moving = p != null && p.isGroundedRaw && Math.hypot(p.velocity.x, p.velocity.z) > 0.5
-    updateAudioFrame(Math.min(dt, 0.1), playing, hRatio, c?.bigFall ?? false, moving, c?.sprintActive ?? false)
+    updateAudioFrame(
+      Math.min(dt, 0.1),
+      playing,
+      hRatio,
+      c?.bigFall ?? false,
+      moving,
+      c?.sprintActive ?? false,
+      game.challenges.windIntensity,
+    )
 
-    // Altitude-driven Ghibli atmosphere (in-place color updates, zero allocations)
     if (l != null) l.color.copy(lerpStops(SUN_STOPS, hRatio, tmpSun))
     if (hemi.current != null) {
       hemi.current.color.copy(lerpStops(HEMI_SKY_STOPS, hRatio, tmpHemiSky))
@@ -110,11 +110,6 @@ function SunLight() {
   )
 }
 
-/**
- * Fog-coloured bowl below the horizon, centred on the camera: where no ground is drawn (past the far ground plane, seen
- * from the summit) the view shows haze instead of the sky dome's lower half, so the world has no visible edge (ref/03).
- * Drawn after the opaque scene without writing depth, it only fills pixels nothing else covered.
- */
 function HorizonBowl() {
   const { bowl, mat } = useMemo(() => {
     const mat = new MeshBasicMaterial({ color: FOG_COLOR, side: BackSide, fog: false, depthWrite: false })

@@ -3,29 +3,36 @@
 import { create } from 'zustand'
 import { INITIAL_SNAPSHOT } from './state.ts'
 import type { EnterIntent, Snapshot } from './state.ts'
+import type { ZoneSplits } from './run.ts'
+import { DEFAULT_MODIFIERS } from '../level/challenges.ts'
+import type { ChallengeMode, ChallengeModifiers } from '../level/challenges.ts'
 
 export type Hud = {
   heightM: number
   targetM: number
   timerMs: number
   showTimer: boolean
-  /** Sprint glyph shown while sprint is active in Toggle/Always mode (D-010). */
   sprintGlyph: boolean
-  /** Lost meters shown briefly on HUD after a big fall (TEST-12b). */
   lostM: number | null
-  /** Increments on every HUD sample (TEST-01 observes store changes while the model stays mounted). */
+  /** Wind Focus stamina 0..1 and active state (Tahap 1). */
+  focusRatio: number
+  focusActive: boolean
+  /** Crosswind phase & shelter status (Tahap 2). */
+  windPhase: 'calm' | 'telegraph' | 'gust'
+  windSheltered: boolean
+  /** Speedrun zone splits Z1–Z4 (Tahap 3). */
+  splits: ZoneSplits
+  /** Highest unlocked relaxed checkpoint label (e.g. '125 m'), or null. */
+  checkpointLabel: string | null
   tick: number
 }
 
 export type Toast = { id: number; text: string }
 
-/** Overlay sub-screens of MENU and PAUSED. */
 export type Panel = 'main' | 'settings' | 'controls' | 'credits' | 'best' | 'confirmRestart' | 'confirmNewClimb'
 
-/** Summary of a saved climb for the MENU Continue button (D-009). */
 export type SavedRunInfo = { heightM: number; timerMs: number }
 
-/** VICTORY summary (D-023); mirrors game.ts VictorySummary. */
 export type VictoryInfo = {
   timerMs: number
   newBest: boolean
@@ -39,26 +46,21 @@ export type VictoryInfo = {
 export type UiStore = {
   snapshot: Snapshot
   worldReady: boolean
-  /** enterPlaying() asked for pointer lock and waits for pointerlockchange → canvas. */
   pendingIntent: EnterIntent | null
-  /** "Click again" hint after a rejected pointer lock request (D-004). */
   hint: string | null
   hud: Hud
   toasts: Toast[]
-  /** performance.now() of the last kill-plane respawn (300 ms fade, D-007), or 0 */
   fadeAt: number
   panel: Panel
   savedRun: SavedRunInfo | null
   victory: VictoryInfo | null
-  /** performance.now() until which the victory buttons stay disabled (D-023). */
   victoryLockedUntil: number
-  /** UI scale 1–2 (D-021) and the UI language (overlay re-renders on change). */
   uiScale: number
   lang: 'id' | 'en'
-  /** Actions used at least once this page session (the first-run controls strip fades them out, D-021). */
   usedActions: string[]
-  /** Real summit revealed: its beacon is lit and the fake one is out (ref/03 §Puncak palsu). */
   summitRevealed: boolean
+  challengeMode: ChallengeMode
+  modifiers: ChallengeModifiers
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -66,7 +68,21 @@ export const useUi = create<UiStore>(() => ({
   worldReady: false,
   pendingIntent: null,
   hint: null,
-  hud: { heightM: 0, targetM: 0, timerMs: 0, showTimer: true, sprintGlyph: false, lostM: null, tick: 0 },
+  hud: {
+    heightM: 0,
+    targetM: 0,
+    timerMs: 0,
+    showTimer: true,
+    sprintGlyph: false,
+    lostM: null,
+    focusRatio: 1,
+    focusActive: false,
+    windPhase: 'calm',
+    windSheltered: false,
+    splits: { z1: null, z2: null, z3: null, z4: null },
+    checkpointLabel: null,
+    tick: 0,
+  },
   toasts: [],
   fadeAt: 0,
   panel: 'main',
@@ -77,4 +93,6 @@ export const useUi = create<UiStore>(() => ({
   lang: 'en',
   usedActions: [],
   summitRevealed: false,
+  challengeMode: 'hardcore',
+  modifiers: { ...DEFAULT_MODIFIERS },
 }))

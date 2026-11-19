@@ -1,8 +1,8 @@
-// Third-person camera (DIRECTIVE D-014, ref/04 §Kamera). The only writer of camera.position, camera.rotation,
-// zoomDistance and the camera FOV (ref/02 Pemilik besaran). React-free; CameraRig.tsx calls update() at priority -1.
+// Third-person camera (DIRECTIVE D-014, ref/04 §Kamera) + optional First-Person Challenge Modifier (Tahap 3).
+// The only writer of camera.position, camera.rotation, zoomDistance and the camera FOV (ref/02 Pemilik besaran).
 import { BvhPhysicsWorld, CharacterCameraBehavior, ZoomAction } from '@pmndrs/viverse'
 import type { CharacterCameraBehaviorOptions } from '@pmndrs/viverse'
-import { MathUtils, Ray, Vector3 } from 'three'
+import { Euler, MathUtils, Ray, Vector3 } from 'three'
 import type { Object3D, PerspectiveCamera } from 'three'
 
 const DEG = Math.PI / 180
@@ -33,11 +33,12 @@ export const CAMERA = Object.freeze({
 
 const pivotOffset = new Vector3()
 const sideRay = new Ray()
-/** Minimum free space kept between the shifted pivot and any blocker (whisker 0.25 m + 0.1 m). */
 const SIDE_MARGIN = 0.35
 const right = new Vector3()
 const up = new Vector3()
 const whiskerRay = new Ray()
+const fpPos = new Vector3()
+const fpEuler = new Euler(0, 0, 0, 'YXZ')
 const WHISKERS: ReadonlyArray<readonly [number, number]> = [
   [0, 0],
   [1, 0],
@@ -48,20 +49,17 @@ const WHISKERS: ReadonlyArray<readonly [number, number]> = [
 
 export class CameraRig {
   readonly behavior = new CharacterCameraBehavior()
-  /** Simplified blocker hulls only (no railings, cables, thin pipes). */
   readonly world: BvhPhysicsWorld
-  /** Player-chosen distance (wheel), clamped to [minZoom, maxZoom]. */
   userZoom: number = CAMERA.defaultZoom
-  /** +1 m while bigFall (D-014, G4). */
   bigFallExtra = 0
   fov: number = CAMERA.defaultFov
-  /** Settings (D-021): rotation sensitivity 0.2–3 and invert-Y, applied to the raw yaw/pitch deltas. */
   sensitivity = 1
   invertY = false
-  /** Sprint kick (D-014): +10° while sprinting when enabled and motion is not reduced; eased with λ = 10. */
   sprintKick = true
   sprinting = false
   reducedMotion = false
+  /** First-person challenge modifier (Tahap 3). */
+  firstPerson = false
   private kick = 0
   private readonly zoomAbort = new AbortController()
   private readonly zoomReader = ZoomAction.createReader(this.zoomAbort.signal)
@@ -71,16 +69,13 @@ export class CameraRig {
   private recentre: { from: number; to: number; fromPitch: number; t: number } | null = null
   private readonly options: CharacterCameraBehaviorOptions
 
-  /** Last measured shortest hit distance (m) or null; for tests and __game. */
   lastHit: number | null = null
-  /** The camera this rig drives (read-only use outside src/camera/). */
   camera: PerspectiveCamera | null = null
 
   constructor(world: BvhPhysicsWorld) {
     this.world = world
     this.options = {
       rotation: { minPitch: CAMERA.minPitch, maxPitch: CAMERA.maxPitch },
-      // speed 0 = wheel never changes zoomDistance inside the library; the game owns zoom (one writer).
       zoom: { speed: 0, minDistance: 0, maxDistance: 100 },
       collision: { offset: 0.2 },
       characterBaseOffset: pivotOffset.set(0, CAMERA.pivotHeight, 0),
@@ -95,12 +90,10 @@ export class CameraRig {
     return this.behavior.rotationPitch
   }
 
-  /** Actual camera distance after collision (library internal, read for tests and __game). */
   get distance(): number {
-    return (this.behavior as unknown as { collisionFreeZoomDistance: number }).collisionFreeZoomDistance
+    return this.firstPerson ? 0 : (this.behavior as unknown as { collisionFreeZoomDistance: number }).collisionFreeZoomDistance
   }
 
-  /** Spawn and Restart: explicit yaw/pitch (the library's first-update branch never runs). */
   setView(yaw: number, pitch: number = CAMERA.defaultPitch): void {
     this.behavior.rotationYaw = yaw
     this.behavior.rotationPitch = pitch
@@ -108,12 +101,10 @@ export class CameraRig {
     this.smoothed = null
   }
 
-  /** Platform yaw carry (ref/04 §Carry 4). */
   addYaw(dYaw: number): void {
     this.behavior.rotationYaw += dYaw
   }
 
-  /** Recentre behind the character, pitch -20°, eased ~0.2 s (instant with reduced motion). */
   startRecentre(facingYaw: number, reducedMotion: boolean): void {
     const from = this.behavior.rotationYaw
     let to = facingYaw
@@ -125,29 +116,22 @@ export class CameraRig {
     this.recentre = { from, to, fromPitch: this.behavior.rotationPitch, t: 0 }
   }
 
-  /** Drains zoom events while the game is paused so nothing piles up (library reader pitfall). */
   drainInput(): void {
     this.zoomReader.update()
   }
 
   private suppressUntil = 0
 
-  /** Ignore rotation input for ms after pointer lock is acquired (first-event movement spike, D-033). */
   suppressRotation(ms: number): void {
     this.suppressUntil = performance.now() + ms
   }
 
   private dropRotationInput(): void {
     const b = this.behavior as unknown as { yawReader: { update(): void }; pitchReader: { update(): void } }
-    // moving queued deltas into "current" now means the library's own update() sees an empty queue
     b.yawReader.update()
     b.pitchReader.update()
   }
 
-  /**
-   * Reads this frame's rotation deltas before the library does (its update() then finds an empty queue) and
-   * applies sensitivity and invert-Y (D-021); the library has one speed for both axes and no invert.
-   */
   private applyRotationInput(): void {
     const b = this.behavior as unknown as { yawReader: { update(): void; get(): number }; pitchReader: { update(): void; get(): number } }
     b.yawReader.update()
@@ -160,11 +144,9 @@ export class CameraRig {
     this.behavior.rotationPitch = MathUtils.clamp(pitch, CAMERA.minPitch, CAMERA.maxPitch)
   }
 
-  /** Priority -1. target = the physics root (feet). */
   update(camera: PerspectiveCamera, target: Object3D, dt: number): void {
     this.camera = camera
     this.frameDt = dt
-    // zoom: the game reads ZoomAction itself (D-014); wheel down (+) zooms out
     this.zoomReader.update()
     const dz = this.zoomReader.get()
     if (dz !== 0) this.userZoom = MathUtils.clamp(this.userZoom * (1 + dz), CAMERA.minZoom, CAMERA.maxZoom)
@@ -179,18 +161,22 @@ export class CameraRig {
       if (r.t >= 1) this.recentre = null
     }
 
-    // below -50° pitch the pivot shifts 0.6 m sideways (eased so the view does not jump), but never closer than
-    // SIDE_MARGIN to a blocker in any horizontal direction: a pivot inside a wall makes the collision ray start inside
-    // the closed hull, miss its near faces and leave the camera in the wall (TEST-10 attempt 2, D-039)
-    const sideWanted = this.behavior.rotationPitch < CAMERA.steepPitch ? CAMERA.steepSideShift : 0
-    const sideAllowed = Math.max(0, Math.min(sideWanted, this.sideClearance(target) - SIDE_MARGIN))
-    if (sideAllowed < this.side) this.side = sideAllowed // snap in, like the collision distance
-    else this.side += (sideAllowed - this.side) * (1 - Math.exp(-dt / 0.15))
-    pivotOffset.set(this.side, CAMERA.pivotHeight, 0)
-
     if (performance.now() < this.suppressUntil) this.dropRotationInput()
     else this.applyRotationInput()
-    this.behavior.update(camera, target, dt, this.camRaycast, this.options)
+
+    if (this.firstPerson) {
+      target.getWorldPosition(fpPos)
+      camera.position.set(fpPos.x, fpPos.y + 1.55, fpPos.z)
+      fpEuler.set(this.behavior.rotationPitch, this.behavior.rotationYaw, 0, 'YXZ')
+      camera.quaternion.setFromEuler(fpEuler)
+    } else {
+      const sideWanted = this.behavior.rotationPitch < CAMERA.steepPitch ? CAMERA.steepSideShift : 0
+      const sideAllowed = Math.max(0, Math.min(sideWanted, this.sideClearance(target) - SIDE_MARGIN))
+      if (sideAllowed < this.side) this.side = sideAllowed
+      else this.side += (sideAllowed - this.side) * (1 - Math.exp(-dt / 0.15))
+      pivotOffset.set(this.side, CAMERA.pivotHeight, 0)
+      this.behavior.update(camera, target, dt, this.camRaycast, this.options)
+    }
 
     const kickTarget = this.sprintKick && this.sprinting && !this.reducedMotion ? CAMERA.sprintKick : 0
     this.kick += (kickTarget - this.kick) * (1 - Math.exp(-10 * dt))
@@ -201,13 +187,7 @@ export class CameraRig {
     }
   }
 
-  /**
-   * D-014: centre ray + 4 whiskers (±0.25 m) against the camera world, shortest hit; snap in, ease out
-   * (τ = 0.15 s); returns max(s, 0.55) so the distance after the library's 0.2 offset stays ≥ 0.35.
-   * Always returns a number so that easing also applies when nothing is hit.
-   */
   readonly camRaycast = (ray: Ray, far: number): number => {
-    // perpendicular axes of the ray (ray points from the pivot toward the camera)
     right.set(0, 1, 0).cross(ray.direction)
     if (right.lengthSq() < 1e-8) right.set(1, 0, 0)
     right.normalize()
@@ -220,7 +200,6 @@ export class CameraRig {
       if (hit != null && hit.distance < shortest) shortest = hit.distance
     }
     this.lastHit = Number.isFinite(shortest) ? shortest : null
-    // no hit: aim for the full distance (far + offset, so the library's "- 0.2" lands on far)
     const target = Number.isFinite(shortest) ? Math.min(shortest, far + 0.2) : far + 0.2
     if (this.smoothed == null || target < this.smoothed) {
       this.smoothed = target
@@ -230,7 +209,6 @@ export class CameraRig {
     return Math.max(this.smoothed, CAMERA.minReturn)
   }
 
-  /** Shortest horizontal free distance from the base pivot (feet + pivotHeight) over 8 directions, capped. */
   private sideClearance(target: Object3D): number {
     target.getWorldPosition(sideRay.origin)
     sideRay.origin.y += CAMERA.pivotHeight
@@ -245,7 +223,6 @@ export class CameraRig {
     return shortest
   }
 
-  /** Current sideways pivot shift (m), for tests and __game. */
   get sideShift(): number {
     return this.side
   }

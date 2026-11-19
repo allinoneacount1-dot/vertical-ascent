@@ -1,7 +1,6 @@
-// DOM overlay (DIRECTIVE D-005, D-008, D-009, D-021, D-023): menu (Play or Continue + New climb, Settings, Controls,
-// Credits, Best), pause menu (Resume, Restart with confirmation, Save & quit, Settings, Controls), victory summary
-// with a 2 s lock (Replay, Free roam, Menu), HUD (height / target, timer, sprint glyph), first-run controls strip,
-// toasts in an aria-live region, kill-plane fade. Only the overlay subscribes to the store; the Canvas never does.
+// DOM overlay (DIRECTIVE D-005, D-008, D-009, D-021, D-023; Tahap 1–3):
+// Menu with Hardcore/Relaxed mode + Challenge Modifiers, HUD with Wind Focus stamina bar,
+// Crosswind gust indicator, Speedrun Zone Splits (Z1–Z4), and quick restart support.
 import { useEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { useUi } from '../game/store.ts'
@@ -20,7 +19,6 @@ import type { StringId } from './strings.ts'
 
 const setPanel = (panel: Panel) => useUi.setState({ panel })
 
-/** mm:ss.d for the victory and best screens. */
 function formatTenths(ms: number): string {
   return `${formatHud(ms)}.${Math.floor(ms / 100) % 10}`
 }
@@ -28,6 +26,10 @@ function formatTenths(ms: number): string {
 function Hud() {
   const hud = useUi((s) => s.hud)
   const freeRoam = useUi((s) => s.snapshot.mode === 'freeRoam')
+  const challengeMode = useUi((s) => s.challengeMode)
+  const noWindFocus = useUi((s) => s.modifiers.noWindFocus)
+  const splits = hud.splits
+
   return (
     <div className="hud" aria-hidden="true" tabIndex={-1}>
       <div className="hud-block">
@@ -42,6 +44,36 @@ function Hud() {
           <span className="hud-value" data-testid="hud-timer">
             {formatHud(hud.timerMs)}
           </span>
+        </div>
+      )}
+      {!noWindFocus && (
+        <div className={hud.focusActive ? 'hud-block hud-focus active' : 'hud-block hud-focus'} data-testid="hud-focus">
+          <span className="hud-label">{t('windFocus')} (Q)</span>
+          <div className="focus-bar">
+            <div className="focus-fill" style={{ width: `${Math.round(hud.focusRatio * 100)}%` }} />
+          </div>
+        </div>
+      )}
+      {hud.windPhase !== 'calm' && (
+        <div className={`hud-block hud-wind ${hud.windPhase}`} data-testid="hud-wind">
+          <span className="hud-label">
+            {hud.windPhase === 'telegraph' ? t('windTelegraph') : t('windGust')}
+            {hud.windSheltered ? ` · ${t('windSheltered')}` : ''}
+          </span>
+        </div>
+      )}
+      {!freeRoam && (
+        <div className="hud-block hud-splits" data-testid="hud-splits">
+          <span className="hud-label" data-testid="hud-mode">
+            {challengeMode === 'hardcore' ? t('modeHardcore') : `${t('modeRelaxed')}${hud.checkpointLabel ? ` · CP ${hud.checkpointLabel}` : ''}`}
+          </span>
+          <div className="splits-row">
+            {(['z1', 'z2', 'z3', 'z4'] as const).map((z) => (
+              <span key={z} className={splits[z] != null ? 'split-chip done' : 'split-chip'}>
+                {z.toUpperCase()} {splits[z] != null ? formatHud(splits[z]!) : '--:--'}
+              </span>
+            ))}
+          </div>
         </div>
       )}
       {hud.sprintGlyph && (
@@ -60,7 +92,6 @@ function Hud() {
   )
 }
 
-/** First-run controls strip (D-021): one item per action, fading once the action has been used; P and R listed. */
 function ControlsStrip() {
   const used = useUi((s) => s.usedActions)
   const items: Array<[string, StringId]> = [
@@ -114,7 +145,6 @@ function SettingsPanel() {
     game.applySettings(next)
     setS(next)
   }
-  // rebinding: the next key press (as KeyboardEvent.code) becomes the action's only key; Escape cancels
   useEffect(() => {
     if (capture == null) return
     const onKey = (e: KeyboardEvent) => {
@@ -207,9 +237,11 @@ function ControlsPanel() {
         <li>{t('keysMove')}</li>
         <li>{t('keysSprint')}</li>
         <li>{t('keysJump')}</li>
+        <li>{t('keysFocus')}</li>
+        <li>{t('keysQuickRestart')}</li>
+        <li>{t('keysCheckpoint')}</li>
         <li>{t('keysLook')}</li>
         <li>{t('pauseHint')}</li>
-        <li>{t('recentreHint')}</li>
       </ul>
       <button type="button" autoFocus data-testid="controls-back" onClick={() => setPanel('main')}>
         {t('back')}
@@ -274,6 +306,9 @@ function MenuMain() {
   const hint = useUi((s) => s.hint)
   const pending = useUi((s) => s.pendingIntent)
   const saved = useUi((s) => s.savedRun)
+  const challengeMode = useUi((s) => s.challengeMode)
+  const modifiers = useUi((s) => s.modifiers)
+
   return (
     <div className="panel menu" data-testid="panel-menu">
       <h1>{t('title')}</h1>
@@ -293,6 +328,63 @@ function MenuMain() {
           </div>
         </>
       )}
+
+      {/* Mode Selector: Hardcore (default) vs Relaxed (Santai) */}
+      <div className="menu-row mode-row">
+        <button
+          type="button"
+          className={challengeMode === 'hardcore' ? 'chip active' : 'chip'}
+          data-testid="mode-hardcore"
+          onClick={() => game.setChallengeMode('hardcore')}
+        >
+          {t('modeHardcore')}
+        </button>
+        <button
+          type="button"
+          className={challengeMode === 'relaxed' ? 'chip active' : 'chip'}
+          data-testid="mode-relaxed"
+          onClick={() => game.setChallengeMode('relaxed')}
+        >
+          {t('modeRelaxed')}
+        </button>
+      </div>
+
+      {/* Optional Challenge Modifiers */}
+      <div className="menu-row mod-row">
+        <button
+          type="button"
+          className={modifiers.constantStorm ? 'chip active' : 'chip'}
+          data-testid="mod-storm"
+          onClick={() => game.setModifiers({ constantStorm: !modifiers.constantStorm })}
+        >
+          {t('modStorm')}
+        </button>
+        <button
+          type="button"
+          className={modifiers.moonGravity ? 'chip active' : 'chip'}
+          data-testid="mod-moon"
+          onClick={() => game.setModifiers({ moonGravity: !modifiers.moonGravity })}
+        >
+          {t('modMoon')}
+        </button>
+        <button
+          type="button"
+          className={modifiers.firstPerson ? 'chip active' : 'chip'}
+          data-testid="mod-fp"
+          onClick={() => game.setModifiers({ firstPerson: !modifiers.firstPerson })}
+        >
+          {t('modFirstPerson')}
+        </button>
+        <button
+          type="button"
+          className={modifiers.noWindFocus ? 'chip active' : 'chip'}
+          data-testid="mod-nofocus"
+          onClick={() => game.setModifiers({ noWindFocus: !modifiers.noWindFocus })}
+        >
+          {t('modNoFocus')}
+        </button>
+      </div>
+
       <div className="menu-row">
         <button type="button" className="secondary" data-testid="settings" onClick={() => setPanel('settings')}>
           {t('settings')}
@@ -424,7 +516,7 @@ export function Overlay() {
   const panel = useUi((s) => s.panel)
   const toasts = useUi((s) => s.toasts)
   const uiScale = useUi((s) => s.uiScale)
-  useUi((s) => s.lang) // re-render every string when the language changes
+  useUi((s) => s.lang)
   const sub =
     panel === 'settings' ? <SettingsPanel /> : panel === 'controls' ? <ControlsPanel /> : panel === 'credits' ? <CreditsPanel /> : panel === 'best' ? <BestPanel /> : null
   return (

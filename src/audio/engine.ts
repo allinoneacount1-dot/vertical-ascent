@@ -1,8 +1,10 @@
-// Procedural Web Audio engine (G4, D-019, TEST-17, TEST-12b): wind bed scaled by height & bigFall,
-// plus footstep / jump / land SFX. Zero external audio files; uses the singleton AudioContext from context.ts.
+// Procedural Web Audio engine (G4, D-019, TEST-17, TEST-12b): wind bed scaled by height, bigFall & crosswind gust,
+// Wind Focus low-pass muffle, plus footstep / jump / land / bounce / crumble / bell / steam / mantle SFX.
+// Zero external audio files; uses the singleton AudioContext from context.ts.
 import { getAudioContext } from './context.ts'
 
 let masterGain: GainNode | null = null
+let focusFilter: BiquadFilterNode | null = null
 let sfxGain: GainNode | null = null
 let ambienceGain: GainNode | null = null
 let windGain: GainNode | null = null
@@ -16,6 +18,7 @@ let currentWindGain = 0
 let stepTimer = 0
 let footstepCount = 0
 let lastFootstepAt = 0
+let focusMuffled = false
 
 function ensureGraph(): AudioContext | null {
   const ctx = getAudioContext()
@@ -23,7 +26,13 @@ function ensureGraph(): AudioContext | null {
   if (masterGain == null) {
     masterGain = ctx.createGain()
     masterGain.gain.value = targetMaster
-    masterGain.connect(ctx.destination)
+
+    focusFilter = ctx.createBiquadFilter()
+    focusFilter.type = 'lowpass'
+    focusFilter.frequency.value = focusMuffled ? 650 : 20000
+    focusFilter.Q.value = 0.8
+    masterGain.connect(focusFilter)
+    focusFilter.connect(ctx.destination)
 
     sfxGain = ctx.createGain()
     sfxGain.gain.value = targetSfx
@@ -69,6 +78,16 @@ export function syncAudioSettings(masterPct: number, sfxPct: number, ambiencePct
   if (masterGain) masterGain.gain.value = targetMaster
   if (sfxGain) sfxGain.gain.value = targetSfx
   if (ambienceGain) ambienceGain.gain.value = targetAmbience
+}
+
+/** Muffle audio softly during Wind Focus slow-motion. */
+export function setFocusAudio(active: boolean): void {
+  if (focusMuffled === active) return
+  focusMuffled = active
+  const ctx = getAudioContext()
+  if (ctx && focusFilter) {
+    focusFilter.frequency.setTargetAtTime(active ? 650 : 20000, ctx.currentTime, 0.08)
+  }
 }
 
 export function playFootstep(): void {
@@ -133,6 +152,126 @@ export function playLand(impactVy: number): void {
   osc.stop(now + 0.15)
 }
 
+/** Elastic spring twang for fabric canopies & bounce mushrooms. */
+export function playBounceTwang(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const lfo = ctx.createOscillator()
+  const lfoGain = ctx.createGain()
+  const g = ctx.createGain()
+  osc.type = 'triangle'
+  osc.frequency.setValueAtTime(135, now)
+  osc.frequency.exponentialRampToValueAtTime(420, now + 0.18)
+  osc.frequency.exponentialRampToValueAtTime(290, now + 0.34)
+  lfo.frequency.value = 26
+  lfoGain.gain.value = 18
+  lfo.connect(lfoGain)
+  lfoGain.connect(osc.frequency)
+  g.gain.setValueAtTime(0.28, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.36)
+  osc.connect(g)
+  g.connect(sfxGain)
+  osc.start(now)
+  lfo.start(now)
+  osc.stop(now + 0.36)
+  lfo.stop(now + 0.36)
+}
+
+/** Rocky crackle telegraph ("krek") for crumbling Laputa stones. */
+export function playCrumbleCrack(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const dur = 0.22
+  const buf = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * dur), ctx.sampleRate)
+  const ch = buf.getChannelData(0)
+  for (let i = 0; i < ch.length; i++) {
+    const env = Math.pow(1 - i / ch.length, 1.4)
+    const burst = i % 190 < 45 ? 1 : 0.25
+    ch[i] = (Math.random() * 2 - 1) * env * burst
+  }
+  const src = ctx.createBufferSource()
+  src.buffer = buf
+  const filter = ctx.createBiquadFilter()
+  filter.type = 'bandpass'
+  filter.frequency.value = 620
+  filter.Q.value = 2.0
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0.28, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + dur)
+  src.connect(filter)
+  filter.connect(g)
+  g.connect(sfxGain)
+  src.start(now)
+  src.stop(now + dur)
+}
+
+/** Warm brass bell chime before a cable gondola departs. */
+export function playGondolaBell(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  for (const [freq, amp] of [
+    [660, 0.14],
+    [1320, 0.06],
+  ]) {
+    const osc = ctx.createOscillator()
+    const g = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(freq, now)
+    g.gain.setValueAtTime(amp, now)
+    g.gain.exponentialRampToValueAtTime(0.0008, now + 0.55)
+    osc.connect(g)
+    g.connect(sfxGain)
+    osc.start(now)
+    osc.stop(now + 0.56)
+  }
+}
+
+/** Pressurized steam hiss telegraph / burst for copper steam pipes. */
+export function playSteamHiss(strong = false): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const dur = strong ? 0.45 : 0.28
+  const buf = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * dur), ctx.sampleRate)
+  const ch = buf.getChannelData(0)
+  for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * Math.sin((i / ch.length) * Math.PI)
+  const src = ctx.createBufferSource()
+  src.buffer = buf
+  const filter = ctx.createBiquadFilter()
+  filter.type = 'highpass'
+  filter.frequency.value = strong ? 1400 : 2200
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(strong ? 0.18 : 0.1, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + dur)
+  src.connect(filter)
+  filter.connect(g)
+  g.connect(sfxGain)
+  src.start(now)
+  src.stop(now + dur)
+}
+
+/** Soft vault / hand-grab cue for ledge mantle. */
+export function playMantle(): void {
+  const ctx = ensureGraph()
+  if (ctx == null || sfxGain == null || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const g = ctx.createGain()
+  osc.type = 'sine'
+  osc.frequency.setValueAtTime(140, now)
+  osc.frequency.exponentialRampToValueAtTime(240, now + 0.08)
+  g.gain.setValueAtTime(0.14, now)
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.09)
+  osc.connect(g)
+  g.connect(sfxGain)
+  osc.start(now)
+  osc.stop(now + 0.09)
+}
+
 export function updateAudioFrame(
   dt: number,
   playing: boolean,
@@ -140,15 +279,17 @@ export function updateAudioFrame(
   bigFall: boolean,
   movingOnGround: boolean,
   sprinting: boolean,
+  gustIntensity = 0,
 ): void {
   const ctx = ensureGraph()
   if (ctx == null || windGain == null || windFilter == null) return
   const h = Math.max(0, Math.min(1, heightRatio))
-  // Wind bed target: 0.05 at 0%, 0.25 at 50%, 0.45 at 100%, +0.35 during bigFall
-  const target = playing ? 0.05 + 0.4 * h + (bigFall ? 0.35 : 0) : 0
+  const g = Math.max(0, Math.min(1, gustIntensity))
+  // Wind bed target: 0.05 at 0%, 0.25 at 50%, 0.45 at 100%, +0.35 during bigFall, +0.32 during crosswind gust
+  const target = playing ? Math.min(1, 0.05 + 0.4 * h + (bigFall ? 0.35 : 0) + g * 0.32) : 0
   currentWindGain = target
   windGain.gain.value = target
-  windFilter.frequency.value = 340 + 500 * h + (bigFall ? 650 : 0)
+  windFilter.frequency.value = 340 + 500 * h + (bigFall ? 650 : 0) + g * 720
 
   if (playing && movingOnGround) {
     stepTimer -= dt
@@ -161,7 +302,15 @@ export function updateAudioFrame(
   }
 }
 
-export function audioSnapshot(): { master: number; sfx: number; ambience: number; wind: number; footstepCount: number; lastFootstepAt: number } {
+export function audioSnapshot(): {
+  master: number
+  sfx: number
+  ambience: number
+  wind: number
+  footstepCount: number
+  lastFootstepAt: number
+  focusMuffled: boolean
+} {
   return {
     master: Math.round(targetMaster * 1000) / 1000,
     sfx: Math.round(targetSfx * 1000) / 1000,
@@ -169,5 +318,6 @@ export function audioSnapshot(): { master: number; sfx: number; ambience: number
     wind: Math.round(currentWindGain * 1000) / 1000,
     footstepCount,
     lastFootstepAt: Math.round(lastFootstepAt),
+    focusMuffled,
   }
 }

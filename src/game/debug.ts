@@ -1,12 +1,12 @@
 // window.__game (ref/02 §window.__game): read-only observation surface for tests and debugging, present in
-// production. Setup helpers __debugTeleport / __debugSetVelocity exist only under import.meta.env.DEV and are
-// used only for setup in physics/smoke tests and play-noisy.ts (D-018).
+// production. Setup helpers __debugTeleport / __debugSetVelocity / __debugSetFocus / __debugSetMode exist only under DEV.
 import { Vector3 } from 'three'
 import type { WebGLRenderer } from 'three'
 import { game } from './game.ts'
 import { useUi } from './store.ts'
 import { audioState } from '../audio/context.ts'
 import { audioSnapshot } from '../audio/engine.ts'
+import type { ChallengeMode, ChallengeModifiers } from '../level/challenges.ts'
 
 type Vec3 = [number, number, number]
 
@@ -26,6 +26,8 @@ function snapshotGame() {
   const rig = game.cameraRig
   const platforms: Record<string, { phase: number }> = {}
   for (const [id, p] of game.motion.platforms) platforms[id] = { phase: r3(p.phase) }
+  const crumbles: Record<string, { phase: string; timer: number }> = {}
+  for (const [id, c] of game.challenges.crumbles) crumbles[id] = { phase: c.phase, timer: r3(c.timer) }
   const info = renderer?.info
   return {
     level: game.level.id,
@@ -35,6 +37,9 @@ function snapshotGame() {
     worldReady: ui.worldReady,
     state: ui.snapshot.state,
     mode: ui.snapshot.mode,
+    challengeMode: game.challengeMode,
+    modifiers: { ...game.modifiers },
+    checkpointIndex: game.checkpointIndex,
     player: {
       pos: port ? arr(port.position) : ([0, 0, 0] as Vec3),
       vel: port ? arr(port.velocity) : ([0, 0, 0] as Vec3),
@@ -45,6 +50,7 @@ function snapshotGame() {
       groundBody: controller?.groundBody ?? null,
       sprintActive: controller?.sprintActive ?? false,
       facingYaw: r3(controller?.facingYaw ?? 0),
+      onSlippery: controller?.onSlippery ?? false,
     },
     run: {
       timerMs: Math.round(game.run.timerMs),
@@ -55,11 +61,23 @@ function snapshotGame() {
       metersLost: game.run.metersLost,
       focusUsed: game.run.focusUsed,
       started: game.run.started,
+      splits: { ...game.run.splits },
+    },
+    challenges: {
+      focusEnergy: r3(game.challenges.focusEnergy),
+      focusActive: game.challenges.focusActive,
+      focusUsedCount: game.challenges.focusUsedCount,
+      bounceCount: game.challenges.bounceCount,
+      crumbleTriggers: game.challenges.crumbleTriggers,
+      mantleCount: game.challenges.mantleCount,
+      slipperyTicks: game.challenges.slipperyTicks,
+      steamPushes: game.challenges.steamPushes,
+      wind: game.challenges.windSnapshot(),
+      crumbles,
     },
     hud: { targetM: ui.hud.targetM, showTimer: ui.hud.showTimer, tick: ui.hud.tick },
     summit: { summitM: game.level.summitM, fakeSummitM: game.level.fakeSummitM, summitRevealed: ui.summitRevealed, fakeSummitAtMs: game.fakeSummitAtMs },
     inputLocked: game.inputLocked,
-    /** Settings in effect and the options of the last pointer-lock request (TEST-39 observes them). */
     settings: JSON.parse(JSON.stringify(game.settings)) as unknown,
     lockOptions: game.lastLockOptions,
     pointerLocked: document.pointerLockElement != null && document.pointerLockElement === game.canvas,
@@ -94,7 +112,6 @@ function snapshotGame() {
 
 let clipName: () => string | null = () => null
 
-/** The animation layer reports the active clip name (set by the character visual). */
 export function setClipReporter(fn: () => string | null): void {
   clipName = fn
 }
@@ -124,7 +141,17 @@ export function installGameGlobal(): void {
         game.log('debugSetVelocity', { v })
       },
     })
+    Object.defineProperty(api, '__debugSetFocus', {
+      value: (held: boolean) => {
+        game.challenges.focusHeld = held
+      },
+    })
+    Object.defineProperty(api, '__debugSetMode', {
+      value: (mode: ChallengeMode, mods?: Partial<ChallengeModifiers>) => {
+        game.setChallengeMode(mode)
+        if (mods) game.setModifiers(mods)
+      },
+    })
   }
-  // configurable so a dev HMR re-run can replace it; tests never write to it
   Object.defineProperty(window, '__game', { value: Object.freeze(api), configurable: true })
 }

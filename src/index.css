@@ -27,7 +27,6 @@ canvas:focus {
   outline: none;
 }
 
-/* The overlay never blocks the canvas; only panels take pointer input. */
 .overlay {
   position: absolute;
   inset: 0;
@@ -90,15 +89,17 @@ canvas:focus {
   opacity: 0.85;
 }
 
-/* HUD: numbers ≥28 px, labels ≥18 px on a semi-opaque backplate (D-021). */
+/* HUD: numbers >=28 px, labels >=18 px on a semi-opaque backplate (D-021). */
 .hud {
   position: absolute;
   top: 16px;
   left: 16px;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: stretch;
   pointer-events: none;
+  max-width: calc(100vw - 32px);
 }
 
 .hud-block {
@@ -118,6 +119,70 @@ canvas:focus {
   font-size: 30px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+/* Wind Focus stamina bar */
+.hud-focus {
+  min-width: 148px;
+  justify-content: space-between;
+}
+
+.hud-focus.active {
+  box-shadow: 0 0 0 2px #7fe3ff;
+}
+
+.focus-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.focus-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #68d8f8, #ffcf5a);
+  border-radius: 999px;
+  transition: width 80ms linear;
+}
+
+/* Crosswind indicator */
+.hud-wind {
+  justify-content: center;
+  border: 2px solid rgba(160, 220, 255, 0.55);
+}
+
+.hud-wind.gust {
+  border-color: #7fe3ff;
+  background: rgba(16, 44, 68, 0.88);
+}
+
+/* Speedrun Zone Splits */
+.hud-splits {
+  justify-content: space-between;
+}
+
+.splits-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.split-chip {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0.72;
+}
+
+.split-chip.done {
+  background: rgba(255, 207, 90, 0.25);
+  color: var(--accent);
+  opacity: 1;
+  font-weight: 700;
 }
 
 .hud-sprint {
@@ -164,6 +229,23 @@ canvas:focus {
   border-color: rgba(242, 244, 248, 0.6);
 }
 
+/* Mode & Challenge Modifier toggle chips */
+.panel button.chip {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--fg);
+  border: 1.5px solid rgba(242, 244, 248, 0.35);
+}
+
+.panel button.chip.active {
+  background: rgba(255, 207, 90, 0.24);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 .panel .row {
   display: flex;
   gap: 10px;
@@ -201,7 +283,6 @@ canvas:focus {
   font-size: 18px;
 }
 
-/* kill-plane respawn: 300 ms fade from black (D-007) */
 .fade {
   position: absolute;
   inset: 0;
@@ -225,7 +306,6 @@ canvas:focus {
   }
 }
 
-/* UI scale 100–200 % (D-021): panels, HUD, strip and toasts scale together. */
 .panel,
 .hud,
 .strip,
@@ -234,7 +314,6 @@ canvas:focus {
 }
 
 .panel.settings {
-  /* zoom multiplies lengths, so divide to keep the scaled panel inside the viewport */
   max-height: calc(86vh / var(--ui-scale, 1));
   overflow-y: auto;
   min-width: 420px;
@@ -295,7 +374,6 @@ canvas:focus {
   color: var(--accent);
 }
 
-/* first-run controls strip (D-021): items fade once used */
 .strip {
   position: absolute;
   bottom: 88px;

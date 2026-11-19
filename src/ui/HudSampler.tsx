@@ -1,12 +1,12 @@
-// Priority 0: run timer, height, and the HUD store on a fixed 10 Hz grid (D-005, D-008); blob shadow (D-014).
+// Priority 0: run timer, height, Wind Focus bar, crosswind indicator, zone splits, and blob shadow on a 10 Hz grid.
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Ray, Vector3 } from 'three'
 import type { Mesh } from 'three'
 import { game } from '../game/game.ts'
 import { useUi } from '../game/store.ts'
+import { RELAXED_CHECKPOINTS } from '../level/challenges.ts'
 
-/** HUD store writes happen once per 100 ms slot of the page clock: ≤10 Hz, and every slot gets one write. */
 export class HudSampler {
   private lastSlot = -1
 
@@ -24,8 +24,24 @@ export class HudSampler {
     if (slot === this.lastSlot) return
     this.lastSlot = slot
     const sprintGlyph = game.sprintMode !== 'hold' && (game.controller?.sprintActive ?? false)
+    const checkpointLabel =
+      game.challengeMode === 'relaxed' && game.checkpointIndex >= 0
+        ? RELAXED_CHECKPOINTS[game.checkpointIndex].label
+        : null
     useUi.setState({
-      hud: { ...ui.hud, heightM: game.run.heightM, timerMs: game.run.timerMs, sprintGlyph, tick: ui.hud.tick + 1 },
+      hud: {
+        ...ui.hud,
+        heightM: game.run.heightM,
+        timerMs: game.run.timerMs,
+        sprintGlyph,
+        focusRatio: Math.round(game.challenges.focusEnergy * 100) / 100,
+        focusActive: game.challenges.focusActive,
+        windPhase: game.challenges.windPhase,
+        windSheltered: game.challenges.windSheltered,
+        splits: { ...game.run.splits },
+        checkpointLabel,
+        tick: ui.hud.tick + 1,
+      },
     })
   }
 }
