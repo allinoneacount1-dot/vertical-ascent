@@ -61,6 +61,7 @@ export type UiStore = {
   summitRevealed: boolean
   challengeMode: ChallengeMode
   modifiers: ChallengeModifiers
+  relicCount: number
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -96,4 +97,5 @@ export const useUi = create<UiStore>(() => ({
   summitRevealed: false,
   challengeMode: 'hardcore',
   modifiers: { ...DEFAULT_MODIFIERS },
+  relicCount: 0,
 }))

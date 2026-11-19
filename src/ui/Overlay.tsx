@@ -11,6 +11,7 @@ import { game } from '../game/game.ts'
 import { loadSettings, saveSettings } from '../game/settings.ts'
 import type { ActionId, Settings } from '../game/settings.ts'
 import { BINDING_PRESETS, keyLabel } from '../game/input-bindings.ts'
+import { SKY_RELICS } from '../level/relicsData.ts'
 import { assetUrl } from '../assets.ts'
 import type { SprintMode } from '../controller/locomotion.ts'
 import credits from './credits.json'
@@ -29,6 +30,7 @@ function Hud() {
   const challengeMode = useUi((s) => s.challengeMode)
   const noWindFocus = useUi((s) => s.modifiers.noWindFocus)
   const splits = hud.splits
+  const relicCount = useUi((s) => s.relicCount)
 
   return (
     <div className="hud" aria-hidden="true" tabIndex={-1}>
@@ -104,6 +106,7 @@ function Hud() {
               style={{ bottom: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }}
             />
           </div>
+          <span className="elev-label" data-testid="hud-relics">✦ {relicCount}/{SKY_RELICS.length}</span>
           <span className="elev-label">V</span>
         </div>
       )}
@@ -484,6 +487,8 @@ function Victory() {
   const v = useUi((s) => s.victory)
   const lockedUntil = useUi((s) => s.victoryLockedUntil)
   const pending = useUi((s) => s.pendingIntent)
+  const relicCount = useUi((s) => s.relicCount)
+  const [copied, setCopied] = useState(false)
   const [, rerender] = useState(0)
   const locked = performance.now() < lockedUntil
   useEffect(() => {
@@ -520,6 +525,25 @@ function Victory() {
         </button>
         <button type="button" className="secondary" data-testid="free-roam" disabled={locked || pending != null} onClick={() => void enterPlaying('freeRoam')}>
           {t('freeRoam')}
+        </button>
+        <button
+          type="button"
+          className="secondary"
+          data-testid="victory-share"
+          disabled={locked}
+          onClick={() => {
+            const modeLabel = game.challengeMode === 'hardcore' ? 'Hardcore' : 'Santai'
+            const card = [
+              `Vertical Ascent (500 m) — ${formatTenths(v.timerMs)} [${modeLabel}]`,
+              `Big Falls: ${v.bigFalls} | Lost: ${Math.round(v.metersLost)} m | Sky Relics: ${relicCount}/${SKY_RELICS.length}`,
+              'Play: https://vertical-ascent-omega.vercel.app',
+            ].join('\n')
+            void navigator.clipboard?.writeText(card).catch(() => {})
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+          }}
+        >
+          {copied ? 'Copied!' : 'Share Score'}
         </button>
         <button type="button" className="secondary" data-testid="victory-menu" disabled={locked} onClick={() => game.dispatch({ type: 'menu' })}>
           {t('menu')}

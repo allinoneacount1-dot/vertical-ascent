@@ -18,6 +18,8 @@ import { ChallengeObjects } from './ChallengeObjects.tsx'
 import { SculpturalObjects } from './SculpturalObjects.tsx'
 import { WorldVista } from './WorldVista.tsx'
 import { CloudSea } from './CloudSea.tsx'
+import { SkyRelics } from './SkyRelics.tsx'
+import { GhostRacer } from './GhostRacer.tsx'
 import { PersonalBestFlag } from './PersonalBestFlag.tsx'
 
 const ROTATION_ORDER = 'YXZ'
@@ -225,6 +227,8 @@ export function Level({ level }: { level: LoadedLevel }) {
       <SculpturalObjects level={level} />
       <WorldVista level={level} />
       <CloudSea level={level} />
+      <SkyRelics level={level} />
+      <GhostRacer level={level} />
       <PersonalBestFlag level={level} />
       <FinishSensor level={level} />
       <SummitFeatures level={level} />

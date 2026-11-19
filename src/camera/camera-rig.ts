@@ -155,6 +155,38 @@ export class CameraRig {
     return this.vista != null
   }
 
+  victoryOrbit = false
+  introActive = false
+  private introElapsed = 0
+  private introDuration = 1.25
+  private introFromPitch = 0.42
+  private introToPitch = CAMERA.defaultPitch
+
+  /** Brief cinematic intro pan when starting a run (immediately cancelled on input or reducedMotion). */
+  startIntroPan(spawnYaw: number, reducedMotion: boolean): void {
+    this.victoryOrbit = false
+    if (reducedMotion) {
+      this.introActive = false
+      return
+    }
+    this.behavior.rotationYaw = spawnYaw
+    this.behavior.rotationPitch = this.introFromPitch
+    this.introElapsed = 0
+    this.introActive = true
+  }
+
+  cancelIntroPan(): void {
+    this.introActive = false
+  }
+
+  setVictoryOrbit(on: boolean): void {
+    this.victoryOrbit = on
+    if (on) {
+      this.introActive = false
+      this.vista = null
+    }
+  }
+
   drainInput(): void {
     this.zoomReader.update()
   }
@@ -179,6 +211,7 @@ export class CameraRig {
     const dPitch = b.pitchReader.get()
     if (dYaw === 0 && dPitch === 0) return
     this.vista = null
+    this.introActive = false
     this.behavior.rotationYaw += dYaw * this.sensitivity
     const pitch = this.behavior.rotationPitch + dPitch * this.sensitivity * (this.invertY ? -1 : 1)
     this.behavior.rotationPitch = MathUtils.clamp(pitch, CAMERA.minPitch, CAMERA.maxPitch)
@@ -225,6 +258,17 @@ export class CameraRig {
 
     if (performance.now() < this.suppressUntil) this.dropRotationInput()
     else this.applyRotationInput()
+
+    if (this.victoryOrbit) {
+      this.behavior.rotationYaw += dt * 0.28
+      this.behavior.rotationPitch = MathUtils.lerp(this.behavior.rotationPitch, -0.18, 1 - Math.exp(-3 * dt))
+    } else if (this.introActive) {
+      this.introElapsed += dt
+      const u = Math.min(1, this.introElapsed / this.introDuration)
+      const ease = 1 - Math.pow(1 - u, 3)
+      this.behavior.rotationPitch = this.introFromPitch + (this.introToPitch - this.introFromPitch) * ease
+      if (u >= 1) this.introActive = false
+    }
 
     if (this.firstPerson) {
       target.getWorldPosition(fpPos)

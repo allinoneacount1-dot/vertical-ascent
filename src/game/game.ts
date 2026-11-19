@@ -1,3 +1,5 @@
+import { GhostSystem } from './ghost.ts'
+import { SKY_RELICS, loadCollectedRelics, saveCollectedRelics } from '../level/relicsData.ts'
 // Runtime game singleton: wires the state machine (state.ts) to its effects and owns references to the
 // physics port, controller, platforms, camera rig, level, challenges and run. The Canvas never unmounts (D-005).
 import { Ray, Vector3 } from 'three'
@@ -134,12 +136,15 @@ class Game {
   }
   private lastSculpturalBody: string | null = null
   private visitedSanctuaries = new Set<number>()
+  readonly ghost = new GhostSystem()
+  readonly collectedRelics: Set<string> = loadCollectedRelics()
 
   constructor() {
     this.level = loadLevel(currentLevelId())
     this.records = loadRecords(this.level.summitM)
     this.setLevel(this.level)
     this.refreshSavedRun()
+    useUi.setState({ relicCount: this.collectedRelics.size })
   }
 
   setLevel(level: LoadedLevel): void {
@@ -280,6 +285,7 @@ class Game {
         break
       case 'toMenu':
         this.refreshSavedRun()
+    useUi.setState({ relicCount: this.collectedRelics.size })
         break
       default:
         break
@@ -320,6 +326,17 @@ class Game {
     return true
   }
 
+  collectRelic(id: string, name: string): boolean {
+    if (this.collectedRelics.has(id)) return false
+    this.collectedRelics.add(id)
+    saveCollectedRelics(this.collectedRelics)
+    useUi.setState({ relicCount: this.collectedRelics.size })
+    playWindChime()
+    this.toast(`Sky Relic ${this.collectedRelics.size}/${SKY_RELICS.length} — ${name}`)
+    this.log('relicCollected', { id, count: this.collectedRelics.size })
+    return true
+  }
+
   /** Return to highest unlocked checkpoint in Relaxed (Santai) mode. */
   returnToCheckpoint(): void {
     if (this.snapshot.state !== 'PLAYING' || this.challengeMode !== 'relaxed' || this.checkpointIndex < 0) return
@@ -357,6 +374,7 @@ class Game {
     saveRunSave(save)
     this.log('runSaved', { lastSafe: save.lastSafe, timerMs: Math.round(save.timerMs) })
     this.refreshSavedRun()
+    useUi.setState({ relicCount: this.collectedRelics.size })
   }
 
   refreshSavedRun(): void {
@@ -428,6 +446,7 @@ class Game {
     saveRecords(records)
     clearRunSave()
     this.refreshSavedRun()
+    useUi.setState({ relicCount: this.collectedRelics.size })
     this.inputLockedUntil = performance.now() + VICTORY_LOCK_MS
     const victory: VictorySummary = {
       timerMs: this.run.timerMs,
@@ -600,6 +619,13 @@ class Game {
     if (this.cameraRig?.vistaActive && this.controller.moveSpeed > 0.8) {
       this.cameraRig.cancelVistaLook()
     }
+    if (this.cameraRig?.introActive && this.controller.moveSpeed > 0.35) {
+      this.cameraRig.cancelIntroPan()
+    }
+    if (this.snapshot.state === 'PLAYING' && this.snapshot.mode === 'run') {
+      const p = this.port.position
+      this.ghost.record(this.run.timerMs, p.x, p.y, p.z, this.controller.facingYaw, this.run.heightM)
+    }
 
     // 3. Crosswind Gust push (z4 or Badai Konstan) with upwind shelter raycast
     if (this.challenges.windPhase === 'gust') {
@@ -704,6 +730,10 @@ class Game {
     this.checkpointIndex = -1
     this.lastSculpturalBody = null
     this.visitedSanctuaries.clear()
+    this.ghost.commitIfBetter(this.level.summitM, false, this.run.timerMs)
+    this.ghost.resetRun()
+    this.cameraRig?.setVictoryOrbit(false)
+    if (this.level.id === 'main') this.cameraRig?.startIntroPan(this.spawnYaw, this.reducedMotion)
     this.controller?.resetRun(this.spawn, this.spawnYaw, false)
     if (this.visual) this.controller?.applyFacing(this.visual)
     this.applyModifierEffects()
