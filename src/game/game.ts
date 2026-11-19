@@ -128,6 +128,15 @@ class Game {
   modifiers: ChallengeModifiers = { ...DEFAULT_MODIFIERS }
   /** Highest unlocked relaxed checkpoint index (-1 = none, 0 = 125m, 1 = 250m, 2 = 375m). */
   checkpointIndex = -1
+  readonly culling = {
+    registry: new Map<string, boolean>(),
+    summary(): { total: number; visible: number; culled: number } {
+      let visible = 0
+      for (const v of this.registry.values()) if (v) visible++
+      const total = this.registry.size
+      return { total, visible, culled: total - visible }
+    },
+  }
   readonly atmosphere = {
     fogHex: '#ecd8c2',
     skyTopHex: '#6eb1eb',

@@ -11,6 +11,7 @@ import type { LoadedLevel } from './levels.ts'
 import { CHALLENGE_SPECS } from './challenges.ts'
 import type { ChallengeSpec } from './challenges.ts'
 import { game } from '../game/game.ts'
+import { AltitudeCullGroup } from './ZoneVisibilityCuller.tsx'
 
 const ROTATION_ORDER = 'YXZ' as const
 
@@ -422,21 +423,35 @@ function CatchDeck({ spec }: { spec: ChallengeSpec }) {
   )
 }
 
+const CHALLENGE_BANDS: Readonly<Record<'z1' | 'z2' | 'z3' | 'z4', [number, number]>> = {
+  z1: [0, 75],
+  z2: [60, 205],
+  z3: [190, 365],
+  z4: [350, 510],
+}
+
 export function ChallengeObjects({ level }: { level: LoadedLevel }) {
   const active = useMemo(() => level.id === 'main', [level.id])
   if (!active) return null
   return (
     <>
-      {CHALLENGE_SPECS.map((spec) => {
-        if (spec.kind === 'bounce') return <BouncePad key={spec.id} spec={spec} />
-        if (spec.kind === 'crumbling') return <CrumblingRuin key={spec.id} spec={spec} />
-        if (spec.kind === 'slippery') return <SlipperySurface key={spec.id} spec={spec} />
-        if (spec.kind === 'gondola' || spec.kind === 'windmill' || spec.kind === 'skyBalloon') {
-          return <ChallengeMover key={spec.id} spec={spec} />
-        }
-        if (spec.kind === 'steamPipe') return <SteamPipe key={spec.id} spec={spec} />
-        if (spec.kind === 'catchDeck') return <CatchDeck key={spec.id} spec={spec} />
-        return null
+      {(['z1', 'z2', 'z3', 'z4'] as const).map((zone) => {
+        const [minY, maxY] = CHALLENGE_BANDS[zone]
+        return (
+          <AltitudeCullGroup key={zone} id={`challenges-${zone}`} minY={minY} maxY={maxY} marginM={130}>
+            {CHALLENGE_SPECS.filter((s) => s.zone === zone).map((spec) => {
+              if (spec.kind === 'bounce') return <BouncePad key={spec.id} spec={spec} />
+              if (spec.kind === 'crumbling') return <CrumblingRuin key={spec.id} spec={spec} />
+              if (spec.kind === 'slippery') return <SlipperySurface key={spec.id} spec={spec} />
+              if (spec.kind === 'gondola' || spec.kind === 'windmill' || spec.kind === 'skyBalloon') {
+                return <ChallengeMover key={spec.id} spec={spec} />
+              }
+              if (spec.kind === 'steamPipe') return <SteamPipe key={spec.id} spec={spec} />
+              if (spec.kind === 'catchDeck') return <CatchDeck key={spec.id} spec={spec} />
+              return null
+            })}
+          </AltitudeCullGroup>
+        )
       })}
     </>
   )

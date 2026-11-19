@@ -36,6 +36,7 @@ import type {
   VerticalGearSpec,
 } from './sculptural.ts'
 import { game } from '../game/game.ts'
+import { AltitudeCullGroup } from './ZoneVisibilityCuller.tsx'
 
 const ROTATION_ORDER = 'YXZ' as const
 
@@ -555,20 +556,34 @@ function FacetedFloatingRock({ spec }: { spec: FacetedRockSpec }) {
   )
 }
 
+const ZONE_BANDS: Readonly<Record<'z1' | 'z2' | 'z3' | 'z4', [number, number]>> = {
+  z1: [0, 75],
+  z2: [60, 205],
+  z3: [190, 365],
+  z4: [350, 510],
+}
+
 export function SculpturalObjects({ level }: { level: LoadedLevel }) {
   const active = useMemo(() => level.id === 'main', [level.id])
   if (!active) return null
   return (
     <group name="sculptural-world">
-      {SCULPTURAL_SPECS.map((spec) => {
-        if (spec.kind === 'spiralStairs') return <SpiralStairs key={spec.id} spec={spec} />
-        if (spec.kind === 'ropeBridge') return <RopeBridge key={spec.id} spec={spec} />
-        if (spec.kind === 'giantRoot') return <GiantRoot key={spec.id} spec={spec} />
-        if (spec.kind === 'verticalGear') return <VerticalGearWheel key={spec.id} spec={spec} />
-        if (spec.kind === 'pendulumLantern') return <PendulumLantern key={spec.id} spec={spec} />
-        if (spec.kind === 'brokenArch') return <BrokenStoneArch key={spec.id} spec={spec} />
-        if (spec.kind === 'facetedRock') return <FacetedFloatingRock key={spec.id} spec={spec} />
-        return null
+      {(['z1', 'z2', 'z3', 'z4'] as const).map((zone) => {
+        const [minY, maxY] = ZONE_BANDS[zone]
+        return (
+          <AltitudeCullGroup key={zone} id={`sculptural-${zone}`} minY={minY} maxY={maxY} marginM={130}>
+            {SCULPTURAL_SPECS.filter((s) => s.zone === zone).map((spec) => {
+              if (spec.kind === 'spiralStairs') return <SpiralStairs key={spec.id} spec={spec} />
+              if (spec.kind === 'ropeBridge') return <RopeBridge key={spec.id} spec={spec} />
+              if (spec.kind === 'giantRoot') return <GiantRoot key={spec.id} spec={spec} />
+              if (spec.kind === 'verticalGear') return <VerticalGearWheel key={spec.id} spec={spec} />
+              if (spec.kind === 'pendulumLantern') return <PendulumLantern key={spec.id} spec={spec} />
+              if (spec.kind === 'brokenArch') return <BrokenStoneArch key={spec.id} spec={spec} />
+              if (spec.kind === 'facetedRock') return <FacetedFloatingRock key={spec.id} spec={spec} />
+              return null
+            })}
+          </AltitudeCullGroup>
+        )
       })}
     </group>
   )
