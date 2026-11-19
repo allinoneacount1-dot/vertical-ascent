@@ -146,6 +146,11 @@ export function installGameGlobal(): void {
         game.challenges.focusHeld = held
       },
     })
+    Object.defineProperty(api, '__debugSetOdyssey', {
+      value: (on: boolean) => {
+        game.setOdysseyMode(on)
+      },
+    })
     Object.defineProperty(api, '__debugSetMode', {
       value: (mode: ChallengeMode, mods?: Partial<ChallengeModifiers>) => {
         game.setChallengeMode(mode)

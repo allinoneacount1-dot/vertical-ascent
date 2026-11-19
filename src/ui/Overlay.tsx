@@ -31,6 +31,7 @@ function Hud() {
   const noWindFocus = useUi((s) => s.modifiers.noWindFocus)
   const splits = hud.splits
   const relicCount = useUi((s) => s.relicCount)
+  const aetherLowG = useUi((s) => s.aetherLowG)
 
   return (
     <div className="hud" aria-hidden="true" tabIndex={-1}>
@@ -106,6 +107,7 @@ function Hud() {
               style={{ bottom: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }}
             />
           </div>
+          {aetherLowG && <span className="elev-label" data-testid="hud-lowg">0.65G</span>}
           <span className="elev-label" data-testid="hud-relics">✦ {relicCount}/{SKY_RELICS.length}</span>
           <span className="elev-label">V</span>
         </div>
@@ -337,6 +339,7 @@ function MenuMain() {
   const saved = useUi((s) => s.savedRun)
   const challengeMode = useUi((s) => s.challengeMode)
   const modifiers = useUi((s) => s.modifiers)
+  const odysseyMode = useUi((s) => s.odysseyMode)
 
   return (
     <div className="panel menu" data-testid="panel-menu">
@@ -375,6 +378,24 @@ function MenuMain() {
           onClick={() => game.setChallengeMode('relaxed')}
         >
           {t('modeRelaxed')}
+        </button>
+      </div>
+      <div className="mode-row" data-testid="odyssey-toggle">
+        <button
+          type="button"
+          className={!odysseyMode ? 'chip active' : 'chip'}
+          data-testid="course-500"
+          onClick={() => game.setOdysseyMode(false)}
+        >
+          Classic 500 m
+        </button>
+        <button
+          type="button"
+          className={odysseyMode ? 'chip active' : 'chip'}
+          data-testid="course-1000"
+          onClick={() => game.setOdysseyMode(true)}
+        >
+          Odyssey 1000 m (Z5–Z8)
         </button>
       </div>
 

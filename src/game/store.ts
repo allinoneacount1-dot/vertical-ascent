@@ -62,6 +62,8 @@ export type UiStore = {
   challengeMode: ChallengeMode
   modifiers: ChallengeModifiers
   relicCount: number
+  odysseyMode: boolean
+  aetherLowG: boolean
 }
 
 export const useUi = create<UiStore>(() => ({
@@ -98,4 +100,6 @@ export const useUi = create<UiStore>(() => ({
   challengeMode: 'hardcore',
   modifiers: { ...DEFAULT_MODIFIERS },
   relicCount: 0,
+  odysseyMode: false,
+  aetherLowG: false,
 }))

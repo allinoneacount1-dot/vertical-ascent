@@ -1,4 +1,5 @@
 import { GhostSystem } from './ghost.ts'
+import { AETHER_GRAVITY, AETHER_LOW_G_ALTITUDE_M, ODYSSEY_SUMMIT_M, ODYSSEY_UPDRAFS } from '../level/odyssey.ts'
 import { SKY_RELICS, loadCollectedRelics, saveCollectedRelics } from '../level/relicsData.ts'
 // Runtime game singleton: wires the state machine (state.ts) to its effects and owns references to the
 // physics port, controller, platforms, camera rig, level, challenges and run. The Canvas never unmounts (D-005).
@@ -107,6 +108,9 @@ class Game {
   /** Scaled simulation delta for the current frame (0.45x during Wind Focus). */
   simDt = 0
   inFinish = false
+  odysseyMode = false
+  inOdysseyFinish = false
+  aetherLowG = false
   inFakeSummit = false
   fakeSummitAtMs: number | null = null
   records: Records
@@ -170,6 +174,18 @@ class Game {
     useUi.setState({ challengeMode: mode })
   }
 
+  setOdysseyMode(on: boolean): void {
+    this.odysseyMode = on
+    this.inOdysseyFinish = false
+    const targetM = on ? ODYSSEY_SUMMIT_M : this.level.summitM
+    useUi.setState((s) => ({ odysseyMode: on, hud: { ...s.hud, targetM } }))
+  }
+
+  setInOdysseyFinish(inside: boolean): void {
+    this.inOdysseyFinish = inside
+    this.log('odysseyFinishSensor', { inside })
+  }
+
   setModifiers(change: Partial<ChallengeModifiers>): void {
     this.modifiers = { ...this.modifiers, ...change }
     this.applyModifierEffects()
@@ -191,7 +207,7 @@ class Game {
     this.inFakeSummit = false
     this.fakeSummitAtMs = null
     const revealed = this.level.fakeSummitM == null || this.records.reachedFakeSummit
-    const targetM = revealed ? this.level.summitM : this.level.fakeSummitM!
+    const targetM = this.odysseyMode ? ODYSSEY_SUMMIT_M : revealed ? this.level.summitM : this.level.fakeSummitM!
     useUi.setState((s) => ({ summitRevealed: revealed, hud: { ...s.hud, targetM } }))
   }
 
@@ -265,6 +281,7 @@ class Game {
       case 'freeRoam':
         this.run.newRun(this.spawn.y)
         this.inFinish = false
+    this.inOdysseyFinish = false
         this.resetSummit()
         this.afterEnterPlaying()
         break
@@ -396,6 +413,7 @@ class Game {
     this.motion.reset()
     this.challenges.reset()
     this.inFinish = false
+    this.inOdysseyFinish = false
     this.resetSummit()
     if (save == null) {
       this.startRun()
@@ -631,6 +649,37 @@ class Game {
     if (this.cameraRig?.introActive && this.controller.moveSpeed > 0.35) {
       this.cameraRig.cancelIntroPan()
     }
+    // 6. Mode Odyssey 1000 m physics: Z5/Z7 Updraft Thermal columns + Z7/Z8 Aether Low-Gravity (0.65x)
+    if (this.odysseyMode) {
+      const pp = this.port.position
+      for (const u of ODYSSEY_UPDRAFS) {
+        const dx = pp.x - u.pos[0]
+        const dz = pp.z - u.pos[2]
+        if (dx * dx + dz * dz <= u.radius * u.radius && pp.y >= u.pos[1] - 0.6 && pp.y <= u.pos[1] + u.height) {
+          const curVy = this.port.velocity.y
+          if (curVy < u.liftVy) {
+            const deltaVy = Math.min(u.liftVy - curVy, 42 * simDt)
+            this.port.impulse(tmp.set(0, deltaVy, 0), Number.POSITIVE_INFINITY)
+          }
+          break
+        }
+      }
+      // Deterministic 1000 m Celestial Throne arrival zone ([55, 1000, 0], 12x12 deck)
+      const onThrone = Math.abs(pp.x - 55) <= 5.8 && Math.abs(pp.z) <= 5.8 && pp.y >= 999.5 && pp.y <= 1006
+      if (onThrone !== this.inOdysseyFinish) this.setInOdysseyFinish(onThrone)
+      const wantLowG = pp.y - this.spawn.y >= AETHER_LOW_G_ALTITUDE_M
+      if (wantLowG !== this.aetherLowG) {
+        this.aetherLowG = wantLowG
+        this.port.setGravity(this.modifiers.moonGravity ? -10.5 : wantLowG ? AETHER_GRAVITY : -20)
+        useUi.setState({ aetherLowG: wantLowG })
+        if (wantLowG) this.toast('Aether Spire — Low Gravity 0.65x')
+      }
+    } else if (this.aetherLowG) {
+      this.aetherLowG = false
+      this.port.setGravity(this.modifiers.moonGravity ? -10.5 : -20)
+      useUi.setState({ aetherLowG: false })
+    }
+
     if (this.snapshot.state === 'PLAYING' && this.snapshot.mode === 'run') {
       const p = this.port.position
       this.ghost.record(this.run.timerMs, p.x, p.y, p.z, this.controller.facingYaw, this.run.heightM)
@@ -674,7 +723,8 @@ class Game {
     const s = this.snapshot
     const port = this.port
     if (port == null) return
-    if (s.state === 'PLAYING' && s.mode === 'run' && this.inFinish && port.isGroundedRaw) this.dispatch({ type: 'finish' })
+    const atGoal = this.odysseyMode ? this.inOdysseyFinish : this.inFinish
+    if (s.state === 'PLAYING' && s.mode === 'run' && atGoal && port.isGroundedRaw) this.dispatch({ type: 'finish' })
     if (s.state === 'PLAYING' && s.mode === 'run') this.checkFakeSummit(port.isGroundedRaw)
     if (port.isGroundedRaw && this.controller?.groundBody == null) {
       tmp.copy(port.position).setY(port.position.y + 0.05)
@@ -749,6 +799,7 @@ class Game {
     this.cameraRig?.setView(this.spawnYaw)
     this.lastGroundedY = this.spawn.y
     this.inFinish = false
+    this.inOdysseyFinish = false
     this.resetSummit()
   }
 
