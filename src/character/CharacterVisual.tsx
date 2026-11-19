@@ -1,14 +1,17 @@
-// Character model + animation graph of the hybrid controller (DIRECTIVE D-001). Reads game-owned flags only;
-// never writes position, velocity, the controller's input velocity or the camera (ref/02 Pemilik besaran).
+// Character model + animation graph of the hybrid controller (DIRECTIVE D-001 + Fase 6 Multi-Hero 3D).
+// Reads heroId from UI store and lazy-loads that hero's frozen model config via Suspense; never writes physics state.
 import { Suspense, useEffect } from 'react'
 import { LoopOnce, LoopRepeat } from 'three'
 import type { RootState } from '@react-three/fiber'
 import { Graph, GrapthState, RunTimeline, Switch, SwitchCase, forever } from '@react-three/timeline'
 import type { TimelineClock } from '@react-three/timeline'
 import { CharacterAnimationAction, CharacterModelProvider, useCharacterModelLoader } from '@react-three/viverse'
-import { ACTIVE_MODEL_OPTIONS, CLIPS, FADE_S, JUMP_UP_MIN_S, LAND_HOLD_S, RISING_VY } from './rig.ts'
+import { CLIPS, FADE_S, HERO_MODEL_OPTIONS, JUMP_UP_MIN_S, LAND_HOLD_S, RISING_VY } from './rig.ts'
 import { addClimbingPack } from './protagonist-style.ts'
+import { applyHeroStyle } from './heroes.ts'
+import type { HeroId } from './heroes.ts'
 import { game } from '../game/game.ts'
+import { useUi } from '../game/store.ts'
 import { setClipReporter } from '../game/debug.ts'
 
 type Flags = { moving: boolean; sprint: boolean; grounded: boolean; vy: number }
@@ -28,7 +31,6 @@ function readFlags(): Flags {
   }
   flags.moving = c.moveSpeed > 0
   flags.sprint = c.sprintActive
-  // grounded with the coyote window as hysteresis, so a one-slice contact flicker does not start a fall clip
   flags.grounded = p.secondsSinceGrounded < p.settings.coyoteTime
   flags.vy = p.velocity.y
   return flags
@@ -48,7 +50,6 @@ const clip = (name: string) => () => {
   activeClip = name
 }
 
-/** Air jumps already shown; a new one (double jump, D-038) replays jumpUp from jumpLoop. */
 let seenAirJumps = 0
 const airJumpCount = () => game.controller?.airJumpCount ?? 0
 const startJumpUp = () => {
@@ -58,15 +59,15 @@ const startJumpUp = () => {
 const newAirJump = () => airJumpCount() !== seenAirJumps
 setClipReporter(() => activeClip)
 
-export function CharacterVisual() {
-  const model = useCharacterModelLoader(ACTIVE_MODEL_OPTIONS)
+function CharacterModelSlot({ heroId }: { heroId: HeroId }) {
+  const model = useCharacterModelLoader(HERO_MODEL_OPTIONS[heroId])
   useEffect(() => {
-    // D-017 silhouette change for the protagonist (a VRM, the only model with a humanoid); the mannequin stays as it is
     const humanoid = (model as { humanoid?: Parameters<typeof addClimbingPack>[1] }).humanoid
     if (humanoid != null) addClimbingPack(model.scene, humanoid)
+    applyHeroStyle(model.scene, heroId)
     game.setModel(model)
     return () => game.setModel(null)
-  }, [model])
+  }, [model, heroId])
   return (
     <CharacterModelProvider model={model}>
       <RunTimeline>
@@ -118,7 +119,6 @@ export function CharacterVisual() {
                 loop={LoopOnce}
                 fadeDuration={FADE_S}
                 init={clip('jumpDown')}
-                // ≤150 ms landing window, measured in timeline time (not setTimeout) — D-023
                 update={(_s: RootState, _c: TimelineClock, actionTime: number) => actionTime < LAND_HOLD_S}
               />
             </Suspense>
@@ -127,5 +127,14 @@ export function CharacterVisual() {
       </RunTimeline>
       <primitive object={model.scene} />
     </CharacterModelProvider>
+  )
+}
+
+export function CharacterVisual() {
+  const heroId = useUi((s) => s.heroId)
+  return (
+    <Suspense fallback={null}>
+      <CharacterModelSlot key={heroId} heroId={heroId} />
+    </Suspense>
   )
 }

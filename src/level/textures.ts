@@ -17,13 +17,14 @@ function mulberry32(seed: number) {
   }
 }
 
-function makeCanvas(size = 256): [HTMLCanvasElement, CanvasRenderingContext2D] | null {
+function makeCanvas(size = 512): [HTMLCanvasElement, CanvasRenderingContext2D] | null {
   if (typeof document === 'undefined') return null
   const c = document.createElement('canvas')
   c.width = size
   c.height = size
   const g = c.getContext('2d')
   if (!g) return null
+  g.scale(size / 256, size / 256)
   return [c, g]
 }
 
@@ -42,8 +43,8 @@ function finalize(c: HTMLCanvasElement, repeatX: number, repeatY: number, isColo
 export function getSurfaceTextures(style: SurfaceStyle): TexturePair | null {
   const existing = cache.get(style)
   if (existing) return existing
-  const col = makeCanvas(256)
-  const bmp = makeCanvas(256)
+  const col = makeCanvas(512)
+  const bmp = makeCanvas(512)
   if (!col || !bmp) return null
   const [cc, cg] = col
   const [bc, bg] = bmp

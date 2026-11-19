@@ -23,3 +23,13 @@ export const WORLD_VISTA_META = {
   distantIslands: DISTANT_ISLANDS.length,
   circlingBirds: 22,
 } as const
+
+export const LIVING_WORLD_META = {
+  grassCount: 960,
+  bannerCount: 14,
+  shrineCount: 6,
+  windmillCount: 5,
+  godRayCount: 6,
+  cumulusClusters: 16,
+  relicAltars: 12,
+} as const

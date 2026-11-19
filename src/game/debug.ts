@@ -7,6 +7,8 @@ import { useUi } from './store.ts'
 import { audioState } from '../audio/context.ts'
 import { audioSnapshot } from '../audio/engine.ts'
 import type { ChallengeMode, ChallengeModifiers } from '../level/challenges.ts'
+import { HERO_MODEL_OPTIONS } from '../character/rig.ts'
+import { LIVING_WORLD_META } from '../level/worldMeta.ts'
 
 type Vec3 = [number, number, number]
 
@@ -105,6 +107,8 @@ function snapshotGame() {
       textures: info?.memory.textures ?? 0,
       programs: info?.programs?.length ?? 0,
     },
+    hero: { id: game.heroId, modelUrl: HERO_MODEL_OPTIONS[game.heroId].url },
+    livingWorld: LIVING_WORLD_META,
     multiplayer: game.multiplayer.snapshot(),
     bvh: { buildMs: { ...game.bvh.buildMs }, tris: { ...game.bvh.tris } },
     events: game.events.slice(),
