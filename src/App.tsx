@@ -2,12 +2,13 @@
 // ?level= in DEV). <BvhPhysicsWorld> without <Viverse> (D-003). The Canvas never unmounts between menu and game (D-005).
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { BackSide, Mesh, MeshBasicMaterial, Object3D, SphereGeometry, Vector3 } from 'three'
-import type { DirectionalLight } from 'three'
+import { BackSide, Color, Mesh, MeshBasicMaterial, Object3D, SphereGeometry, Vector3 } from 'three'
+import type { DirectionalLight, Fog, HemisphereLight } from 'three'
 import { Environment, Sky } from '@react-three/drei'
 import { BvhPhysicsWorld, usePointerLockRotateZoomActionBindings } from '@react-three/viverse'
 import { installInputBindings } from './game/input-bindings.ts'
 import { Level } from './level/Level.tsx'
+import { AtmosphereParticles } from './level/AtmosphereParticles.tsx'
 import { Player } from './controller/Player.tsx'
 import { GameLoop } from './controller/GameLoop.tsx'
 import { CameraDriver } from './camera/CameraDriver.tsx'
@@ -35,18 +36,35 @@ const HDRI_URL = assetUrl('assets/hdri/industrial_sunset_puresky_1k.hdr')
 /** Sun direction shared by the sky and the shadow light. */
 const SUN: [number, number, number] = [-12, 20, 10]
 const SUN_DISTANCE = 80
-/** Fog band (ref/03 §Isyarat ketinggian): the far ground plane (4000 m) reaches past 1.2 × FOG_FAR, so no world edge shows. */
-const FOG_COLOR = '#cfd9e4'
+/** Fog band (ref/03 §Isyarat ketinggian): smoothly shifts with altitude from Ghibli sunset to celestial indigo. */
+const FOG_COLOR = '#e4cab6'
 const FOG_NEAR = 220
 const FOG_FAR = 1500
 const CAMERA_FAR = 2500
 
-/** Shadow light that follows the player, so the ±40 m shadow box covers wherever the climb is (G4 §5 brought forward). */
+const FOG_STOPS = [new Color('#e4cab6'), new Color('#c8dff0'), new Color('#b5d6ee'), new Color('#7fa6da')]
+const SUN_STOPS = [new Color('#ffebd0'), new Color('#fff7e8'), new Color('#ffffff'), new Color('#fff3d1')]
+const HEMI_SKY_STOPS = [new Color('#a4c8f5'), new Color('#8dc8ff'), new Color('#82bef7'), new Color('#6d97e2')]
+const HEMI_GND_STOPS = [new Color('#cfa37f'), new Color('#9ab0bf'), new Color('#c2d9c6'), new Color('#d8cba8')]
+const tmpFog = new Color()
+const tmpSun = new Color()
+const tmpHemiSky = new Color()
+const tmpHemiGnd = new Color()
+
+function lerpStops(stops: Color[], t: number, out: Color): Color {
+  const clamped = Math.max(0, Math.min(1, t))
+  const scaled = clamped * (stops.length - 1)
+  const i = Math.min(stops.length - 2, Math.floor(scaled))
+  return out.copy(stops[i]).lerp(stops[i + 1], scaled - i)
+}
+
+/** Shadow light + altitude-driven Ghibli lighting & audio update. */
 function SunLight() {
   const light = useRef<DirectionalLight>(null)
+  const hemi = useRef<HemisphereLight>(null)
   const target = useMemo(() => new Object3D(), [])
   const offset = useMemo(() => new Vector3(...SUN).normalize().multiplyScalar(SUN_DISTANCE), [])
-  useFrame((_, dt) => {
+  useFrame(({ scene }, dt) => {
     const l = light.current
     const at = game.port?.position
     if (l != null && at != null) {
@@ -57,17 +75,27 @@ function SunLight() {
     const p = game.port
     const c = game.controller
     const playing = game.snapshot.state === 'PLAYING'
-    const hRatio = game.level.summitM > 0 ? game.run.heightM / game.level.summitM : 0
+    const hRatio = game.level.summitM > 0 ? Math.max(0, Math.min(1, game.run.heightM / game.level.summitM)) : 0
     const moving = p != null && p.isGroundedRaw && Math.hypot(p.velocity.x, p.velocity.z) > 0.5
     updateAudioFrame(Math.min(dt, 0.1), playing, hRatio, c?.bigFall ?? false, moving, c?.sprintActive ?? false)
+
+    // Altitude-driven Ghibli atmosphere (in-place color updates, zero allocations)
+    if (l != null) l.color.copy(lerpStops(SUN_STOPS, hRatio, tmpSun))
+    if (hemi.current != null) {
+      hemi.current.color.copy(lerpStops(HEMI_SKY_STOPS, hRatio, tmpHemiSky))
+      hemi.current.groundColor.copy(lerpStops(HEMI_GND_STOPS, hRatio, tmpHemiGnd))
+    }
+    const fog = scene.fog as Fog | null
+    if (fog != null) fog.color.copy(lerpStops(FOG_STOPS, hRatio, tmpFog))
   })
   return (
     <>
+      <hemisphereLight ref={hemi} args={['#a4c8f5', '#cfa37f', 0.72]} />
       <primitive object={target} />
       <directionalLight
         ref={light}
         target={target}
-        intensity={1.6}
+        intensity={1.75}
         position={SUN}
         castShadow
         shadow-mapSize={[2048, 2048]}
@@ -88,17 +116,20 @@ function SunLight() {
  * Drawn after the opaque scene without writing depth, it only fills pixels nothing else covered.
  */
 function HorizonBowl() {
-  const bowl = useMemo(() => {
-    const m = new Mesh(
+  const { bowl, mat } = useMemo(() => {
+    const mat = new MeshBasicMaterial({ color: FOG_COLOR, side: BackSide, fog: false, depthWrite: false })
+    const bowl = new Mesh(
       new SphereGeometry(CAMERA_FAR * 0.8, 48, 12, 0, Math.PI * 2, Math.PI / 2 + 0.004, Math.PI / 2 - 0.004),
-      new MeshBasicMaterial({ color: FOG_COLOR, side: BackSide, fog: false, depthWrite: false }),
+      mat,
     )
-    m.renderOrder = 1
-    m.frustumCulled = false
-    return m
+    bowl.renderOrder = 1
+    bowl.frustumCulled = false
+    return { bowl, mat }
   }, [])
-  useFrame(({ camera }) => {
+  useFrame(({ camera, scene }) => {
     bowl.position.copy(camera.position)
+    const fog = scene.fog as Fog | null
+    if (fog != null) mat.color.copy(fog.color)
   })
   return <primitive object={bowl} />
 }
@@ -144,6 +175,7 @@ export default function App() {
           <Sky sunPosition={SUN} />
           <fog attach="fog" args={[FOG_COLOR, FOG_NEAR, FOG_FAR]} />
           <HorizonBowl />
+          <AtmosphereParticles />
           <Lights />
           <Suspense fallback={null}>
             <Level level={game.level} />
