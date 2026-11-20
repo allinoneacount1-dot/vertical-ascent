@@ -24,8 +24,11 @@ import {
   ShaderMaterial,
   SphereGeometry,
   Vector2,
+  Vector3,
 } from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { LoadedLevel } from './levels.ts'
+import { colliderSize } from './procedural.ts'
 import { RELAXED_CHECKPOINTS } from './challenges.ts'
 import { SKY_RELICS } from './relicsData.ts'
 import { game } from '../game/game.ts'
@@ -93,24 +96,59 @@ const GOD_RAY_SLOTS: readonly { pos: [number, number, number]; scale: [number, n
   { pos: [48, 445, -16], scale: [22, 110, 22] },
 ]
 
-const GRASS_COUNT = 900
+const GRASS_COUNT = 2400
 const FLOWER_COUNT = 180
 const CUMULUS_COUNT = 28
+const CLIFF_PINE_COUNT = 24
 
+/** Layered Liyue cliff-pine foliage pads (3 offset flattened cones merged into 1 instanced geometry). */
+function buildCliffPineCanopyGeometry() {
+  const tier1 = new ConeGeometry(1.75, 0.82, 7).toNonIndexed()
+  tier1.translate(0.55, 2.55, 0)
+  const tier2 = new ConeGeometry(1.38, 0.72, 7).toNonIndexed()
+  tier2.translate(0.95, 3.25, 0.12)
+  const tier3 = new ConeGeometry(0.95, 0.62, 7).toNonIndexed()
+  tier3.translate(1.25, 3.85, -0.08)
+  const merged = mergeGeometries([tier1, tier2, tier3], false)!
+  tier1.dispose()
+  tier2.dispose()
+  tier3.dispose()
+  return merged
+}
 
+/** Leaning cliff-pine trunk curving outward from rocky Z1-Z2 cliff ledges. */
+function buildCliffPineTrunkGeometry() {
+  const lower = new CylinderGeometry(0.18, 0.28, 1.9, 6).toNonIndexed()
+  lower.rotateZ(-0.26)
+  lower.translate(0.24, 0.9, 0)
+  const upper = new CylinderGeometry(0.11, 0.18, 1.85, 6).toNonIndexed()
+  upper.rotateZ(-0.42)
+  upper.translate(0.78, 2.45, 0)
+  const merged = mergeGeometries([lower, upper], false)!
+  lower.dispose()
+  upper.dispose()
+  return merged
+}
 
 function syncLivingUniforms(
-  grassUniforms: { uTime: { value: number }; uWind: { value: number }; uWindDir: { value: Vector2 } },
+  grassUniforms: {
+    uTime: { value: number }
+    uWind: { value: number }
+    uWindDir: { value: Vector2 }
+    uPlayerPos: { value: Vector3 }
+  },
   bannerUniforms: { uTime: { value: number }; uWind: { value: number } },
   rayUniforms: { uTime: { value: number }; uOpacity: { value: number } },
   t: number,
   windInt: number,
   windAng: number,
   starOpacity: number,
+  playerPos: Vector3 | undefined,
 ): void {
   grassUniforms.uTime.value = t
   grassUniforms.uWind.value = 0.3 + windInt * 0.85
   grassUniforms.uWindDir.value.set(Math.cos(windAng), Math.sin(windAng))
+  if (playerPos != null) grassUniforms.uPlayerPos.value.copy(playerPos)
   bannerUniforms.uTime.value = t
   bannerUniforms.uWind.value = 0.35 + windInt * 0.9
   rayUniforms.uTime.value = t
@@ -122,20 +160,24 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
   const grassRef = useRef<InstancedMesh>(null)
   const flowerRef = useRef<InstancedMesh>(null)
   const cumulusRef = useRef<InstancedMesh>(null)
+  const pineTrunkRef = useRef<InstancedMesh>(null)
+  const pineCanopyRef = useRef<InstancedMesh>(null)
   const sailRefs = useRef<Array<Group | null>>([])
   const shrineGlowRefs = useRef<Array<MeshStandardMaterial | null>>([])
   const litShrinesRef = useRef<Set<string>>(new Set())
 
   const resources = useMemo(() => {
-    // 1. Wind-swaying grass shader (instanced, 1 draw call)
-    const grassGeo = new PlaneGeometry(0.14, 0.72, 1, 3)
-    grassGeo.translate(0, 0.36, 0)
+    // 1. Wind-swaying + player-reactive grass shader (instanced, 1 draw call)
+    const grassGeo = new PlaneGeometry(0.16, 0.78, 1, 3)
+    grassGeo.translate(0, 0.39, 0)
     const grassUniforms = {
       uTime: { value: 0 },
       uWind: { value: 0.35 },
       uWindDir: { value: new Vector2(1, 0) },
-      uBaseColor: { value: new Color('#3f7842') },
-      uTipColor: { value: new Color('#a8d86b') },
+      uPlayerPos: { value: new Vector3(0, -100, 0) },
+      uBaseColor: { value: new Color('#366d3c') },
+      uTipColor: { value: new Color('#b5e46e') },
+      uSunTipColor: { value: new Color('#e8f694') },
     }
     const grassMat = new ShaderMaterial({
       uniforms: grassUniforms,
@@ -144,24 +186,39 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
         uniform float uTime;
         uniform float uWind;
         uniform vec2 uWindDir;
+        uniform vec3 uPlayerPos;
         varying float vH;
+        varying float vTint;
         void main() {
-          vH = clamp(position.y / 0.72, 0.0, 1.0);
+          vH = clamp(position.y / 0.78, 0.0, 1.0);
           vec4 worldBase = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
           float phase = worldBase.x * 0.35 + worldBase.z * 0.28 + worldBase.y * 0.1;
+          vTint = fract(sin(dot(worldBase.xz, vec2(12.9898, 78.233))) * 43758.5453);
           float sway = sin(uTime * (2.2 + uWind * 3.0) + phase) * (0.14 + uWind * 0.36) * vH * vH;
           vec3 pos = position;
           pos.x += uWindDir.x * sway;
           pos.z += uWindDir.y * sway;
+          // Player-reactive bend when footsteps pass nearby (2.2 m radius)
+          vec3 toBlade = worldBase.xyz - uPlayerPos;
+          float vDist = abs(toBlade.y);
+          float hDist = length(toBlade.xz);
+          float push = smoothstep(2.2, 0.2, hDist) * smoothstep(2.4, 0.3, vDist);
+          vec2 pushDir = hDist > 0.001 ? normalize(toBlade.xz) : vec2(1.0, 0.0);
+          pos.x += pushDir.x * push * 0.62 * vH;
+          pos.z += pushDir.y * push * 0.62 * vH;
+          pos.y -= push * 0.26 * vH * vH;
           gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(pos, 1.0);
         }
       `,
       fragmentShader: `
         uniform vec3 uBaseColor;
         uniform vec3 uTipColor;
+        uniform vec3 uSunTipColor;
         varying float vH;
+        varying float vTint;
         void main() {
-          vec3 col = mix(uBaseColor, uTipColor, pow(vH, 0.75));
+          vec3 tip = mix(uTipColor, uSunTipColor, vTint * 0.55);
+          vec3 col = mix(uBaseColor, tip, pow(vH, 0.72));
           gl_FragColor = vec4(col, 1.0);
         }
       `,
@@ -284,6 +341,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
     const windmillPostGeo = new CylinderGeometry(0.26, 0.42, 6.2, 8)
     const sailArmGeo = new BoxGeometry(0.14, 4.4, 0.14)
     const sailClothGeo = new PlaneGeometry(1.15, 3.4)
+    const pineTrunkGeo = buildCliffPineTrunkGeometry()
+    const pineCanopyGeo = buildCliffPineCanopyGeometry()
+    const pineBarkMat = new MeshStandardMaterial({ color: '#5c3f2c', roughness: 0.92 })
+    const pineNeedleMat = new MeshStandardMaterial({ color: '#39734a', roughness: 0.84 })
 
     return {
       grassGeo,
@@ -315,6 +376,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       windmillPostGeo,
       sailArmGeo,
       sailClothGeo,
+      pineTrunkGeo,
+      pineCanopyGeo,
+      pineBarkMat,
+      pineNeedleMat,
     }
   }, [])
 
@@ -336,13 +401,13 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
     const dummy = new Object3D()
     const rng = mulberry32(6001)
 
-    // Populate instanced grass around Start Plaza rim (r = 8..28 m) & Catch Decks (125m, 250m, 375m)
+    // Populate instanced grass around Start Plaza rim, Catch Decks, and Z1-Z2 walkable cliff platforms
     if (grassRef.current) {
       const anchors: Array<{ cx: number; cy: number; cz: number; minR: number; maxR: number; count: number }> = [
-        { cx: 0, cy: 0, cz: 0, minR: 7.5, maxR: 28, count: 620 },
-        { cx: RELAXED_CHECKPOINTS[0].pos[0], cy: RELAXED_CHECKPOINTS[0].pos[1], cz: RELAXED_CHECKPOINTS[0].pos[2], minR: 2.2, maxR: 4.5, count: 100 },
-        { cx: RELAXED_CHECKPOINTS[1].pos[0], cy: RELAXED_CHECKPOINTS[1].pos[1], cz: RELAXED_CHECKPOINTS[1].pos[2], minR: 2.2, maxR: 4.5, count: 90 },
-        { cx: RELAXED_CHECKPOINTS[2].pos[0], cy: RELAXED_CHECKPOINTS[2].pos[1], cz: RELAXED_CHECKPOINTS[2].pos[2], minR: 2.2, maxR: 4.5, count: 90 },
+        { cx: 0, cy: 0, cz: 0, minR: 7.5, maxR: 30, count: 780 },
+        { cx: RELAXED_CHECKPOINTS[0].pos[0], cy: RELAXED_CHECKPOINTS[0].pos[1], cz: RELAXED_CHECKPOINTS[0].pos[2], minR: 2.2, maxR: 4.5, count: 120 },
+        { cx: RELAXED_CHECKPOINTS[1].pos[0], cy: RELAXED_CHECKPOINTS[1].pos[1], cz: RELAXED_CHECKPOINTS[1].pos[2], minR: 2.2, maxR: 4.5, count: 110 },
+        { cx: RELAXED_CHECKPOINTS[2].pos[0], cy: RELAXED_CHECKPOINTS[2].pos[1], cz: RELAXED_CHECKPOINTS[2].pos[2], minR: 2.2, maxR: 4.5, count: 100 },
       ]
       let idx = 0
       for (const a of anchors) {
@@ -356,6 +421,49 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
           dummy.updateMatrix()
           grassRef.current.setMatrixAt(idx, dummy.matrix)
         }
+      }
+      // Scatter lush grass tufts flush on top of flat static walkable Z1-Z2 platforms
+      const greenPlatforms = level.data.platforms.filter((e) => {
+        if (e.motion != null || e.tag === 'hazard' || (e.rotX != null && Math.abs(e.rotX) > 0.01)) return false
+        if (e.pos[1] < 2 || e.pos[1] > 245) return false
+        const p = level.prefabs.get(e.prefab)
+        return p != null && p.walkable && p.collider != null
+      })
+      const remaining = GRASS_COUNT - idx
+      if (greenPlatforms.length > 0 && remaining > 0) {
+        const perPlat = Math.max(4, Math.floor(remaining / greenPlatforms.length))
+        for (const e of greenPlatforms) {
+          const p = level.prefabs.get(e.prefab)!
+          const [w, h, d] = colliderSize(p)
+          const off = p.collider!.offset
+          const cosY = Math.cos(e.rotY)
+          const sinY = Math.sin(e.rotY)
+          const cx = e.pos[0] + (off[0] * cosY + off[2] * sinY) * p.scale
+          const cz = e.pos[2] + (-off[0] * sinY + off[2] * cosY) * p.scale
+          const topY = e.pos[1] + off[1] * p.scale + h * 0.5
+          const hx = Math.max(0.25, w * 0.38)
+          const hz = Math.max(0.25, d * 0.38)
+          for (let k = 0; k < perPlat && idx < GRASS_COUNT; k++, idx++) {
+            const lx = (rng() * 2 - 1) * hx
+            const lz = (rng() * 2 - 1) * hz
+            const wx = cx + lx * cosY + lz * sinY
+            const wz = cz - lx * sinY + lz * cosY
+            dummy.position.set(wx, topY, wz)
+            dummy.rotation.set(0, rng() * Math.PI * 2, (rng() - 0.5) * 0.16)
+            const s = 0.55 + rng() * 0.65
+            dummy.scale.set(s, s, s)
+            dummy.updateMatrix()
+            grassRef.current.setMatrixAt(idx, dummy.matrix)
+          }
+          if (idx >= GRASS_COUNT) break
+        }
+      }
+      // Hide any unused grass slots below kill plane
+      for (; idx < GRASS_COUNT; idx++) {
+        dummy.position.set(0, -500, 0)
+        dummy.scale.set(0.001, 0.001, 0.001)
+        dummy.updateMatrix()
+        grassRef.current.setMatrixAt(idx, dummy.matrix)
       }
       grassRef.current.instanceMatrix.needsUpdate = true
     }
@@ -376,7 +484,54 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       flowerRef.current.instanceMatrix.needsUpdate = true
       if (flowerRef.current.instanceColor) flowerRef.current.instanceColor.needsUpdate = true
     }
-  }, [active])
+
+    // Populate leaning Liyue cliff pines on outer edges of tall Z1-Z2 platforms (strictly non-collider, outside jump center)
+    if (pineTrunkRef.current && pineCanopyRef.current) {
+      const cliffPlatforms = level.data.platforms.filter((e) => {
+        if (e.motion != null || e.tag === 'hazard' || (e.rotX != null && Math.abs(e.rotX) > 0.01)) return false
+        if (e.pos[1] < 24 || e.pos[1] > 245) return false
+        const p = level.prefabs.get(e.prefab)
+        if (!p || !p.walkable || !p.collider) return false
+        const [w, , d] = colliderSize(p)
+        return w >= 3.2 && d >= 3.2
+      })
+      let placed = 0
+      const step = Math.max(1, Math.floor(cliffPlatforms.length / CLIFF_PINE_COUNT))
+      for (let i = 0; i < cliffPlatforms.length && placed < CLIFF_PINE_COUNT; i += step) {
+        const e = cliffPlatforms[i]
+        const p = level.prefabs.get(e.prefab)!
+        const [w, h, d] = colliderSize(p)
+        const off = p.collider!.offset
+        const cosY = Math.cos(e.rotY)
+        const sinY = Math.sin(e.rotY)
+        const cx = e.pos[0] + (off[0] * cosY + off[2] * sinY) * p.scale
+        const cz = e.pos[2] + (-off[0] * sinY + off[2] * cosY) * p.scale
+        const topY = e.pos[1] + off[1] * p.scale + h * 0.5
+        // Anchor on outer corner leaning away from spire center (0, 0) so sightlines stay wide open
+        const outAng = Math.atan2(cz, cx)
+        const rimR = Math.min(w, d) * 0.44
+        const px = cx + Math.cos(outAng) * rimR
+        const pz = cz + Math.sin(outAng) * rimR
+        const s = 0.85 + rng() * 0.45
+        dummy.position.set(px, topY - 0.15, pz)
+        dummy.rotation.set(0, -outAng, 0)
+        dummy.scale.set(s, s, s)
+        dummy.updateMatrix()
+        pineTrunkRef.current.setMatrixAt(placed, dummy.matrix)
+        pineCanopyRef.current.setMatrixAt(placed, dummy.matrix)
+        placed++
+      }
+      for (; placed < CLIFF_PINE_COUNT; placed++) {
+        dummy.position.set(0, -500, 0)
+        dummy.scale.set(0.001, 0.001, 0.001)
+        dummy.updateMatrix()
+        pineTrunkRef.current.setMatrixAt(placed, dummy.matrix)
+        pineCanopyRef.current.setMatrixAt(placed, dummy.matrix)
+      }
+      pineTrunkRef.current.instanceMatrix.needsUpdate = true
+      pineCanopyRef.current.instanceMatrix.needsUpdate = true
+    }
+  }, [active, level])
 
   useEffect(
     () => () => {
@@ -406,6 +561,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       resources.windmillPostGeo.dispose()
       resources.sailArmGeo.dispose()
       resources.sailClothGeo.dispose()
+      resources.pineTrunkGeo.dispose()
+      resources.pineCanopyGeo.dispose()
+      resources.pineBarkMat.dispose()
+      resources.pineNeedleMat.dispose()
     },
     [resources],
   )
@@ -419,7 +578,16 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
     const windInt = game.challenges.windIntensity
     const windAng = game.challenges.windAngle
 
-    syncLivingUniforms(resources.grassUniforms, resources.bannerUniforms, resources.rayUniforms, t, windInt, windAng, game.atmosphere.starOpacity)
+    syncLivingUniforms(
+      resources.grassUniforms,
+      resources.bannerUniforms,
+      resources.rayUniforms,
+      t,
+      windInt,
+      windAng,
+      game.atmosphere.starOpacity,
+      game.port?.position,
+    )
 
     // Spin Ghibli windmill sails faster when crosswind gusts hit
     const spinSpeed = 0.65 + windInt * 2.6
@@ -469,9 +637,11 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
 
   return (
     <group name="living-world">
-      {/* 1. Instanced wind-swaying grass & wildflowers */}
+      {/* 1. Instanced wind-swaying grass, wildflowers & leaning Liyue cliff pines */}
       <instancedMesh ref={grassRef} name="living-grass" args={[resources.grassGeo, resources.grassMat, GRASS_COUNT]} frustumCulled={false} />
       <instancedMesh ref={flowerRef} name="living-flowers" args={[resources.flowerGeo, resources.flowerMat, FLOWER_COUNT]} frustumCulled={false} />
+      <instancedMesh ref={pineTrunkRef} name="living-cliff-pine-trunks" args={[resources.pineTrunkGeo, resources.pineBarkMat, CLIFF_PINE_COUNT]} frustumCulled={false} />
+      <instancedMesh ref={pineCanopyRef} name="living-cliff-pine-canopies" args={[resources.pineCanopyGeo, resources.pineNeedleMat, CLIFF_PINE_COUNT]} frustumCulled={false} />
 
       {/* 2. Fluttering Ghibli cloth prayer banners */}
       <group name="living-banners">

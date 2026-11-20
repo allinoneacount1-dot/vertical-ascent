@@ -38,3 +38,6 @@ licenses/*.pdf
 public/assets/_build-only/
 .claude/settings.local.json
 !evidence/**/*.log
+
+.vercel
+.env*

@@ -18,6 +18,7 @@ import { ChallengeObjects } from './ChallengeObjects.tsx'
 import { SculpturalObjects } from './SculpturalObjects.tsx'
 import { WorldVista } from './WorldVista.tsx'
 import { LivingWorld } from './LivingWorld.tsx'
+import { BiomeLandmarks } from './BiomeLandmarks.tsx'
 import { CloudSea } from './CloudSea.tsx'
 import { SkyRelics } from './SkyRelics.tsx'
 import { GhostRacer } from './GhostRacer.tsx'
@@ -234,11 +235,11 @@ export function Level({ level }: { level: LoadedLevel }) {
       <SculpturalObjects level={level} />
       <WorldVista level={level} />
       <LivingWorld level={level} />
+      <BiomeLandmarks level={level} />
       <CloudSea level={level} />
       <SkyRelics level={level} />
       <GhostRacer level={level} />
       <RemotePlayers />
-      <LivingWorld level={level} />
       <CharacterVfx />
       <CharacterJuice />
       <Suspense fallback={null}>
