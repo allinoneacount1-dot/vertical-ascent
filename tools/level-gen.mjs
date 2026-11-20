@@ -25,7 +25,7 @@ function mulberry32(a) {
   }
 }
 const rng = mulberry32(SEED)
-const pick = (arr) => arr[Math.floor(rng() * arr.length)]
+const _pick = (arr) => arr[Math.floor(rng() * arr.length)]
 const r3 = (v) => Math.round(v * 1000) / 1000
 
 // ---- movement limits (level/movement.json; ref/03 §Aturan desain margins) ----------------------------------------------
@@ -213,7 +213,7 @@ function add(zone, entry) {
   return entry.id
 }
 /** Static colliders for clearance checks: { min, max } world AABBs. */
-const solids = []
+const _solids = []
 function aabbOf(pos, prefabId, rotY = 0) {
   const p = prefabs.get(prefabId) ?? baseSlicePrefab(prefabId)
   if (!p?.collider) return null
@@ -258,7 +258,6 @@ function checkJump(label, A, B, opts = {}) {
   const reach = dj ? reachDj(g.dh) : reachRun(g.dh)
   const margin = opts.margin ?? (dj ? MARGIN_DJ : MARGIN)
   if (g.dist > margin * reach + 1e-6) errors.push(`${label}: distance ${r3(g.dist)} > ${margin} × reach ${r3(reach)} (dh ${r3(g.dh)})`)
-  if (!dj && g.dh <= MAX_RISE && reachRun(g.dh) * 0 > 0) errors.push('unreachable')
   return g
 }
 
@@ -387,7 +386,7 @@ function buildClimb(zone, tierIndex, rect, nextRect, entryPoint, y0, y1, script,
   const fixedRise = script.reduce((s, n) => s + (MOVES[n].rise ?? 0), 0) + lifts.reduce((s, L) => s + L + 0.8, 0)
   const FIRST = 1.0
   const FINAL = 1.1
-  const fillRise = y1 - y0 - FIRST - FINAL - fixedRise
+  const _fillRise = y1 - y0 - FIRST - FINAL - fixedRise
   const cw = (((sX - sE) % loop.P) + loop.P) % loop.P
   // spans without an extra lap first (stacked laps need ≥6 m between them), then with one extra lap
   const options = [
@@ -644,7 +643,7 @@ function supportsFor(zone, ring, rect, height) {
 }
 
 /** Railings on every deck edge except the edge shared with the previous (lower) deck: walking off there drops S. */
-function railingsFor(zone, rect, height, prevRect, nextRect) {
+function railingsFor(zone, rect, height, prevRect, _nextRect) {
   const edges = [
     { axis: 'x', at: rect.z0, from: rect.x0, to: rect.x1, inward: 1 },
     { axis: 'x', at: rect.z1, from: rect.x0, to: rect.x1, inward: -1 },

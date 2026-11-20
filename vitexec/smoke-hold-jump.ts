@@ -1,6 +1,5 @@
 // TEST-08, smoke part (DIRECTIVE §7 row 08): live app, real keyboard only. Hold Space for 2 s → exactly one takeoff.
 // Counts 'takeoff' events (any kind, so a stray air jump would also fail) from the keydown until 1 s after release.
-import { keyboard } from 'vitexec'
 import { Recorder, bootToPlaying, game, logRenderer, nextFrame, r3, sleep } from '/vitexec/lib/move-smoke.ts'
 
 type Ev = { t: number; type: string; data?: { kind?: string } }

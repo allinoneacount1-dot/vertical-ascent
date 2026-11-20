@@ -7,7 +7,7 @@ import { game } from '../game/game.ts'
 import { useUi } from '../game/store.ts'
 import { RELAXED_CHECKPOINTS } from '../level/challenges.ts'
 
-export class HudSampler {
+class HudSampler {
   private lastSlot = -1
 
   sample(now: number): void {

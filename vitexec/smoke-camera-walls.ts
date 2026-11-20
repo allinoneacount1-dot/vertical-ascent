@@ -11,7 +11,7 @@ import { mouse } from 'vitexec'
 import { Euler, Matrix4, Vector3 } from 'three'
 import { BLOCKOUT } from '/src/level/blockout.ts'
 import { game as liveGame } from '/src/game/game.ts'
-import { Recorder, bootToPlaying, game, logRenderer, nextFrame, r3, sleep, turnToYaw, wrap } from '/vitexec/lib/move-smoke.ts'
+import { Recorder, bootToPlaying, logRenderer, nextFrame, r3, sleep, turnToYaw, wrap } from '/vitexec/lib/move-smoke.ts'
 
 type Cam = { yaw: number; pitch: number; distance: number; zoom: number; lastHit: number | null; pos: number[] }
 type Full = { player: { pos: number[] }; camera: Cam; state: string }

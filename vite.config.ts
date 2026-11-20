@@ -12,6 +12,19 @@ export default defineConfig({
   appType: 'mpa',
   plugins: [react(), stubViverseDefaults(GAP_SLOTS)],
   resolve: { dedupe: ['three', '@react-three/fiber'] },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('/three/') || id.includes('\\three\\')) return 'vendor-three'
+          if (id.includes('/@react-three/') || id.includes('\\@react-three\\') || id.includes('/@pmndrs/') || id.includes('\\@pmndrs\\')) return 'vendor-r3f'
+          if (id.includes('/react/') || id.includes('\\react\\') || id.includes('/react-dom/') || id.includes('\\react-dom\\') || id.includes('/zustand/') || id.includes('\\zustand\\')) return 'vendor-react'
+          return undefined
+        },
+      },
+    },
+  },
   // include: vitexec harness scripts import '@pmndrs/viverse' directly; without pre-bundling, the first cold run
   // discovers it, re-optimizes and reloads the page mid-script (D-031).
   optimizeDeps: {

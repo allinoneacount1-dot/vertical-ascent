@@ -2,7 +2,7 @@
 // in the air for 3 s → Δposition 0, Δtimer 0, Δmixer time 0; Resume continues the arc; P pauses without the lock.
 // Input: vitexec mouse/keyboard only; the single synthetic step is the allowlisted "stand-in: exitPointerLock".
 import { mouse } from 'vitexec'
-import { Recorder, bootToPlaying, game, logRenderer, nextFrame, r3, sleep } from '/vitexec/lib/move-smoke.ts'
+import { Recorder, bootToPlaying, logRenderer, nextFrame, r3, sleep } from '/vitexec/lib/move-smoke.ts'
 
 type Full = { state: string; player: { pos: number[]; vel: number[]; groundedRaw: boolean }; run: { timerMs: number }; anim: { mixerTime: number }; frame: number; events: Array<{ t: number; type: string }> }
 const full = () => (window as unknown as { __game: { snapshot(): Full } }).__game.snapshot()
