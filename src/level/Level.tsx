@@ -19,6 +19,7 @@ import { SculpturalObjects } from './SculpturalObjects.tsx'
 import { WorldVista } from './WorldVista.tsx'
 import { LivingWorld } from './LivingWorld.tsx'
 import { BiomeLandmarks } from './BiomeLandmarks.tsx'
+import { DynamicWorld } from './DynamicWorld.tsx'
 import { CloudSea } from './CloudSea.tsx'
 import { SkyRelics } from './SkyRelics.tsx'
 import { GhostRacer } from './GhostRacer.tsx'
@@ -236,6 +237,7 @@ export function Level({ level }: { level: LoadedLevel }) {
       <WorldVista level={level} />
       <LivingWorld level={level} />
       <BiomeLandmarks level={level} />
+      <DynamicWorld level={level} />
       <CloudSea level={level} />
       <SkyRelics level={level} />
       <GhostRacer level={level} />
