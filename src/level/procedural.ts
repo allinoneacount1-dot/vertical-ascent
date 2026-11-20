@@ -138,11 +138,14 @@ function sculptedCliffPillarGeo(w: number, h: number, d: number, seed: number): 
   return geo
 }
 
-/** Tapered Laputa/Genshin floating island rocky underside (flat top at y = 0, jagged craggy tip at y = -depth). */
+/** Tapered Laputa/Genshin floating island rocky underside (watertight: pure position-based displacement, zero seam tears). */
 function floatingIslandUndersideGeo(rx: number, rz: number, depth: number, seed: number, sides = 9): BufferGeometry {
   const geo = new CylinderGeometry(1, 0.14, depth, sides, 3)
   geo.translate(0, -depth / 2, 0)
   const rng = mulberry32(seed ^ 0x9e3779b9)
+  const p1 = rng() * Math.PI * 2
+  const p2 = rng() * Math.PI * 2
+  const p3 = rng() * Math.PI * 2
   const pos = geo.attributes.position
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i)
@@ -152,32 +155,43 @@ function floatingIslandUndersideGeo(rx: number, rz: number, depth: number, seed:
     const t = Math.max(0, Math.min(1, -y / depth))
     if (r > 1e-4) {
       const ang = Math.atan2(z, x)
-      const crag = 1 + Math.sin(ang * 3 + seed * 0.1) * 0.14 + Math.cos(ang * 5 - seed * 0.2) * 0.09 + (rng() - 0.5) * 0.12
+      // Pure periodic function of (ang, t) so UV seam & cap vertices stay 100% watertight
+      const crag =
+        1 +
+        Math.sin(ang * 3 + p1) * 0.14 +
+        Math.cos(ang * 5 + p2) * 0.08 +
+        Math.sin(ang * 2 + t * 5.2 + p3) * 0.07
       const bulge = 1 + Math.sin(t * Math.PI) * 0.16
       pos.setX(i, x * rx * crag * bulge)
       pos.setZ(i, z * rz * crag * bulge)
     }
     if (t > 0.15 && t < 0.95) {
-      pos.setY(i, y + (rng() - 0.5) * depth * 0.1)
+      const ang = Math.atan2(z, x)
+      pos.setY(i, y + Math.sin(ang * 4 + t * 3.1 + p2) * depth * 0.065)
     }
   }
   geo.computeVertexNormals()
   return geo
 }
 
-/** Faceted boulder belly with flat top at y = 0 and organic bulging rock facets underneath. */
+/** Faceted boulder belly with flat top at y = 0 (watertight: pure 3D position-based displacement on non-indexed dodecahedron). */
 function boulderBellyGeo(rx: number, rz: number, depth: number, seed: number): BufferGeometry {
   const geo = new DodecahedronGeometry(1, 0)
   const rng = mulberry32(seed ^ 0x51f15e)
+  const p1 = rng() * Math.PI * 2
+  const p2 = rng() * Math.PI * 2
+  const p3 = rng() * Math.PI * 2
   const pos = geo.attributes.position
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i)
     const y = pos.getY(i)
     const z = pos.getZ(i)
-    const n = 0.88 + rng() * 0.24
+    // Pure function of (x, y, z) so all triangles sharing a corner receive identical displacement (zero exploded shards)
+    const n = 0.94 + Math.sin(x * 3.7 + p1) * 0.08 + Math.cos(z * 4.1 + p2) * 0.08 + Math.sin(y * 3.3 + p3) * 0.06
+    const ny = 0.92 + Math.cos(x * 2.9 - z * 3.1 + p3) * 0.12
     pos.setX(i, x * rx * n)
     pos.setZ(i, z * rz * n)
-    pos.setY(i, y >= 0 ? -y * 0.06 : y * depth * (0.85 + rng() * 0.25))
+    pos.setY(i, y >= 0 ? -y * 0.06 : y * depth * ny)
   }
   geo.computeVertexNormals()
   return geo

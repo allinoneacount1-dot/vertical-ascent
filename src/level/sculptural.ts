@@ -590,17 +590,22 @@ export function buildFacetedRockGeometries(radius: number, depth: number, seed: 
   topCap.computeBoundingBox()
   topCap.translate(0, 0.25 - topCap.boundingBox!.max.y, 0)
 
-  // Tapered faceted stone underside (flat-shaded crystal-like Laputa rock)
+  // Tapered faceted stone underside (watertight periodic displacement so UV seam & bottom cap never tear)
   const avgR = radii.reduce((a, b) => a + b, 0) / radii.length
   const underside = new CylinderGeometry(avgR * 0.9, avgR * 0.14, depth, sides, 2)
+  const phaseA = rng() * Math.PI * 2
+  const phaseB = rng() * Math.PI * 2
   const pos = underside.attributes.position
   for (let i = 0; i < pos.count; i++) {
+    const px = pos.getX(i)
     const py = pos.getY(i)
-    // Keep top ring flush with topCap; perturb lower rings for asymmetric faceted look
-    if (py < depth * 0.35) {
-      const jitter = 0.8 + rng() * 0.38
-      pos.setX(i, pos.getX(i) * jitter)
-      pos.setZ(i, pos.getZ(i) * jitter)
+    const pz = pos.getZ(i)
+    // Keep top ring flush with topCap; perturb lower rings deterministically by angle & height
+    if (py < depth * 0.35 && Math.hypot(px, pz) > 1e-4) {
+      const ang = Math.atan2(pz, px)
+      const jitter = 0.92 + Math.sin(ang * 3 + phaseA) * 0.12 + Math.cos(ang * 5 + py * 1.4 + phaseB) * 0.08
+      pos.setX(i, px * jitter)
+      pos.setZ(i, pz * jitter)
     }
   }
   underside.translate(0, -depth / 2 - 0.08, 0)
