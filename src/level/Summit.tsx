@@ -50,6 +50,13 @@ function glowTexture(): CanvasTexture {
   return tex
 }
 
+function applyBeaconLit(beam: Mesh, glow: Sprite, light: PointLight, lamps: MeshStandardMaterial[], on: boolean) {
+  beam.visible = on
+  glow.visible = on
+  light.intensity = on ? LIGHT_INTENSITY : 0
+  for (const m of lamps) m.emissiveIntensity = on ? 2 : 0
+}
+
 /** One beacon: the prefab's post and lamp (own materials, not merged) plus a beam, a glow sprite and a point light. */
 function Beacon({ entry, level }: { entry: PlatformEntry; level: LoadedLevel }) {
   const parts = useMemo(() => {
@@ -80,8 +87,12 @@ function Beacon({ entry, level }: { entry: PlatformEntry; level: LoadedLevel }) 
     return { root, lamps, beam, glow, light, beamMat, glowMat }
   }, [entry, level])
 
-  useEffect(
-    () => () => {
+  const partsRef = useRef<typeof parts | null>(null)
+
+  useEffect(() => {
+    partsRef.current = parts
+    return () => {
+      partsRef.current = null
       parts.root.traverse((o) => {
         const m = o as Mesh
         if (m.isMesh) {
@@ -91,20 +102,18 @@ function Beacon({ entry, level }: { entry: PlatformEntry; level: LoadedLevel }) 
       })
       parts.glowMat.map?.dispose()
       parts.glowMat.dispose()
-    },
-    [parts],
-  )
+    }
+  }, [parts])
 
   const lit = useRef<boolean | null>(null)
   useFrame(() => {
+    const p = partsRef.current
+    if (!p) return
     const revealed = useUi.getState().summitRevealed
     const on = entry.beacon === 'true' ? revealed : !revealed
     if (on === lit.current) return
     lit.current = on
-    parts.beam.visible = on
-    parts.glow.visible = on
-    parts.light.intensity = on ? LIGHT_INTENSITY : 0
-    for (const m of parts.lamps) m.emissiveIntensity = on ? 2 : 0
+    applyBeaconLit(p.beam, p.glow, p.light, p.lamps, on)
     game.log('beacon', { beacon: entry.beacon, lit: on })
   })
 

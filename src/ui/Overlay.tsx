@@ -630,13 +630,14 @@ function Victory() {
   const pending = useUi((s) => s.pendingIntent)
   const relicCount = useUi((s) => s.relicCount)
   const [copied, setCopied] = useState(false)
-  const [, rerender] = useState(0)
-  const locked = performance.now() < lockedUntil
+  const [unlockedUntil, setUnlockedUntil] = useState(0)
+  const locked = lockedUntil > 0 && unlockedUntil < lockedUntil
   useEffect(() => {
-    if (!locked) return
-    const id = setTimeout(() => rerender((n) => n + 1), Math.max(0, lockedUntil - performance.now()) + 16)
+    if (lockedUntil <= 0) return
+    const remaining = Math.max(0, lockedUntil - performance.now())
+    const id = setTimeout(() => setUnlockedUntil(lockedUntil), remaining + 16)
     return () => clearTimeout(id)
-  }, [locked, lockedUntil])
+  }, [lockedUntil])
   if (v == null) return null
   const delta = v.newBest ? t('newBest') : v.deltaMs == null ? null : `${v.deltaMs >= 0 ? '+' : '−'}${formatTenths(Math.abs(v.deltaMs))} ${t('vsBest')}`
   return (

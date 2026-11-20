@@ -207,7 +207,9 @@ function WorldReady() {
 
 export function Level({ level }: { level: LoadedLevel }) {
   const world = useBvhPhysicsWorld()
-  useMemo(() => instrumentWorld(world, 'physics'), [world])
+  useLayoutEffect(() => {
+    instrumentWorld(world, 'physics')
+  }, [world])
   const entries = level.data.platforms
   const prefabOf = (e: PlatformEntry) => level.prefabs.get(e.prefab)!
   const statics = entries.filter((e) => e.motion == null && prefabOf(e).collider != null)

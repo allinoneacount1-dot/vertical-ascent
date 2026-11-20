@@ -1,7 +1,7 @@
 // Single-draw-call ambient wind motes / sunlit pollen / sky stardust (G4/Ghibli atmosphere).
 // Reacts to Crosswind Gust telegraph & active gusts (Tahap 2) by thickening/brightening and accelerating laterally.
 // Wraps smoothly around the player in a 90x45x90 m volume with zero per-frame allocations.
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture, Color, Points, PointsMaterial, SRGBColorSpace } from 'three'
 import { game } from '../game/game.ts'
@@ -70,16 +70,22 @@ export function AtmosphereParticles() {
     return { points, geom, mat, seeds }
   }, [])
 
-  useEffect(
-    () => () => {
+  const simRef = useRef<{ geom: BufferGeometry; mat: PointsMaterial; seeds: Float32Array } | null>(null)
+
+  useEffect(() => {
+    simRef.current = { geom, mat, seeds }
+    return () => {
+      simRef.current = null
       geom.dispose()
       mat.map?.dispose()
       mat.dispose()
-    },
-    [geom, mat],
-  )
+    }
+  }, [geom, mat, seeds])
 
   useFrame((state, dt) => {
+    const sim = simRef.current
+    if (!sim) return
+    const { geom: g, mat: m, seeds: s } = sim
     const step = Math.min(dt, 0.05)
     const at = game.port?.position
     const cx = at?.x ?? 0
@@ -97,11 +103,11 @@ export function AtmosphereParticles() {
     if (hRatio < 0.5) tmpColor.copy(COL_LOW).lerp(COL_MID, hRatio * 2)
     else tmpColor.copy(COL_MID).lerp(COL_HIGH, (hRatio - 0.5) * 2)
     if (gust > 0.05) tmpColor.lerp(COL_GUST, Math.min(1, gust * 0.85))
-    mat.color.copy(tmpColor)
-    mat.opacity = Math.min(0.95, 0.42 + hRatio * 0.32 + fireflyBoost * 0.22 + gust * 0.42)
-    mat.size = 0.42 + fireflyBoost * 0.26 + gust * 0.48
+    m.color.copy(tmpColor)
+    m.opacity = Math.min(0.95, 0.42 + hRatio * 0.32 + fireflyBoost * 0.22 + gust * 0.42)
+    m.size = 0.42 + fireflyBoost * 0.26 + gust * 0.48
 
-    const attr = geom.getAttribute('position') as BufferAttribute
+    const attr = g.getAttribute('position') as BufferAttribute
     const arr = attr.array as Float32Array
     const halfXZ = SPAN_XZ / 2
     const halfY = SPAN_Y / 2
@@ -109,9 +115,9 @@ export function AtmosphereParticles() {
       const i3 = i * 3
       const vx = gust > 0.05 ? gustDirX * windSpeed : windSpeed
       const vz = gust > 0.05 ? gustDirZ * windSpeed : windSpeed * 0.35
-      let x = arr[i3] + vx * seeds[i3] * step
-      let y = arr[i3 + 1] + (0.25 + Math.sin(t * 0.9 + seeds[i3 + 2]) * 0.35) * seeds[i3 + 1] * step
-      let z = arr[i3 + 2] + vz * seeds[i3] * step
+      let x = arr[i3] + vx * s[i3] * step
+      let y = arr[i3 + 1] + (0.25 + Math.sin(t * 0.9 + s[i3 + 2]) * 0.35) * s[i3 + 1] * step
+      let z = arr[i3 + 2] + vz * s[i3] * step
 
       if (x - cx > halfXZ) x -= SPAN_XZ
       else if (x - cx < -halfXZ) x += SPAN_XZ
