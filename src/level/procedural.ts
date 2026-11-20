@@ -12,10 +12,12 @@ import {
   CylinderGeometry,
   DodecahedronGeometry,
   Euler,
+  Float32BufferAttribute,
   Matrix4,
   Mesh,
   MeshStandardMaterial,
   OctahedronGeometry,
+  PlaneGeometry,
   Quaternion,
   SphereGeometry,
   TorusGeometry,
@@ -36,10 +38,30 @@ export type Piece = {
   roughness: number
   metalness: number
   style: SurfaceStyle | null
+  vertexColors?: boolean
 }
 
 const ROTATION_ORDER = 'YXZ'
 const TRIM = 0.14
+
+/** Natural uneven earth & grass micro-relief for ground-floor (strictly 0 inside plaza, spiral tower & camp). */
+export function groundTerrainHeight(x: number, z: number): number {
+  const rSpawn = Math.hypot(x, z)
+  const rTower = Math.hypot(x - 12, z + 4)
+  const rCamp = Math.hypot(x + 8.6, z - 5.4)
+  const wSpawn = Math.max(0, Math.min(1, (rSpawn - 10.5) / 8.0))
+  const wTower = Math.max(0, Math.min(1, (rTower - 4.8) / 4.5))
+  const wCamp = Math.max(0, Math.min(1, (rCamp - 4.2) / 4.0))
+  const flatMask = wSpawn * wTower * wCamp
+  const smooth = flatMask * flatMask * (3 - 2 * flatMask)
+  const hills =
+    Math.sin(x * 0.085 + 0.4) * Math.cos(z * 0.075 - 0.3) * 0.42 +
+    Math.sin(x * 0.21 - z * 0.17) * 0.18 +
+    Math.cos(x * 0.39 + z * 0.33) * 0.07
+  // Subtle edge taper down near r > 180 so outer meadow blends into WorldVista valley hills
+  const outerFade = Math.max(0, 1 - Math.max(0, rSpawn - 165) / 55)
+  return hills * smooth * outerFade
+}
 
 function hashString(str: string): number {
   let h = 2166136261 >>> 0
@@ -60,19 +82,26 @@ function mulberry32(seed: number) {
   }
 }
 
-const key = (color: string, emissive: string | null, roughness: number, metalness: number, style: SurfaceStyle | null) =>
-  `${color}|${emissive ?? ''}|${roughness}|${metalness}|${style ?? ''}`
+const key = (
+  color: string,
+  emissive: string | null,
+  roughness: number,
+  metalness: number,
+  style: SurfaceStyle | null,
+  vertexColors = false,
+) => `${color}|${emissive ?? ''}|${roughness}|${metalness}|${style ?? ''}|${vertexColors ? 1 : 0}`
 
 function piece(
   geometry: BufferGeometry,
   color: string,
-  opts: { emissive?: string | null; roughness?: number; metalness?: number; style?: SurfaceStyle | null } = {},
+  opts: { emissive?: string | null; roughness?: number; metalness?: number; style?: SurfaceStyle | null; vertexColors?: boolean } = {},
 ): Piece {
   const emissive = opts.emissive ?? null
   const roughness = opts.roughness ?? 0.85
   const metalness = opts.metalness ?? 0
   const style = opts.style ?? null
-  return { geometry, color, emissive, roughness, metalness, style, key: key(color, emissive, roughness, metalness, style) }
+  const vertexColors = opts.vertexColors ?? false
+  return { geometry, color, emissive, roughness, metalness, style, vertexColors, key: key(color, emissive, roughness, metalness, style, vertexColors) }
 }
 
 const boxAt = (size: Vec3, at: Vec3) => new BoxGeometry(size[0], size[1], size[2]).translate(at[0], at[1], at[2])
@@ -565,7 +594,47 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     return out
   }
 
-  const defaultStyle: SurfaceStyle = id.includes('floor') ? 'concrete' : prefab.surface === 'metal' ? 'stone' : 'cliff'
+  if (id === 'ground-floor') {
+    const geo = new PlaneGeometry(w, d, 96, 96)
+    geo.rotateX(-Math.PI / 2)
+    const pos = geo.attributes.position
+    const colors = new Float32Array(pos.count * 3)
+    const cEarth = new Color('#9c7d57')
+    const cMoss = new Color('#6fa656')
+    const cMeadow = new Color('#8ec464')
+    const cShadow = new Color('#587d44')
+    const tmp = new Color()
+    for (let i = 0; i < pos.count; i++) {
+      const gx = pos.getX(i)
+      const gz = pos.getZ(i)
+      const relief = groundTerrainHeight(gx, gz)
+      pos.setY(i, h / 2 + relief)
+
+      // Distance to winding dirt footpath from spawn (0,0) -> spiral tower (12,-4) & camp (-8.6, 5.4)
+      const tProj = Math.max(0, Math.min(1, (gx * 12 + gz * -4) / (12 * 12 + 4 * 4)))
+      const dPath = Math.hypot(gx - tProj * 12, gz - tProj * -4)
+      const dCamp = Math.hypot(gx + 8.6, gz - 5.4)
+      const dPlaza = Math.hypot(gx, gz)
+      const dirtFactor = Math.max(
+        Math.max(0, 1 - dPath / 3.4) * 0.72,
+        Math.max(0, 1 - dCamp / 4.2) * 0.55,
+        Math.max(0, 1 - dPlaza / 7.5) * 0.28,
+      )
+      const patch = 0.5 + 0.5 * Math.sin(gx * 0.14 + Math.cos(gz * 0.12) * 1.8)
+      tmp.copy(cMoss).lerp(cMeadow, patch)
+      if (relief < -0.1) tmp.lerp(cShadow, Math.min(0.65, -relief * 1.1))
+      if (relief > 0.25) tmp.lerp(cEarth, Math.min(0.35, (relief - 0.25) * 0.9))
+      tmp.lerp(cEarth, Math.min(0.9, dirtFactor))
+      colors[i * 3] = tmp.r
+      colors[i * 3 + 1] = tmp.g
+      colors[i * 3 + 2] = tmp.b
+    }
+    geo.setAttribute('color', new Float32BufferAttribute(colors, 3))
+    geo.computeVertexNormals()
+    return [piece(geo, '#ffffff', { roughness: 0.94, style: 'earth', vertexColors: true })]
+  }
+
+  const defaultStyle: SurfaceStyle = id.includes('floor') ? 'earth' : prefab.surface === 'metal' ? 'stone' : 'cliff'
   const out = [piece(new BoxGeometry(w, h, d), v.color, { style: defaultStyle })]
   if (v.accent != null) addTrim(out, v.accent)
   return out
@@ -623,12 +692,13 @@ export function materialFor(p: Piece): MeshStandardMaterial {
       color: p.color,
       roughness: p.roughness,
       metalness: p.metalness,
-      ...(tex ? { map: tex.map, bumpMap: tex.bumpMap, bumpScale: 0.055 } : {}),
+      vertexColors: p.vertexColors ?? false,
+      ...(tex ? { map: tex.map, bumpMap: tex.bumpMap, bumpScale: p.style === 'earth' ? 0.11 : 0.055 } : {}),
     })
     if (p.emissive) {
       m.emissive.set(p.emissive)
       m.emissiveIntensity = 1.4
-    } else if (p.style === 'cliff' || p.style === 'moss' || p.style === 'stone' || p.style === 'marble') {
+    } else if (p.style === 'cliff' || p.style === 'moss' || p.style === 'earth' || p.style === 'stone' || p.style === 'marble') {
       applyStylizedRim(m)
     }
     materials.set(p.key, m)

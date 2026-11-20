@@ -14,6 +14,7 @@ import {
   Color,
   ConeGeometry,
   CylinderGeometry,
+  DodecahedronGeometry,
   DoubleSide,
   Group,
   InstancedMesh,
@@ -28,7 +29,7 @@ import {
 } from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { LoadedLevel } from './levels.ts'
-import { colliderSize } from './procedural.ts'
+import { colliderSize, groundTerrainHeight } from './procedural.ts'
 import { RELAXED_CHECKPOINTS } from './challenges.ts'
 import { SKY_RELICS } from './relicsData.ts'
 import { game } from '../game/game.ts'
@@ -100,6 +101,9 @@ const GRASS_COUNT = 2400
 const FLOWER_COUNT = 180
 const CUMULUS_COUNT = 28
 const CLIFF_PINE_COUNT = 24
+const COBBLESTONE_COUNT = 72
+const GROUND_ROCK_COUNT = 80
+const FERN_COUNT = 140
 
 /** Layered Liyue cliff-pine foliage pads (3 offset flattened cones merged into 1 instanced geometry). */
 function buildCliffPineCanopyGeometry() {
@@ -162,6 +166,9 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
   const cumulusRef = useRef<InstancedMesh>(null)
   const pineTrunkRef = useRef<InstancedMesh>(null)
   const pineCanopyRef = useRef<InstancedMesh>(null)
+  const cobbleRef = useRef<InstancedMesh>(null)
+  const groundRockRef = useRef<InstancedMesh>(null)
+  const fernRef = useRef<InstancedMesh>(null)
   const sailRefs = useRef<Array<Group | null>>([])
   const shrineGlowRefs = useRef<Array<MeshStandardMaterial | null>>([])
   const litShrinesRef = useRef<Set<string>>(new Set())
@@ -345,6 +352,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
     const pineCanopyGeo = buildCliffPineCanopyGeometry()
     const pineBarkMat = new MeshStandardMaterial({ color: '#5c3f2c', roughness: 0.92 })
     const pineNeedleMat = new MeshStandardMaterial({ color: '#39734a', roughness: 0.84 })
+    const cobbleGeo = new CylinderGeometry(0.46, 0.54, 0.08, 7)
+    const groundRockGeo = new DodecahedronGeometry(0.45, 0)
+    const fernGeo = new ConeGeometry(0.42, 0.55, 6)
+    const fernMat = new MeshStandardMaterial({ color: '#528f48', roughness: 0.86 })
 
     return {
       grassGeo,
@@ -380,6 +391,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       pineCanopyGeo,
       pineBarkMat,
       pineNeedleMat,
+      cobbleGeo,
+      groundRockGeo,
+      fernGeo,
+      fernMat,
     }
   }, [])
 
@@ -531,6 +546,62 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       pineTrunkRef.current.instanceMatrix.needsUpdate = true
       pineCanopyRef.current.instanceMatrix.needsUpdate = true
     }
+
+    // Populate cobblestone stepping stones from Spawn (0,0) to z1-spiral-tower (12,-4) & camp (-8.6, 5.4)
+    if (cobbleRef.current) {
+      for (let i = 0; i < COBBLESTONE_COUNT; i++) {
+        const toTower = i < 48
+        const u = toTower ? (i / 47) : ((i - 48) / (COBBLESTONE_COUNT - 49))
+        const tx = toTower ? u * 10.5 + Math.sin(u * Math.PI * 2) * 0.8 : -u * 7.5 + Math.sin(u * Math.PI) * 0.7
+        const tz = toTower ? u * -3.5 + Math.cos(u * Math.PI * 2) * 0.65 : u * 4.8 + Math.cos(u * Math.PI) * 0.55
+        const ox = tx + (rng() - 0.5) * 1.15
+        const oz = tz + (rng() - 0.5) * 1.15
+        const gy = groundTerrainHeight(ox, oz)
+        dummy.position.set(ox, gy + 0.015, oz)
+        dummy.rotation.set(0, rng() * Math.PI * 2, 0)
+        dummy.scale.set(0.65 + rng() * 0.7, 0.8 + rng() * 0.5, 0.55 + rng() * 0.65)
+        dummy.updateMatrix()
+        cobbleRef.current.setMatrixAt(i, dummy.matrix)
+      }
+      cobbleRef.current.instanceMatrix.needsUpdate = true
+    }
+
+    // Populate mossy ground rocks & low fern clusters resting flush on groundTerrainHeight
+    if (groundRockRef.current) {
+      for (let i = 0; i < GROUND_ROCK_COUNT; i++) {
+        const ang = rng() * Math.PI * 2
+        const r = 11.5 + rng() * 52
+        const gx = Math.cos(ang) * r
+        const gz = Math.sin(ang) * r
+        const gy = groundTerrainHeight(gx, gz)
+        const sx = 0.55 + rng() * 1.4
+        const sy = 0.35 + rng() * 0.7
+        const sz = 0.55 + rng() * 1.3
+        dummy.position.set(gx, gy + sy * 0.14, gz)
+        dummy.rotation.set((rng() - 0.5) * 0.3, rng() * Math.PI * 2, (rng() - 0.5) * 0.3)
+        dummy.scale.set(sx, sy, sz)
+        dummy.updateMatrix()
+        groundRockRef.current.setMatrixAt(i, dummy.matrix)
+      }
+      groundRockRef.current.instanceMatrix.needsUpdate = true
+    }
+
+    if (fernRef.current) {
+      for (let i = 0; i < FERN_COUNT; i++) {
+        const ang = rng() * Math.PI * 2
+        const r = 9.5 + rng() * 44
+        const gx = Math.cos(ang) * r
+        const gz = Math.sin(ang) * r
+        const gy = groundTerrainHeight(gx, gz)
+        const s = 0.65 + rng() * 1.1
+        dummy.position.set(gx, gy + 0.22 * s, gz)
+        dummy.rotation.set((rng() - 0.5) * 0.18, rng() * Math.PI * 2, (rng() - 0.5) * 0.18)
+        dummy.scale.set(s * 1.25, s * 0.85, s * 1.25)
+        dummy.updateMatrix()
+        fernRef.current.setMatrixAt(i, dummy.matrix)
+      }
+      fernRef.current.instanceMatrix.needsUpdate = true
+    }
   }, [active, level])
 
   useEffect(
@@ -565,6 +636,10 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       resources.pineCanopyGeo.dispose()
       resources.pineBarkMat.dispose()
       resources.pineNeedleMat.dispose()
+      resources.cobbleGeo.dispose()
+      resources.groundRockGeo.dispose()
+      resources.fernGeo.dispose()
+      resources.fernMat.dispose()
     },
     [resources],
   )
@@ -642,6 +717,9 @@ export function LivingWorld({ level }: { level: LoadedLevel }) {
       <instancedMesh ref={flowerRef} name="living-flowers" args={[resources.flowerGeo, resources.flowerMat, FLOWER_COUNT]} frustumCulled={false} />
       <instancedMesh ref={pineTrunkRef} name="living-cliff-pine-trunks" args={[resources.pineTrunkGeo, resources.pineBarkMat, CLIFF_PINE_COUNT]} frustumCulled={false} />
       <instancedMesh ref={pineCanopyRef} name="living-cliff-pine-canopies" args={[resources.pineCanopyGeo, resources.pineNeedleMat, CLIFF_PINE_COUNT]} frustumCulled={false} />
+      <instancedMesh ref={cobbleRef} name="living-cobblestones" args={[resources.cobbleGeo, resources.stoneMat, COBBLESTONE_COUNT]} receiveShadow frustumCulled={false} />
+      <instancedMesh ref={groundRockRef} name="living-ground-rocks" args={[resources.groundRockGeo, resources.stoneMat, GROUND_ROCK_COUNT]} castShadow receiveShadow frustumCulled={false} />
+      <instancedMesh ref={fernRef} name="living-meadow-ferns" args={[resources.fernGeo, resources.fernMat, FERN_COUNT]} frustumCulled={false} />
 
       {/* 2. Fluttering Ghibli cloth prayer banners */}
       <group name="living-banners">

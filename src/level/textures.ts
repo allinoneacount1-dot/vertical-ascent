@@ -2,7 +2,7 @@
 // Zero external image files; safe in headless/Node environments where document is unavailable (returns null maps).
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 
-export type SurfaceStyle = 'cliff' | 'stone' | 'facade' | 'metal' | 'moss' | 'marble' | 'concrete' | 'hazard' | 'trim'
+export type SurfaceStyle = 'cliff' | 'stone' | 'facade' | 'metal' | 'moss' | 'earth' | 'marble' | 'concrete' | 'hazard' | 'trim'
 
 type TexturePair = { map: CanvasTexture; bumpMap: CanvasTexture }
 const cache = new Map<string, TexturePair>()
@@ -211,6 +211,60 @@ export function getSurfaceTextures(style: SurfaceStyle): TexturePair | null {
       cg.arc(rng() * S, rng() * S, 2.8 + rng() * 2.2, 0, Math.PI * 2)
       cg.fill()
     }
+  } else if (style === 'earth') {
+    // Natural uneven earth, loam soil patches, mossy grass tufts, tiny pebbles & wildflowers
+    cg.fillStyle = '#a4b87c'
+    cg.fillRect(0, 0, S, S)
+    // Rich soil & moss organic blotches
+    for (let i = 0; i < 420; i++) {
+      const x = rng() * S
+      const y = rng() * S
+      const rx = 10 + rng() * 34
+      const ry = 7 + rng() * 24
+      const isSoil = rng() > 0.52
+      cg.fillStyle = isSoil
+        ? `rgba(${148 + Math.round(rng() * 34)},${116 + Math.round(rng() * 26)},${82 + Math.round(rng() * 20)},0.34)`
+        : `rgba(${104 + Math.round(rng() * 38)},${162 + Math.round(rng() * 48)},${86 + Math.round(rng() * 28)},0.38)`
+      cg.beginPath()
+      cg.ellipse(x, y, rx, ry, rng() * Math.PI, 0, Math.PI * 2)
+      cg.fill()
+      const bv = isSoil ? Math.round(92 + rng() * 44) : Math.round(135 + rng() * 62)
+      bg.fillStyle = `rgba(${bv},${bv},${bv},0.42)`
+      bg.beginPath()
+      bg.ellipse(x, y, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2)
+      bg.fill()
+    }
+    // Crisp grass blade strokes & small ground pebbles
+    for (let i = 0; i < 620; i++) {
+      const x = rng() * S
+      const y = rng() * S
+      if (rng() > 0.25) {
+        cg.strokeStyle = rng() > 0.45 ? 'rgba(116,178,86,0.52)' : 'rgba(170,206,104,0.45)'
+        cg.lineWidth = 1.6
+        cg.beginPath()
+        cg.moveTo(x, y)
+        cg.lineTo(x + (rng() - 0.5) * 8, y - (5 + rng() * 10))
+        cg.stroke()
+      } else {
+        const pr = 2.2 + rng() * 4.2
+        cg.fillStyle = 'rgba(148,140,124,0.62)'
+        cg.beginPath()
+        cg.arc(x, y, pr, 0, Math.PI * 2)
+        cg.fill()
+        bg.fillStyle = '#dcdcdc'
+        bg.beginPath()
+        bg.arc(x, y, pr, 0, Math.PI * 2)
+        bg.fill()
+      }
+    }
+    // Tiny scattered meadow blossoms
+    for (let i = 0; i < 54; i++) {
+      const pick = rng()
+      cg.fillStyle = pick > 0.6 ? 'rgba(255,244,168,0.86)' : pick > 0.3 ? 'rgba(255,252,242,0.84)' : 'rgba(162,226,255,0.8)'
+      cg.beginPath()
+      cg.arc(rng() * S, rng() * S, 2.2 + rng() * 1.8, 0, Math.PI * 2)
+      cg.fill()
+    }
   } else if (style === 'marble') {
     // Celestia ivory-gold veined sanctuary marble with delicate teal rune flecks
     cg.fillStyle = '#f6f3ec'
@@ -273,7 +327,7 @@ export function getSurfaceTextures(style: SurfaceStyle): TexturePair | null {
     }
   }
 
-  const repeat = style === 'concrete' ? 24 : style === 'cliff' || style === 'facade' ? 2 : 1
+  const repeat = style === 'concrete' ? 24 : style === 'earth' ? 18 : style === 'cliff' || style === 'facade' ? 2 : 1
   const pair: TexturePair = {
     map: finalize(cc, repeat, repeat, true),
     bumpMap: finalize(bc, repeat, repeat, false),

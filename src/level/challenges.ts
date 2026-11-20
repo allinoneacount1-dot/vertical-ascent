@@ -324,6 +324,29 @@ export const CHALLENGE_SPECS: readonly ChallengeSpec[] = [
       dwellS: 4.5,
     },
   },
+
+  // ---- Tahap 4: Spiral Staircase Route Traps, Crumbling Landings, Wind/Steam Jets, Sweeping Blades & Bounce Pads (z1-z4) ----
+  { id: 'spiral-bounce-z1-top', zone: 'z1', kind: 'bounce', style: 'mushroom', pos: [12.0, 12.15, -4.0], size: [2.2, 0.7, 2.2], bounceSpeed: 18.5 },
+  { id: 'spiral-crumble-z1-2', zone: 'z1', kind: 'crumbling', style: 'ruin', pos: [18.0, 35.85, -16.0], size: [2.6, 0.55, 2.6] },
+  { id: 'spiral-steam-z1-2', zone: 'z1', kind: 'steamPipe', style: 'steamPipe', pos: [18.0, 24.5, -16.0], size: [0.5, 0.5, 7.6], rotY: 0.4, steamCycleS: 4.8, steamPhaseS: 0.4, steamDir: [1, 0.3, 0.4] },
+  { id: 'spiral-blade-z1-3', zone: 'z1', kind: 'windmill', style: 'windmill', pos: [24.0, 49.5, 4.0], size: [8.4, 0.55, 1.4], motion: { type: 'rotate', points: [], axis: [0, 1, 0], periodS: 7.5, phaseS: 0, dwellS: 0 } },
+  { id: 'spiral-steam-z1-3', zone: 'z1', kind: 'steamPipe', style: 'steamPipe', pos: [24.0, 56.0, 4.0], size: [0.5, 0.5, 7.8], rotY: -0.5, steamCycleS: 4.6, steamPhaseS: 1.8, steamDir: [-0.8, 0.35, 0.6] },
+  { id: 'spiral-crumble-z2-1', zone: 'z2', kind: 'crumbling', style: 'ruin', pos: [24.0, 74.95, 18.0], size: [2.6, 0.55, 2.6] },
+  { id: 'spiral-bounce-z2-1', zone: 'z2', kind: 'bounce', style: 'mushroom', pos: [24.0, 74.75, 18.0], size: [2.2, 0.7, 2.2], bounceSpeed: 21.0 },
+  { id: 'spiral-blade-z2-2', zone: 'z2', kind: 'windmill', style: 'windmill', pos: [30.0, 98.0, 2.0], size: [8.8, 0.55, 1.4], motion: { type: 'rotate', points: [], axis: [0, 1, 0], periodS: 6.8, phaseS: 1.4, dwellS: 0 } },
+  { id: 'spiral-steam-z2-2', zone: 'z2', kind: 'steamPipe', style: 'steamPipe', pos: [30.0, 112.0, 2.0], size: [0.5, 0.5, 8.2], rotY: 0.85, steamCycleS: 4.4, steamPhaseS: 0.9, steamDir: [0.7, 0.38, -0.7] },
+  { id: 'spiral-crumble-z3-1', zone: 'z3', kind: 'crumbling', style: 'ruin', pos: [34.0, 125.35, -14.0], size: [2.8, 0.55, 2.8] },
+  { id: 'spiral-steam-z3-1', zone: 'z3', kind: 'steamPipe', style: 'steamPipe', pos: [34.0, 154.0, -14.0], size: [0.5, 0.5, 8.4], rotY: -0.35, steamCycleS: 4.2, steamPhaseS: 2.1, steamDir: [-1, 0.35, 0] },
+  { id: 'spiral-blade-z3-1', zone: 'z3', kind: 'windmill', style: 'windmill', pos: [34.0, 171.0, -14.0], size: [9.0, 0.55, 1.45], motion: { type: 'rotate', points: [], axis: [0, 1, 0], periodS: 6.4, phaseS: 2.2, dwellS: 0 } },
+  { id: 'spiral-bounce-z3-2', zone: 'z3', kind: 'bounce', style: 'mushroom', pos: [40.0, 188.3, 8.0], size: [2.4, 0.7, 2.4], bounceSpeed: 23.0 },
+  { id: 'spiral-steam-z3-2', zone: 'z3', kind: 'steamPipe', style: 'steamPipe', pos: [40.0, 222.0, 8.0], size: [0.5, 0.5, 8.4], rotY: 0.65, steamCycleS: 4.0, steamPhaseS: 1.1, steamDir: [0.85, 0.35, 0.5] },
+  { id: 'spiral-crumble-z4-1', zone: 'z4', kind: 'crumbling', style: 'ruin', pos: [48.0, 250.35, -10.0], size: [2.8, 0.55, 2.8] },
+  { id: 'spiral-blade-z4-1', zone: 'z4', kind: 'windmill', style: 'windmill', pos: [48.0, 294.0, -10.0], size: [9.2, 0.55, 1.45], motion: { type: 'rotate', points: [], axis: [0, 1, 0], periodS: 6.0, phaseS: 0.5, dwellS: 0 } },
+  { id: 'spiral-steam-z4-1', zone: 'z4', kind: 'steamPipe', style: 'steamPipe', pos: [48.0, 326.0, -10.0], size: [0.5, 0.5, 8.6], rotY: -0.75, steamCycleS: 3.9, steamPhaseS: 2.0, steamDir: [-0.7, 0.38, -0.7] },
+  { id: 'spiral-crumble-z4-2', zone: 'z4', kind: 'crumbling', style: 'ruin', pos: [56.0, 361.35, -4.0], size: [2.8, 0.55, 2.8] },
+  { id: 'spiral-blade-z4-2', zone: 'z4', kind: 'windmill', style: 'windmill', pos: [56.0, 412.0, -4.0], size: [9.4, 0.55, 1.5], motion: { type: 'rotate', points: [], axis: [0, 1, 0], periodS: 5.6, phaseS: 1.8, dwellS: 0 } },
+  { id: 'spiral-steam-z4-2', zone: 'z4', kind: 'steamPipe', style: 'steamPipe', pos: [56.0, 448.0, -4.0], size: [0.5, 0.5, 8.8], rotY: 0.45, steamCycleS: 3.8, steamPhaseS: 0.8, steamDir: [0.9, 0.4, 0.3] },
+  { id: 'spiral-bounce-z4-top', zone: 'z4', kind: 'bounce', style: 'mushroom', pos: [56.0, 484.3, -4.0], size: [2.4, 0.7, 2.4], bounceSpeed: 22.0 },
 ]
 
 export const CRUMBLE_TELEGRAPH_S = 1.2

@@ -1,10 +1,9 @@
 // Sculptural Ghibli Non-Box Objects (z1-z4):
 // Renders all 6 organic procedural structure families with fair flat-top proxy colliders and shared materials.
 // Mounted only on the 'main' 500 m world so slice/g1-blockout tests remain completely untouched.
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { CylinderGeometry, Group, Mesh, Vector3 } from 'three'
-import type { Object3D } from 'three'
+import { CylinderGeometry, Group, InstancedMesh, Mesh, Object3D, Vector3 } from 'three'
 import { BvhPhysicsBody } from '@react-three/viverse'
 import type { LoadedLevel } from './levels.ts'
 import type { Motion } from './motion.ts'
@@ -45,6 +44,7 @@ const ROTATION_ORDER = 'YXZ' as const
 function SpiralStairs({ spec }: { spec: SpiralStairsSpec }) {
   const steps = useMemo(() => spiralStairSteps(spec), [spec])
   const arcPerStep = spec.totalSweepRad / spec.stepCount
+  const isCelestial = spec.zone === 'z3' || spec.zone === 'z4'
   const wedgeGeo = useMemo(
     () => buildWedgeStepGeometry(spec.towerRadius - 0.15, spec.outerRadius, arcPerStep * 0.94, 0.38),
     [spec.towerRadius, spec.outerRadius, arcPerStep],
@@ -53,26 +53,70 @@ function SpiralStairs({ spec }: { spec: SpiralStairsSpec }) {
     () => buildWedgeStepGeometry(spec.outerRadius - 0.22, spec.outerRadius + 0.04, arcPerStep * 0.94, 0.08),
     [spec.outerRadius, arcPerStep],
   )
-  const stoneMat = useMemo(() => sculpturalMaterial('spiral-stone', '#9f988c', { roughness: 0.9, style: 'stone' }), [])
-  const mossMat = useMemo(() => sculpturalMaterial('spiral-moss', '#84b07e', { roughness: 0.88, style: 'moss' }), [])
-  const towerMat = useMemo(() => sculpturalMaterial('spiral-tower', '#857d72', { roughness: 0.92, style: 'stone' }), [])
+  const stoneMat = useMemo(
+    () => sculpturalMaterial(isCelestial ? 'spiral-marble' : 'spiral-stone', isCelestial ? '#efeae0' : '#9f988c', { roughness: isCelestial ? 0.65 : 0.9, style: isCelestial ? 'marble' : 'stone' }),
+    [isCelestial],
+  )
+  const mossMat = useMemo(
+    () => sculpturalMaterial(isCelestial ? 'spiral-gold' : 'spiral-moss', isCelestial ? '#e3b856' : '#84b07e', { roughness: isCelestial ? 0.35 : 0.88, metalness: isCelestial ? 0.55 : 0, style: isCelestial ? 'trim' : 'moss' }),
+    [isCelestial],
+  )
+  const towerMat = useMemo(
+    () => sculpturalMaterial(isCelestial ? 'spiral-tower-cel' : 'spiral-tower', isCelestial ? '#d9d0be' : '#857d72', { roughness: 0.9, style: isCelestial ? 'marble' : 'stone' }),
+    [isCelestial],
+  )
+  const beaconMat = useMemo(
+    () => sculpturalMaterial('spiral-beacon', '#a6fff0', { emissive: '#38d9c8', roughness: 0.25 }),
+    [],
+  )
+
+  const wedgeInstRef = useRef<InstancedMesh>(null)
+  const trimInstRef = useRef<InstancedMesh>(null)
+
+  useEffect(() => {
+    const dummy = new Object3D()
+    if (wedgeInstRef.current && trimInstRef.current) {
+      for (let i = 0; i < steps.length; i++) {
+        const s = steps[i]
+        dummy.position.set(spec.pos[0], s.pos[1], spec.pos[2])
+        dummy.rotation.set(0, s.angle, 0, ROTATION_ORDER)
+        dummy.scale.set(1, 1, 1)
+        dummy.updateMatrix()
+        wedgeInstRef.current.setMatrixAt(i, dummy.matrix)
+
+        dummy.position.set(spec.pos[0], s.pos[1] + 0.17, spec.pos[2])
+        dummy.updateMatrix()
+        trimInstRef.current.setMatrixAt(i, dummy.matrix)
+      }
+      wedgeInstRef.current.instanceMatrix.needsUpdate = true
+      trimInstRef.current.instanceMatrix.needsUpdate = true
+    }
+  }, [steps, spec.pos])
+
+  useEffect(
+    () => () => {
+      wedgeGeo.dispose()
+      trimGeo.dispose()
+    },
+    [wedgeGeo, trimGeo],
+  )
 
   return (
     <group name={spec.id}>
-      {/* Central mossy stone tower cylinder */}
+      {/* Central mossy/celestial stone tower cylinder */}
       <mesh position={[spec.pos[0], spec.pos[1] + spec.towerHeight / 2, spec.pos[2]]} material={towerMat} castShadow receiveShadow>
         <cylinderGeometry args={[spec.towerRadius * 0.96, spec.towerRadius * 1.05, spec.towerHeight, 14]} />
       </mesh>
       <mesh position={[spec.pos[0], spec.pos[1] + spec.towerHeight + 0.15, spec.pos[2]]} material={mossMat} receiveShadow>
-        <cylinderGeometry args={[spec.towerRadius * 1.08, spec.towerRadius * 0.96, 0.32, 14]} />
+        <cylinderGeometry args={[spec.towerRadius * 1.15, spec.towerRadius * 0.96, 0.32, 14]} />
       </mesh>
-      {/* Curved wedge steps around the tower */}
-      {steps.map((s) => (
-        <group key={s.id} position={[spec.pos[0], s.pos[1], spec.pos[2]]} rotation={[0, s.angle, 0, ROTATION_ORDER]}>
-          <mesh geometry={wedgeGeo} material={stoneMat} castShadow receiveShadow />
-          <mesh geometry={trimGeo} position={[0, 0.17, 0]} material={mossMat} receiveShadow />
-        </group>
-      ))}
+      {/* Top Anemo guide beacon ring */}
+      <mesh position={[spec.pos[0], spec.pos[1] + spec.towerHeight + 0.36, spec.pos[2]]} rotation={[Math.PI / 2, 0, 0]} material={beaconMat}>
+        <torusGeometry args={[spec.towerRadius * 0.95, 0.08, 6, 20]} />
+      </mesh>
+      {/* Instanced curved wedge steps around the tower (only 2 draw calls per tower!) */}
+      <instancedMesh ref={wedgeInstRef} args={[wedgeGeo, stoneMat, steps.length]} castShadow receiveShadow />
+      <instancedMesh ref={trimInstRef} args={[trimGeo, mossMat, steps.length]} receiveShadow />
       {/* Fair flat-top proxy colliders */}
       <BvhPhysicsBody>
         <mesh position={[spec.pos[0], spec.pos[1] + spec.towerHeight / 2, spec.pos[2]]}>
