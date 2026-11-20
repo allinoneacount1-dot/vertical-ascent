@@ -3,7 +3,8 @@
 // camera-blocker world, the finish sensor, and <WorldReady/> after all bodies. Collider meshes stay visible with an
 // invisible material (bake uses traverseVisible).
 import { Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
-import { BoxGeometry, Euler, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three'
+import { useFrame } from '@react-three/fiber'
+import { AdditiveBlending, BoxGeometry, ConeGeometry, DoubleSide, Euler, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, TorusGeometry, Vector3 } from 'three'
 import type { Object3D } from 'three'
 import { BvhPhysicsBody, BvhPhysicsSensor, useBvhPhysicsWorld } from '@react-three/viverse'
 import { BvhPhysicsWorld } from '@pmndrs/viverse'
@@ -77,19 +78,103 @@ function ColliderBox({ size, position, rotation }: { size: Vec3; position: Vec3;
   )
 }
 
-/** A mover's visual (not merged: it moves), built from the same pieces as the static visuals. */
+/** A mover's visual (not merged: it moves), built from the same pieces as the static visuals, plus animated Anemo levitation rings for lifts/movers. */
 function MoverVisual({ prefab }: { prefab: Prefab }) {
-  const group = useMemo(() => {
+  const isAnemoMover = prefab.id === 'lift-l' || prefab.id === 'mover-m'
+  const isLift = prefab.id === 'lift-l'
+  const outerRingRef = useRef<Mesh>(null)
+  const innerRingRef = useRef<Mesh>(null)
+  const updraftRef = useRef<Mesh>(null)
+
+  const { group, geos } = useMemo(() => {
     const g = new Group()
+    const createdGeos: Array<{ dispose: () => void }> = []
     for (const p of localPieces(prefab)) {
       const m = new Mesh(p.geometry, materialFor(p))
       m.castShadow = p.emissive == null
       m.receiveShadow = true
       g.add(m)
+      createdGeos.push(p.geometry)
     }
-    return g
+    return { group: g, geos: createdGeos }
   }, [prefab])
-  return <primitive object={group} />
+
+  const levitation = useMemo(() => {
+    if (!isAnemoMover) return null
+    const rOuter = isLift ? 1.65 : 1.18
+    const rInner = isLift ? 1.05 : 0.74
+    const outerGeo = new TorusGeometry(rOuter, 0.055, 8, 24)
+    outerGeo.rotateX(Math.PI / 2)
+    const innerGeo = new TorusGeometry(rInner, 0.04, 6, 20)
+    innerGeo.rotateX(Math.PI / 2)
+    const coneGeo = new ConeGeometry(isLift ? 1.55 : 1.05, isLift ? 2.1 : 1.4, 14, 1, true)
+    const goldMat = new MeshStandardMaterial({
+      color: '#f0c55e',
+      emissive: '#c9932c',
+      emissiveIntensity: 0.45,
+      roughness: 0.3,
+      metalness: 0.68,
+    })
+    const cyanMat = new MeshStandardMaterial({
+      color: '#a8fff2',
+      emissive: '#38e0cc',
+      emissiveIntensity: 1.5,
+      roughness: 0.2,
+    })
+    const updraftMat = new MeshBasicMaterial({
+      color: '#7ef5e2',
+      transparent: true,
+      opacity: 0.16,
+      blending: AdditiveBlending,
+      depthWrite: false,
+      side: DoubleSide,
+    })
+    return { outerGeo, innerGeo, coneGeo, goldMat, cyanMat, updraftMat }
+  }, [isAnemoMover, isLift])
+
+  useEffect(
+    () => () => {
+      for (const g of geos) g.dispose()
+      if (levitation) {
+        levitation.outerGeo.dispose()
+        levitation.innerGeo.dispose()
+        levitation.coneGeo.dispose()
+        levitation.goldMat.dispose()
+        levitation.cyanMat.dispose()
+        levitation.updraftMat.dispose()
+      }
+    },
+    [geos, levitation],
+  )
+
+  useFrame(({ clock }) => {
+    if (!isAnemoMover) return
+    const t = clock.elapsedTime
+    if (outerRingRef.current) {
+      outerRingRef.current.rotation.y = t * 0.9
+      outerRingRef.current.rotation.x = Math.sin(t * 1.4) * 0.06
+    }
+    if (innerRingRef.current) {
+      innerRingRef.current.rotation.y = -t * 1.6
+    }
+    if (updraftRef.current) {
+      const pulse = 0.92 + Math.sin(t * 3.4) * 0.08
+      updraftRef.current.scale.set(pulse, 1, pulse)
+    }
+  })
+
+  return (
+    <group>
+      <primitive object={group} />
+      {levitation && (
+        <group>
+          <mesh ref={outerRingRef} position={[0, -0.34, 0]} geometry={levitation.outerGeo} material={levitation.goldMat} />
+          <mesh ref={innerRingRef} position={[0, -0.56, 0]} geometry={levitation.innerGeo} material={levitation.cyanMat} />
+          <mesh ref={updraftRef} position={[0, isLift ? -1.35 : -0.95, 0]} geometry={levitation.coneGeo} material={levitation.updraftMat} />
+        </group>
+      )}
+    </group>
+  )
 }
 
 /** All static visuals of the level merged into one mesh per material (procedural.ts). */

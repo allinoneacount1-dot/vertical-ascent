@@ -15,8 +15,10 @@ import {
   Matrix4,
   Mesh,
   MeshStandardMaterial,
+  OctahedronGeometry,
   Quaternion,
   SphereGeometry,
+  TorusGeometry,
   Vector3,
 } from 'three'
 import type { Group } from 'three'
@@ -193,7 +195,62 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
   if (v == null) return []
   const size: Vec3 = prefab.collider ? colliderSize(prefab) : (v.size ?? [1, 1, 1])
   const [w, h, d] = size
-  if (v.kind === 'composite') return (v.parts ?? []).map(partPiece)
+  if (v.kind === 'composite') {
+    // Transform legacy grey industrial lift-rails-* into Genshin/Ghibli carved stone-and-brass temple guide pillars
+    if (prefab.id.startsWith('lift-rails-') && (v.parts?.length ?? 0) > 0) {
+      const out: Piece[] = []
+      for (const p of v.parts!) {
+        const [px, py, pz] = p.pos
+        const railH = p.size[1]
+        const topY = py + railH / 2
+        const botY = py - railH / 2
+        // Carved octagonal sanctuary stone guide pillar
+        out.push(
+          piece(
+            new CylinderGeometry(0.14, 0.17, railH, 8).translate(px, py, pz),
+            '#d9d0be',
+            { roughness: 0.82, style: 'stone' },
+          ),
+        )
+        // Glowing cyan Anemo energy conduit strip along inner face
+        const inX = px > 0 ? -0.11 : 0.11
+        const inZ = pz > 0 ? -0.11 : 0.11
+        out.push(
+          piece(
+            boxAt([0.055, railH - 0.6, 0.055], [px + inX, py, pz + inZ]),
+            '#9ff7eb',
+            { emissive: '#38d9c8', roughness: 0.25 },
+          ),
+        )
+        // Brass collars at base, middle, and top + golden lantern finial at top & base plinth
+        for (const cy of [botY + 0.25, py, topY - 0.25]) {
+          out.push(
+            piece(
+              new CylinderGeometry(0.24, 0.24, 0.24, 8).translate(px, cy, pz),
+              '#e0b454',
+              { roughness: 0.34, metalness: 0.65 },
+            ),
+          )
+        }
+        out.push(
+          piece(
+            new OctahedronGeometry(0.24, 0).translate(px, topY + 0.32, pz),
+            '#fff2c4',
+            { emissive: '#ffbe4f', roughness: 0.25 },
+          ),
+        )
+        out.push(
+          piece(
+            new CylinderGeometry(0.28, 0.34, 0.36, 8).translate(px, botY - 0.05, pz),
+            '#c8beaa',
+            { roughness: 0.85, style: 'stone' },
+          ),
+        )
+      }
+      return out
+    }
+    return (v.parts ?? []).map(partPiece)
+  }
   if (v.kind === 'stairs') {
     const steps = Math.max(2, Math.round(d / 0.35))
     const rise = h / steps
@@ -245,20 +302,65 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     return out
   }
 
-  // Floating Ancient Anemo Rune-Stone Platforms (replaces boxy industrial metal movers)
+  // Floating Ancient Anemo Sky Elevators (lift-l) & Rune-Stone Platforms (mover-m)
   if (id === 'mover-m' || id === 'lift-l') {
-    const topH = h * 0.52
+    const isLift = id === 'lift-l'
+    const topH = h * 0.56
     const seed = entrySeed || hashString(id)
-    const slab = sculptedCapGeo(w * 0.54, d * 0.54, topH, seed, 8, 0.05).translate(0, h / 2 - topH / 2, 0)
-    const coreH = Math.max(0.55, h * 0.72)
-    const core = new ConeGeometry(Math.min(w, d) * 0.38, coreH, 6)
+    // Top face stays strictly flush at y = +h/2 so player feet never float or sink
+    const slab = sculptedCapGeo(w * 0.53, d * 0.53, topH, seed, 8, 0.04).translate(0, h / 2 - topH / 2, 0)
+    const rimRing = new TorusGeometry(Math.min(w, d) * 0.44, 0.075, 8, 24)
+      .rotateX(Math.PI / 2)
+      .translate(0, h / 2 - 0.03, 0)
+    const runeRing = new TorusGeometry(Math.min(w, d) * 0.28, 0.045, 6, 20)
+      .rotateX(Math.PI / 2)
+      .translate(0, h / 2 + 0.015, 0)
+    const coreH = isLift ? Math.max(0.85, h * 1.15) : Math.max(0.55, h * 0.72)
+    const core = new ConeGeometry(Math.min(w, d) * 0.34, coreH, 6)
       .rotateX(Math.PI)
       .translate(0, h / 2 - topH - coreH / 2, 0)
     const out: Piece[] = [
-      piece(slab, '#e5dfd0', { roughness: 0.72, style: 'marble' }),
+      piece(slab, isLift ? '#f0eadc' : '#e5dfd0', { roughness: 0.68, style: 'marble' }),
+      piece(rimRing, '#deb355', { roughness: 0.32, metalness: 0.65 }),
+      piece(runeRing, '#a6fff0', { emissive: '#38d9c8', roughness: 0.25 }),
       piece(core, '#58d5b8', { emissive: '#2fb8a6', roughness: 0.3, metalness: 0.2 }),
     ]
-    addTrim(out, '#8ff7e2', '#42c6d4', 0.35)
+    if (isLift) {
+      // 4 low corner carved brass-and-stone lantern bollards (outer corners ±1.78, open jump lanes on all 4 sides)
+      const cx = w * 0.44
+      const cz = d * 0.44
+      for (const [sx, sz] of [
+        [-cx, -cz],
+        [cx, -cz],
+        [-cx, cz],
+        [cx, cz],
+      ]) {
+        out.push(
+          piece(
+            new CylinderGeometry(0.11, 0.15, 0.62, 6).translate(sx, h / 2 + 0.31, sz),
+            '#d9b052',
+            { roughness: 0.36, metalness: 0.62 },
+          ),
+        )
+        out.push(
+          piece(
+            new OctahedronGeometry(0.18, 0).translate(sx, h / 2 + 0.74, sz),
+            '#b8fff2',
+            { emissive: '#42e3c8', roughness: 0.22 },
+          ),
+        )
+      }
+      // Center golden Anemo medallion inlay (flush on top)
+      out.push(
+        piece(
+          new CylinderGeometry(0.42, 0.46, 0.03, 8).translate(0, h / 2 + 0.005, 0),
+          '#e3ba5a',
+          { roughness: 0.34, metalness: 0.65 },
+        ),
+      )
+    } else {
+      addTrim(out, '#8ff7e2', '#42c6d4', 0.35)
+    }
     return out
   }
 
