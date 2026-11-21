@@ -331,7 +331,7 @@ export function localPieces(prefab: Prefab, entrySeed = 0, altitudeY = 0): Piece
     const rockPalette = ['#c6a278', '#b8946c', '#cfa97e', '#b38d68']
     const rockColor = rockPalette[seed % rockPalette.length]
     const cliffBody = sculptedCliffPillarGeo(w, cliffH, d, seed).translate(0, -capH / 2, 0)
-    const grassCap = sculptedCapGeo(w * 0.56, d * 0.56, capH, seed ^ 0x2233, 10, 0.08).translate(0, h / 2 - capH / 2, 0)
+    const grassCap = sculptedCapGeo(w * 0.515, d * 0.515, capH, seed ^ 0x2233, 10, 0.04).translate(0, h / 2 - capH / 2, 0)
     const out: Piece[] = [
       piece(cliffBody, rockColor, { roughness: 0.9, style: 'cliff' }),
       piece(grassCap, '#72b564', { roughness: 0.84, style: 'moss' }),
