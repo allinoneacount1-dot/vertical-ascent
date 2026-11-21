@@ -91,12 +91,12 @@ function Hud() {
         <div className="hud-elevation" data-testid="hud-elevation-map" aria-hidden="true">
           <div className="elev-track">
             <div className="elev-fill" style={{ height: `${Math.max(0, Math.min(100, (hud.heightM / hud.targetM) * 100))}%` }} />
-            {[125, 250, 375].map((m) => (
+            {(hud.targetM > 500 ? [125, 250, 375, 500, 625, 750, 875] : [125, 250, 375]).map((m) => (
               <span
                 key={m}
                 className="elev-tick"
                 style={{ bottom: `${Math.min(100, (m / hud.targetM) * 100)}%` }}
-                title={`Catch Deck ${m}m`}
+                title={`Zone ${m}m`}
               />
             ))}
             {game.records.bestHeightM > 1 && (
