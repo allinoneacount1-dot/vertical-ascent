@@ -33,7 +33,14 @@ type SlotState = {
   yaw: number
 }
 
-function drawNametag(canvas: HTMLCanvasElement, texture: CanvasTexture, name: string, heightM: number, accentHex: string): void {
+function drawNametag(
+  canvas: HTMLCanvasElement,
+  texture: CanvasTexture,
+  name: string,
+  heightM: number,
+  accentHex: string,
+  emote: string | null,
+): void {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
   const w = canvas.width
@@ -63,7 +70,7 @@ function drawNametag(canvas: HTMLCanvasElement, texture: CanvasTexture, name: st
   ctx.font = 'bold 26px Inter, system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(`${name} · ${heightM}m`, w / 2, h / 2 + 1, w - 24)
+  ctx.fillText(emote ? `${emote} ${name} · ${heightM}m` : `${name} · ${heightM}m`, w / 2, h / 2 + 1, w - 24)
   texture.needsUpdate = true
 }
 
@@ -176,10 +183,11 @@ export function RemotePlayers() {
         matSlot.ringMat.color.copy(tmpColor.set(hero.packTrim))
       }
 
-      const nextLabel = `${peer.name}|${peer.heightM}|${hero.swatch}`
+      const activeEmote = peer.emote && performance.now() < peer.emoteUntilMs ? peer.emote : null
+      const nextLabel = `${peer.name}|${peer.heightM}|${hero.swatch}|${activeEmote ?? ''}`
       if (st.labelKey !== nextLabel) {
         st.labelKey = nextLabel
-        drawNametag(matSlot.canvas, matSlot.texture, peer.name, peer.heightM, hero.swatch)
+        drawNametag(matSlot.canvas, matSlot.texture, peer.name, peer.heightM, hero.swatch, activeEmote)
       }
 
       g.visible = true

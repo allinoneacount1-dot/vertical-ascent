@@ -123,9 +123,14 @@ function Hud() {
             />
           </div>
           {mp.roomCode && (
-            <span className="elev-label elev-mp" data-testid="hud-mp-badge">
-              {mp.roomCode} · {mp.peerCount + 1}P
-            </span>
+            <>
+              <span className="elev-label elev-mp" data-testid="hud-mp-badge">
+                {mp.roomCode} · {mp.peerCount + 1}P
+              </span>
+              <span className="elev-label" data-testid="hud-mp-emotes" title="Quick Emotes">
+                1👋 2🔥 3⚠️ 4🏆
+              </span>
+            </>
           )}
           {aetherLowG && <span className="elev-label" data-testid="hud-lowg">0.65G</span>}
           <span className="elev-label" data-testid="hud-relics">✦ {relicCount}/{SKY_RELICS.length}</span>

@@ -123,6 +123,25 @@ export function installPlayGuards(canvas: HTMLCanvasElement): void {
       game.triggerVistaLook()
       return
     }
+    // Multiplayer Quick Emotes via 1-4 keys while in a room
+    if (game.snapshot.state === 'PLAYING' && game.multiplayer.roomCode != null) {
+      if (e.code === 'Digit1') {
+        game.multiplayer.sendEmote('wave')
+        return
+      }
+      if (e.code === 'Digit2') {
+        game.multiplayer.sendEmote('hype')
+        return
+      }
+      if (e.code === 'Digit3') {
+        game.multiplayer.sendEmote('warn')
+        return
+      }
+      if (e.code === 'Digit4') {
+        game.multiplayer.sendEmote('race')
+        return
+      }
+    }
     // Relaxed mode checkpoint return via C key
     if (e.code === 'KeyC' && game.snapshot.state === 'PLAYING' && game.challengeMode === 'relaxed') {
       game.returnToCheckpoint()

@@ -8,7 +8,26 @@ const APP_ID = 'vertical-ascent-ghibli-v1'
 const NAME_KEY = 'va.mp.name.v1'
 const BROADCAST_INTERVAL_MS = 66 // ~15 Hz
 const PEER_STALE_MS = 6000
+const EMOTE_DURATION_MS = 3500
+const EMOTE_COOLDOWN_MS = 700
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
+export type EmoteId = 'wave' | 'hype' | 'warn' | 'race'
+
+export type EmoteSpec = { id: EmoteId; key: string; icon: string; label: string }
+
+export const MP_EMOTES: readonly EmoteSpec[] = [
+  { id: 'wave', key: '1', icon: '\u{1F44B}', label: 'Hi!' },
+  { id: 'hype', key: '2', icon: '\u{1F525}', label: "Let's Go!" },
+  { id: 'warn', key: '3', icon: '\u26A0\uFE0F', label: 'Watch Out!' },
+  { id: 'race', key: '4', icon: '\u{1F3C6}', label: 'Wait Up!' },
+]
+
+export type EmotePacket = {
+  id: string
+  name: string
+  emoteId: EmoteId
+}
 
 export type PosePacket = {
   id: string
@@ -34,6 +53,8 @@ export type RemotePeerState = {
   heightM: number
   lastSeenMs: number
   lastSeq: number
+  emote: string | null
+  emoteUntilMs: number
 }
 
 export type RemotePeerHud = {
@@ -147,23 +168,29 @@ export class MultiplayerSystem {
   private trysteroRoom: TrysteroRoom | null = null
   private sendRtcPose: ((pkt: PosePacket) => void) | null = null
   private sendRtcBye: ((id: string) => void) | null = null
+  private sendRtcEmote: ((pkt: EmotePacket) => void) | null = null
   private bc: BroadcastChannel | null = null
   private seq = 0
   private lastBroadcastMs = 0
+  private lastEmoteMs = 0
+  lastEmoteEvent: { from: string; emoteId: EmoteId } | null = null
   private lastUiSyncMs = 0
   private uiDirty = false
   private onUiChange: (ui: MultiplayerUi) => void
   private onEpochSync: (epochMs: number) => void
   private onToast: (text: string) => void
+  private onEmote?: () => void
 
   constructor(opts: {
     onUiChange: (ui: MultiplayerUi) => void
     onEpochSync: (epochMs: number) => void
     onToast: (text: string) => void
+    onEmote?: () => void
   }) {
     this.onUiChange = opts.onUiChange
     this.onEpochSync = opts.onEpochSync
     this.onToast = opts.onToast
+    this.onEmote = opts.onEmote
   }
 
   setPlayerName(raw: string): void {
@@ -197,9 +224,10 @@ export class MultiplayerSystem {
       if (typeof BroadcastChannel !== 'undefined') {
         const ch = new BroadcastChannel(`va-mp-room-${code}`)
         ch.onmessage = (ev: MessageEvent) => {
-          const msg = ev.data as { type?: string; pose?: PosePacket; id?: string } | null
+          const msg = ev.data as { type?: string; pose?: PosePacket; emote?: EmotePacket; id?: string } | null
           if (!msg) return
           if (msg.type === 'pose' && msg.pose) this.handleIncomingPose(msg.pose)
+          else if (msg.type === 'emote' && msg.emote) this.handleIncomingEmote(msg.emote)
           else if (msg.type === 'bye' && msg.id) this.removePeer(msg.id)
         }
         this.bc = ch
@@ -216,8 +244,10 @@ export class MultiplayerSystem {
       const room = mod.joinRoom({ appId: APP_ID }, `va-room-${code}`) as unknown as TrysteroRoom
       const [sendPose, getPose] = room.makeAction<PosePacket>('pose')
       const [sendBye, getBye] = room.makeAction<string>('bye')
+      const [sendEmoteAct, getEmoteAct] = room.makeAction<EmotePacket>('emote')
       getPose((pkt) => this.handleIncomingPose(pkt))
       getBye((id) => this.removePeer(id))
+      getEmoteAct((pkt) => this.handleIncomingEmote(pkt))
       room.onPeerLeave((rtcPeerId) => {
         // Fallback cleanup if peer disconnected abruptly without bye packet
         this.removePeer(rtcPeerId)
@@ -233,6 +263,13 @@ export class MultiplayerSystem {
       this.sendRtcBye = (id) => {
         try {
           sendBye(id)
+        } catch {
+          // ignore
+        }
+      }
+      this.sendRtcEmote = (pkt) => {
+        try {
+          sendEmoteAct(pkt)
         } catch {
           // ignore
         }
@@ -274,6 +311,7 @@ export class MultiplayerSystem {
     this.trysteroRoom = null
     this.sendRtcPose = null
     this.sendRtcBye = null
+    this.sendRtcEmote = null
     this.bc = null
     this.roomCode = null
     this.roomEpoch = 0
@@ -317,6 +355,8 @@ export class MultiplayerSystem {
         heightM: roundedH,
         lastSeenMs: now,
         lastSeq: pkt.seq,
+        emote: null,
+        emoteUntilMs: 0,
       })
       this.uiDirty = true
     }
@@ -331,6 +371,40 @@ export class MultiplayerSystem {
       this.onToast(`${pkt.name} bergabung ke room`)
       this.emitUi()
     }
+  }
+
+  sendEmote(emoteId: EmoteId): boolean {
+    if (this.roomCode == null) return false
+    const now = performance.now()
+    if (now - this.lastEmoteMs < EMOTE_COOLDOWN_MS) return false
+    const spec = MP_EMOTES.find((e) => e.id === emoteId)
+    if (!spec) return false
+    this.lastEmoteMs = now
+    const pkt: EmotePacket = { id: this.selfId, name: this.playerName, emoteId }
+    try {
+      this.bc?.postMessage({ type: 'emote', emote: pkt })
+    } catch {
+      // ignore
+    }
+    this.sendRtcEmote?.(pkt)
+    this.lastEmoteEvent = { from: this.playerName, emoteId }
+    this.onEmote?.()
+    this.onToast(`${this.playerName}: ${spec.icon} ${spec.label}`)
+    return true
+  }
+
+  private handleIncomingEmote(pkt: EmotePacket): void {
+    if (!pkt || pkt.id === this.selfId) return
+    const spec = MP_EMOTES.find((e) => e.id === pkt.emoteId)
+    if (!spec) return
+    const peer = this.peers.get(pkt.id)
+    if (peer) {
+      peer.emote = spec.icon
+      peer.emoteUntilMs = performance.now() + EMOTE_DURATION_MS
+    }
+    this.lastEmoteEvent = { from: pkt.name, emoteId: pkt.emoteId }
+    this.onEmote?.()
+    this.onToast(`${pkt.name}: ${spec.icon} ${spec.label}`)
   }
 
   private removePeer(id: string): void {
@@ -413,6 +487,7 @@ export class MultiplayerSystem {
       roomEpoch: this.roomEpoch,
       transport: this.transport,
       peerCount: this.peers.size,
+      lastEmoteEvent: this.lastEmoteEvent,
       peers,
     }
   }

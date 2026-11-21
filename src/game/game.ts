@@ -168,6 +168,7 @@ class Game {
       }
     },
     onToast: (text) => this.toast(text),
+    onEmote: () => playLanternChime(),
   })
 
   constructor() {

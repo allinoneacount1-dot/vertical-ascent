@@ -63,6 +63,19 @@ if (!hudBadge || !hudBadge.includes(code) || !hudBadge.includes('2P')) {
 }
 if (peerDots !== 1) failures.push(`Expected 1 elevation peer dot, got ${peerDots}`)
 
+// 2b. Verify Quick Emote broadcast & remote emote reception
+const selfSent = liveGame.multiplayer.sendEmote('wave')
+ch.postMessage({ type: 'emote', emote: { id: 'peer-taro-01', name: 'Taro', emoteId: 'hype' } })
+await sleep(250)
+const emoteState = liveGame.multiplayer.snapshot().lastEmoteEvent
+const emoteHint = document.querySelector('[data-testid="hud-mp-emotes"]')?.textContent?.trim() ?? null
+out.emotes = { selfSent, emoteState, emoteHint }
+if (!selfSent) failures.push('Expected sendEmote(wave) to return true')
+if (emoteState?.from !== 'Taro' || emoteState?.emoteId !== 'hype') {
+  failures.push(`Remote emote mismatch: ${JSON.stringify(emoteState)}`)
+}
+if (!emoteHint) failures.push('Missing HUD multiplayer emote hint')
+
 // 3. Peer disconnects ('bye') and local player leaves room
 ch.postMessage({ type: 'bye', id: 'peer-taro-01' })
 await sleep(250)
